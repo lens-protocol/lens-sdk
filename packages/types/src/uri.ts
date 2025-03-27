@@ -1,5 +1,5 @@
 import type { Tagged } from 'type-fest';
-import { identity } from './identity';
+import { tag } from './tag';
 
 /**
  * A Uniform Resource Identifier.
@@ -8,7 +8,7 @@ import { identity } from './identity';
  * an IPFS URI (e.g. ipfs://Qm...), or an Arweave URI (e.g. ar://Qm...).
  */
 export type URI = Tagged<string, 'URI'>;
-export const uri = identity<URI>;
+export const uri = tag<URI>;
 
 /**
  * A Uniform Resource Locator.
@@ -18,4 +18,4 @@ export const uri = identity<URI>;
  * i.e. specifying both its primary access mechanism and network location.
  */
 export type URL = Tagged<string, 'URL'>;
-export const url = identity<URL>;
+export const url = tag<URL>;

@@ -1,21 +1,28 @@
 import { type TypeOf, z } from 'zod';
 
-import { never } from '@lens-protocol/types';
+import { assertErr, assertOk, never } from '@lens-protocol/types';
 import { InvariantError } from '@lens-protocol/types';
 import { Deferred } from '@lens-protocol/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
 import { BaseStorageSchema, type IStorageItem, SchemaMismatchError } from './BaseStorageSchema';
+import type { IStorageProvider } from './IStorage';
+import { InMemoryStorageProvider } from './InMemoryStorageProvider';
 import { Storage } from './Storage';
 import { mockStorageProvider } from './__helpers__/mocks';
 
+const schema = z.object({
+  name: z.string(),
+});
+
+const key = 'STORAGE_KEY';
+const storageSchema = new BaseStorageSchema(key, schema);
+
+function createStorage(provider: IStorageProvider) {
+  return Storage.create(storageSchema, provider);
+}
+
 describe(`Given a ${Storage.name} instance`, () => {
-  const schema = z.object({
-    name: z.string(),
-  });
-
-  const key = 'STORAGE_KEY';
-  const storageSchema = new BaseStorageSchema(key, schema);
-
   const data = { name: 'Pawel' };
   const metadata = {
     createdAt: Date.now(),
@@ -35,24 +42,29 @@ describe(`Given a ${Storage.name} instance`, () => {
     it('Then it should return the stored data', async () => {
       const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
 
-      const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
+      const result = await createStorage(mockedStorageProvider)
+        .resume()
+        .map((storage) => storage.get());
 
-      const value = await storage.get();
-
-      expect(value).toEqual(data);
+      assertOk(result);
+      expect(result.value).toEqual(data);
       expect(mockedStorageProvider.getItem).toHaveBeenCalledWith(key);
     });
 
     it('Then it should return `null` if empty', async () => {
       const mockedStorageProvider = mockStorageProvider();
-      const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
 
-      const value = await storage.get();
+      const result = await createStorage(mockedStorageProvider)
+        .resume()
+        .map((storage) => storage.get());
 
-      expect(value).toBeNull();
+      assertOk(result);
+      expect(result.value).toBeNull();
       expect(mockedStorageProvider.getItem).toHaveBeenCalledWith(key);
     });
+  });
 
+  describe(`When the '${Storage.prototype.resume.name}' method gets invoked`, () => {
     it('Then it should migrate data with the migration strategy provided', async () => {
       const newSchema = z.object({
         userName: z.string(),
@@ -84,33 +96,35 @@ describe(`Given a ${Storage.name} instance`, () => {
 
       const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
 
-      const storage = Storage.createForSchema(
+      const result = await Storage.create(
         new TestStorageSchema(key, newSchema),
         mockedStorageProvider,
-      );
+      )
+        .resume()
+        .map((storage) => storage.get());
 
-      const value = await storage.get();
-
-      expect(value).toEqual(expectedMigratedData);
+      assertOk(result);
+      expect(result.value).toEqual(expectedMigratedData);
       expect(mockedStorageProvider.getItem).toHaveBeenCalledWith(key);
     });
 
-    it('Then it should throw InvariantError if a migration to newest version was not provided', async () => {
+    it(`Then it should fail with a 'InvariantError' if a migration to newest version was not provided`, async () => {
       const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
 
       class TestStorageSchema extends BaseStorageSchema<typeof schema> {
         version = 2;
       }
 
-      const storage = Storage.createForSchema(
+      const result = await Storage.create(
         new TestStorageSchema(key, schema),
         mockedStorageProvider,
-      );
+      ).resume();
 
-      await expect(() => storage.get()).rejects.toThrow(InvariantError);
+      assertErr(result);
+      expect(result.error).toBeInstanceOf(InvariantError);
     });
 
-    it(`Then it should throw ${SchemaMismatchError.name} if 'data' field is corrupted`, async () => {
+    it(`Then it should fail with a '${SchemaMismatchError.name}' if 'data' field is corrupted`, async () => {
       const mockedStorageProvider = mockStorageProvider(
         JSON.stringify({
           ...storageItem,
@@ -120,13 +134,12 @@ describe(`Given a ${Storage.name} instance`, () => {
         }),
       );
 
-      const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
+      const result = await createStorage(mockedStorageProvider).resume();
+      assertErr(result);
 
-      const getPromise = () => storage.get();
-
-      await expect(getPromise).rejects.toThrow(SchemaMismatchError);
-      await expect(getPromise).rejects.toThrowErrorMatchingInlineSnapshot(`
-        [SchemaMismatchError: Schema mismatch for STORAGE_KEY with errors: [
+      expect(result.error).toBeInstanceOf(SchemaMismatchError);
+      expect(result.error.toString()).toMatchInlineSnapshot(`
+        "SchemaMismatchError: Schema mismatch for STORAGE_KEY with errors: [
           {
             "code": "invalid_type",
             "expected": "string",
@@ -136,11 +149,11 @@ describe(`Given a ${Storage.name} instance`, () => {
             ],
             "message": "Required"
           }
-        ]]
+        ]"
       `);
     });
 
-    it(`should throw ${SchemaMismatchError.name} if 'metadata' field is corrupted`, async () => {
+    it(`Then it should fail with a '${SchemaMismatchError.name}' if 'metadata' field is corrupted`, async () => {
       const mockedStorageProvider = mockStorageProvider(
         JSON.stringify({
           ...storageItem,
@@ -150,12 +163,11 @@ describe(`Given a ${Storage.name} instance`, () => {
         }),
       );
 
-      const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
+      const result = await createStorage(mockedStorageProvider).resume();
 
-      const getPromise = () => storage.get();
-
-      await expect(getPromise).rejects.toThrow(SchemaMismatchError);
-      await expect(getPromise).rejects.toThrowErrorMatchingInlineSnapshot(`
+      assertErr(result);
+      expect(result.error).toBeInstanceOf(SchemaMismatchError);
+      expect(result.error).toMatchInlineSnapshot(`
         [SchemaMismatchError: Schema mismatch for STORAGE_KEY with errors: [
           {
             "code": "invalid_type",
@@ -203,22 +215,49 @@ describe(`Given a ${Storage.name} instance`, () => {
   });
 
   describe(`When the '${Storage.prototype.set.name}' method gets invoked`, () => {
+    it(`Then it should be immediately available in via the '${Storage.prototype.get.name}' method`, async () => {
+      const result = await createStorage(new InMemoryStorageProvider())
+        .resume()
+        .andTee((storage) => storage.set(data))
+        .map((storage) => storage.get());
+
+      assertOk(result);
+      expect(result.value).toEqual(data);
+    });
+
+    it('Then it should run the schema validation on the data', async () => {
+      const result = await createStorage(new InMemoryStorageProvider())
+        .resume()
+        .andTee((storage) =>
+          storage.set({
+            name: '123',
+            something: 'else',
+            // biome-ignore lint/suspicious/noExplicitAny: it's a test!
+          } as any),
+        )
+        .map((storage) => storage.get());
+
+      assertOk(result);
+      expect(result.value).toEqual({ name: '123' });
+    });
+
     describe('for previously empty storage', () => {
       it('Then it should set properly data and metadata with current date', async () => {
         const now = new Date('2020-01-01T00:00:00').valueOf();
         vi.spyOn(global.Date, 'now').mockImplementation(() => now);
 
         const mockedStorageProvider = mockStorageProvider();
-        const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
 
-        await storage.set(data);
+        await createStorage(mockedStorageProvider)
+          .resume()
+          .andTee((storage) => storage.set(data));
 
         expect(mockedStorageProvider.setItem).toHaveBeenCalledWith(
           key,
           JSON.stringify({
             data: data,
             metadata: {
-              ...metadata,
+              version: metadata.version,
               createdAt: now,
               updatedAt: now,
             },
@@ -234,20 +273,20 @@ describe(`Given a ${Storage.name} instance`, () => {
 
         const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
 
-        const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
-
         const newData = {
           name: 'Josh',
         };
-
-        await storage.set(newData);
+        await createStorage(mockedStorageProvider)
+          .resume()
+          .andTee((storage) => storage.set(newData));
 
         expect(mockedStorageProvider.setItem).toHaveBeenCalledWith(
           key,
           JSON.stringify({
             data: newData,
             metadata: {
-              ...metadata,
+              version: metadata.version,
+              createdAt: metadata.createdAt,
               updatedAt: now,
             },
           }),
@@ -259,9 +298,10 @@ describe(`Given a ${Storage.name} instance`, () => {
   describe(`When the "${Storage.prototype.reset.name}" method gets invoked`, () => {
     it('Then it should remove the storage data', async () => {
       const mockedStorageProvider = mockStorageProvider();
-      const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
 
-      await storage.reset();
+      await createStorage(mockedStorageProvider)
+        .resume()
+        .andTee((storage) => storage.reset());
 
       expect(mockedStorageProvider.removeItem).toHaveBeenCalledWith(key);
     });
@@ -290,9 +330,12 @@ describe(`Given a ${Storage.name} instance`, () => {
       const mockedStorageProvider = mockStorageProvider(oldValue);
 
       const deferred = new Deferred<unknown>();
-      const storage = Storage.createForSchema(storageSchema, mockedStorageProvider);
 
-      storage.subscribe((newData, oldData) => deferred.resolve({ newData, oldData }));
+      await createStorage(mockedStorageProvider)
+        .resume()
+        .andTee((storage) => {
+          storage.subscribe((newData, oldData) => deferred.resolve({ newData, oldData }));
+        });
 
       const newValue = JSON.stringify(newStorageItem);
       const subscriber = vi.mocked(mockedStorageProvider.subscribe).mock.calls[0]?.[1] ?? never();

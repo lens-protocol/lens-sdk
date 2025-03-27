@@ -1,6 +1,7 @@
 import type { UnauthenticatedError, UnexpectedError } from '@lens-protocol/client';
 import { invariant } from '@lens-protocol/types';
 
+import { useLensContext } from '../context';
 import { type UseAsyncTask, useAsyncTask } from '../helpers';
 import { useSessionClient } from './useSessionClient';
 
@@ -14,6 +15,7 @@ export type LogoutError = UnauthenticatedError | UnexpectedError;
  * ```
  */
 export function useLogout(): UseAsyncTask<void, void, LogoutError> {
+  const { afterLogout } = useLensContext();
   const { data: sessionClient } = useSessionClient();
 
   return useAsyncTask(() => {
@@ -22,6 +24,6 @@ export function useLogout(): UseAsyncTask<void, void, LogoutError> {
       'It appears that you are not logged in. Please log in before attempting to log out.',
     );
 
-    return sessionClient.logout();
+    return sessionClient.logout().andTee(afterLogout);
   });
 }

@@ -44,8 +44,7 @@ export function createPublicClient() {
   });
 }
 
-export function loginAsAccountOwner() {
-  const client = createPublicClient();
+export function loginAsAccountOwner(client = createPublicClient()) {
   return client.login({
     accountOwner: {
       account: TEST_ACCOUNT,

@@ -1,4 +1,4 @@
-import { chains } from '@lens-network/sdk/viem';
+import { chains } from '@lens-chain/sdk/viem';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { ThirdwebProvider } from 'thirdweb/react';

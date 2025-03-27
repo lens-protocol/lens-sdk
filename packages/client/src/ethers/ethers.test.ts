@@ -18,7 +18,6 @@ describe('Given an integration with ethers.js', { timeout: 10000 }, () => {
           contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
         })
           .andThen(handleOperationWith(wallet))
-          .andTee(console.log)
           .andThen(sessionClient.waitForTransaction),
       );
 

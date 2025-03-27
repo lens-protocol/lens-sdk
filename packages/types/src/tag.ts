@@ -9,6 +9,6 @@ type AnyTagged = Tagged<unknown, PropertyKey>;
  * @param value - The value to assert to the tagged type.
  * @returns The tagged value.
  */
-export function identity<T extends AnyTagged>(value: UnwrapTagged<T>): T {
+export function tag<T extends AnyTagged>(value: UnwrapTagged<T>): T {
   return value as T;
 }

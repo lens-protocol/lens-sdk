@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@halliday-sdk/commerce": "^3.2.2",
-    "@lens-network/sdk": "canary",
+    "@lens-chain/sdk": "canary",
     "@lens-protocol/client": "link:../../packages/client",
     "@lens-protocol/metadata": "next",
     "@lens-protocol/storage-node-client": "next",

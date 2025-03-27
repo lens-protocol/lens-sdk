@@ -1,10 +1,13 @@
+import { Result, ResultAsync, ResultAwareError } from '@lens-protocol/types';
 import { assertError, invariant } from '@lens-protocol/types';
 import { z } from 'zod';
 
 /**
  * Error thrown when the storage item does not match the validation schema
+ *
+ * @internal
  */
-export class SchemaMismatchError extends Error {
+export class SchemaMismatchError extends ResultAwareError {
   name = 'SchemaMismatchError' as const;
 
   constructor(schemaId: string, errors: string) {
@@ -29,18 +32,22 @@ export interface IStorageItem<Data> {
 
 /**
  * A storage schema that can be used to migrate data between versions
+ *
+ * @internal
  */
 export interface IStorageSchema<Data> {
   get key(): string;
   get version(): number;
 
-  process(item: unknown): Promise<IStorageItem<Data>>;
+  process(item: unknown): ResultAsync<IStorageItem<Data>, SchemaMismatchError>;
 }
 
 /**
  * A basic storage schema implementation without migration strategy.
  *
  * Use it directly of as the base class for specific schemas when migrations are required.
+ *
+ * @internal
  */
 export class BaseStorageSchema<
   T extends z.ZodSchema<Output, z.ZodTypeDef, Input>,
@@ -55,13 +62,18 @@ export class BaseStorageSchema<
     private schema: T,
   ) {}
 
-  async process(storageItemUnknown: unknown): Promise<IStorageItem<Output>> {
-    const storageItem = this.parseStorageItem(storageItemUnknown);
-
-    const data = await this.migrate(storageItem);
-
-    return { data, metadata: storageItem.metadata };
-  }
+  process = (
+    storageItemUnknown: unknown,
+  ): ResultAsync<IStorageItem<Output>, SchemaMismatchError> => {
+    return this.parseStorageItem(storageItemUnknown).asyncAndThen((storageItem) =>
+      ResultAsync.fromPromise(this.migrate(storageItem), (err) => err as SchemaMismatchError).map(
+        (data) => ({
+          data,
+          metadata: storageItem.metadata,
+        }),
+      ),
+    );
+  };
 
   protected async migrate(storageItem: IStorageItem<Input>): Promise<Output> {
     const storageVersion = storageItem.metadata.version;
@@ -75,25 +87,22 @@ export class BaseStorageSchema<
     return this.parseData(storageItem.data);
   }
 
-  protected parseStorageItem(storageItem: unknown): IStorageItem<Input> {
-    try {
-      return (
-        z
-          .object({
-            data: z.unknown(),
-            metadata: storageMetadata,
-          })
-          .strict()
-          // force casting required due to the bug in zod
-          // https://github.com/colinhacks/zod/issues/493
-          .parse(storageItem) as IStorageItem<Input>
-      );
-    } catch (error) {
+  protected parseStorageItem = Result.fromThrowable(
+    (storageItem: unknown) =>
+      z
+        .object({
+          data: z.unknown(),
+          metadata: storageMetadata,
+        })
+        .strict()
+        // force casting required due to the bug in zod
+        // https://github.com/colinhacks/zod/issues/493
+        .parse(storageItem) as IStorageItem<Input>,
+    (error) => {
       assertError(error);
-
-      throw new SchemaMismatchError(this.key, error.message);
-    }
-  }
+      return new SchemaMismatchError(this.key, error.message);
+    },
+  );
 
   protected parseData(data: Input): Output {
     try {

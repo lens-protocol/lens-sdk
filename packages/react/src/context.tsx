@@ -1,85 +1,58 @@
 import type { PublicClient, SessionClient } from '@lens-protocol/client';
-import type { AuthenticatedUser } from '@lens-protocol/client';
 import { invariant } from '@lens-protocol/types';
-import React, { type ReactNode, useContext, useEffect, useState } from 'react';
+import React, { type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { Provider as UrqlProvider } from 'urql';
 
+import type { AnyClient } from '@lens-protocol/client';
 import { ReadResult, type SuspenseResult } from './helpers';
 
 /**
  * @internal
  */
-export type UnknownSession = {
-  resolved: false;
-  client: PublicClient;
-  user: undefined;
+export type SessionState = {
+  resolved: boolean;
+  client: AnyClient;
 };
-
-/**
- * @internal
- */
-export type AuthenticatedSession = {
-  resolved: true;
-  client: SessionClient;
-  user: AuthenticatedUser;
-};
-/**
- * @internal
- */
-export type UnauthenticatedSession = {
-  resolved: true;
-  client: PublicClient;
-  user: undefined;
-};
-/**
- * @internal
- */
-export type ResolvedSessionState = AuthenticatedSession | UnauthenticatedSession;
-/**
- * @internal
- */
-export type SessionState = AuthenticatedSession | UnauthenticatedSession | UnknownSession;
 
 /**
  * @internal
  */
 export type LensContextValue = {
-  client: PublicClient;
-  session: SessionState;
-  resumeSession: () => Promise<ResolvedSessionState>;
+  state: SessionState;
+  resume: () => Promise<SessionState>;
+  afterLogin: (sessionClient: SessionClient) => Promise<void>;
+  afterLogout: () => Promise<void>;
 };
 
-function useLensContextValue(client: PublicClient): LensContextValue {
-  const [session, setSession] = useState<SessionState>({
+function useCreateLensContextValue(publicClient: PublicClient): LensContextValue {
+  const [state, setState] = useState<SessionState>({
     resolved: false,
-    client,
-    user: undefined,
+    client: publicClient,
   });
 
   return {
-    client,
-    session,
-    resumeSession: async () => {
-      const result = await client.resumeSession();
+    state,
 
-      const session = await result
-        .asyncMap(
-          async (sessionClient) =>
-            ({
-              resolved: true,
-              client: sessionClient,
-              user: (await sessionClient.getAuthenticatedUser())._unsafeUnwrap(),
-            }) as const,
-        )
-        .unwrapOr({
-          resolved: true,
-          client,
-          user: undefined,
-        } as const);
+    resume: useCallback(async () => {
+      const result = await publicClient.resumeSession();
 
-      setSession(session);
-      return session;
-    },
+      const newState = {
+        resolved: true,
+        client: result.isOk() ? result.value : publicClient,
+      } as const;
+
+      setState(newState);
+
+      return newState;
+    }, [publicClient]),
+
+    afterLogin: useCallback(async (sessionClient) => {
+      setState({ resolved: true, client: sessionClient });
+    }, []),
+
+    afterLogout: useCallback(async () => {
+      setState({ resolved: true, client: publicClient });
+    }, [publicClient]),
   };
 }
 
@@ -94,11 +67,11 @@ type LensContextProviderProps = {
  * @internal
  */
 export function LensContextProvider({ children, client }: LensContextProviderProps) {
-  const value = useLensContextValue(client);
+  const value = useCreateLensContextValue(client);
 
   return (
     <LensContext.Provider value={value}>
-      <UrqlProvider value={value.session.client.urql}>{children}</UrqlProvider>
+      <UrqlProvider value={value.state.client.urql}>{children}</UrqlProvider>
     </LensContext.Provider>
   );
 }
@@ -129,27 +102,28 @@ export type UseSessionStateArgs = {
  */
 export function useSessionState({
   suspense,
-}: UseSessionStateArgs): ReadResult<ResolvedSessionState> | SuspenseResult<ResolvedSessionState> {
-  const { session, resumeSession } = useLensContext();
-  const [output, setOutput] = useState<ReadResult<ResolvedSessionState>>(
-    session.resolved ? ReadResult.Success(session) : ReadResult.Initial(),
+}: UseSessionStateArgs): ReadResult<AnyClient> | SuspenseResult<AnyClient> {
+  const { state, resume } = useLensContext();
+  const [output, setOutput] = useState<ReadResult<AnyClient>>(
+    state.resolved ? ReadResult.Success(state.client) : ReadResult.Initial(),
   );
 
   useEffect(() => {
-    // If the session is already known, don't do anything.
-    if (session.resolved) {
+    // If the session is already known, just update the output.
+    if (state.resolved) {
+      setOutput(ReadResult.Success(state.client));
       return;
     }
 
-    resumeSession().then((value) => setOutput(ReadResult.Success(value)));
-  }, [resumeSession, session]);
+    resume().then((value) => setOutput(ReadResult.Success(value.client)));
+  }, [resume, state]);
 
   // Handle suspense
-  if (suspense && session.resolved === false) {
+  if (suspense && state.resolved === false) {
     // The effect above won't run when we suspend.
 
     // Suspends with a ResultAsync which is a Promise-like object.
-    throw resumeSession();
+    throw resume();
   }
 
   return output;

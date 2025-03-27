@@ -7,12 +7,13 @@ import type {
 } from '@lens-protocol/graphql';
 import { AuthenticateMutation, ChallengeMutation, RefreshMutation } from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
-import { createCredentialsStorage } from '@lens-protocol/storage';
 import {
+  type Result,
   ResultAsync,
   type TxHash,
   errAsync,
   invariant,
+  ok,
   okAsync,
   signatureFrom,
 } from '@lens-protocol/types';
@@ -29,6 +30,7 @@ import {
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type Logger, getLogger } from 'loglevel';
 
+import { CredentialsStorage } from '@lens-protocol/storage';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
 import type { ClientConfig } from './config';
@@ -79,13 +81,14 @@ abstract class AbstractClient<TContext extends Context, TError> {
 
   protected readonly logger: Logger;
 
-  protected readonly credentials: IStorage<Credentials>;
-
-  protected constructor(public readonly context: TContext) {
-    this.credentials = createCredentialsStorage(context.storage, context.environment.name);
-
+  protected constructor(
+    /**
+     * @internal
+     */
+    public readonly context: TContext,
+  ) {
     this.logger = getLogger(this.constructor.name);
-    this.logger.setLevel(context.debug ? 'DEBUG' : 'SILENT');
+    this.logger.setLevel(context.debug ? 'DEBUG' : 'SILENT', false);
 
     this.urql = createClient({
       url: context.environment.backend,
@@ -148,7 +151,7 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
   UnexpectedError
 > {
   /**
-   * The current session client.
+   *  The current session client.
    *
    * This could be the {@link PublicClient} itself if the user is not authenticated, or a {@link SessionClient} if the user is authenticated.
    */
@@ -191,10 +194,9 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
         }
         return AuthenticationError.from(result.reason).asResultAsync();
       })
-      .map(async (tokens) => {
-        await this.credentials.set(tokens);
-        return new SessionClient(this);
-      });
+      .andThen((tokens) => this.createCredentialsStorage().set(tokens))
+      .map((storage) => new SessionClient(storage, this))
+      .mapErr((err) => UnexpectedError.from(err));
   }
 
   /**
@@ -234,13 +236,16 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
    *
    * @returns The session client if available.
    */
-  resumeSession(): ResultAsync<SessionClient<TContext>, UnauthenticatedError> {
-    return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials) => {
-      if (!credentials) {
-        return new UnauthenticatedError('No credentials found').asResultAsync();
-      }
-      return okAsync(new SessionClient(this));
-    });
+  resumeSession(): ResultAsync<SessionClient<TContext>, UnauthenticatedError | UnexpectedError> {
+    return this.createCredentialsStorage()
+      .resume()
+      .mapErr((err) => UnexpectedError.from(err))
+      .andThen((storage) => {
+        if (storage.get() === null) {
+          return new UnauthenticatedError('No credentials found').asResult();
+        }
+        return ok(new SessionClient(storage, this));
+      });
   }
 
   /**
@@ -284,6 +289,10 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
   ): ResultAsync<TValue, UnexpectedError> {
     return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
   }
+
+  private createCredentialsStorage(): IStorage<Credentials> {
+    return CredentialsStorage.from(this.context.storage, this.context.environment.name);
+  }
 }
 
 /**
@@ -299,7 +308,10 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
     return this._parent;
   }
 
-  constructor(private readonly _parent: PublicClient<TContext>) {
+  constructor(
+    private readonly storage: IStorage<Credentials>,
+    private readonly _parent: PublicClient<TContext>,
+  ) {
     super(_parent.context);
     _parent.currentSession = this;
   }
@@ -309,22 +321,27 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
    *
    * @internal
    */
-  getCredentials(): ResultAsync<Credentials | null, UnexpectedError> {
-    return ResultAsync.fromPromise(this.credentials.get(), (err) => UnexpectedError.from(err));
+  getCredentials(): Result<Credentials | null, UnexpectedError> {
+    try {
+      const credentials = this.storage.get();
+      return ok(credentials);
+    } catch (cause) {
+      return UnexpectedError.from(cause).asResult();
+    }
   }
 
   /**
    * The AuthenticatedUser associated with the current session.
    */
-  getAuthenticatedUser(): ResultAsync<AuthenticatedUser, UnexpectedError> {
+  getAuthenticatedUser(): Result<AuthenticatedUser, UnexpectedError> {
     return this.getCredentials().andThen((credentials) => {
       if (!credentials) {
-        return UnexpectedError.from('No credentials found').asResultAsync();
+        return UnexpectedError.from('No credentials found').asResult();
       }
 
       const claims = decodeIdToken(credentials.idToken);
       if (claims.isErr()) {
-        return claims.error.asResultAsync();
+        return claims.error.asResult();
       }
 
       return authenticatedUser(claims.value);
@@ -336,9 +353,9 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
    */
   logout(): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
     return this.getAuthenticatedUser()
-      .andThen(({ authenticationId }) => revokeAuthentication(this, { authenticationId }))
+      .asyncAndThen(({ authenticationId }) => revokeAuthentication(this, { authenticationId }))
       .andTee(() =>
-        ResultAsync.fromPromise(this.credentials.reset(), (err) => UnexpectedError.from(err)),
+        ResultAsync.fromPromise(this.storage.reset(), (err) => UnexpectedError.from(err)),
       );
   }
 
@@ -377,10 +394,9 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
         }
         return AuthenticationError.from(result.reason).asResultAsync();
       })
-      .map(async (tokens) => {
-        await this.credentials.set(tokens);
-        return new SessionClient(this.parent);
-      });
+      .andThen((tokens) => this.storage.set(tokens))
+      .map((storage) => new SessionClient(storage, this.parent))
+      .mapErr((err) => UnexpectedError.from(err));
   }
 
   /**
@@ -471,10 +487,10 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
     return [
       authExchange(async (utils): Promise<AuthConfig> => {
         let exp = 0;
-        let credentials = await this.getCredentials()
+        let credentials = this.getCredentials()
           .andTee(async (value) => {
             if (value) {
-              await decodeAccessToken(value.accessToken).andTee((claims) => {
+              decodeAccessToken(value.accessToken).andTee((claims) => {
                 exp = claims.exp;
               });
             }
@@ -517,7 +533,7 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
                   await decodeAccessToken(credentials.accessToken).andTee((claims) => {
                     exp = claims.exp;
                   });
-                  await this.credentials.set(result.data?.value);
+                  await this.storage.set(result.data?.value);
                   break;
 
                 case 'ForbiddenError':
