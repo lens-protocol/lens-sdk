@@ -65,7 +65,9 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * Create a Group
  *
  * ```ts
- * const result = await createGroup(sessionClient);
+ * const result = await createGroup(sessionClient, {
+ *   metadataUri: uri("lens://4f91..."),
+ * });
  * ```
  *
  * @param client - The session client for the authenticated Account.

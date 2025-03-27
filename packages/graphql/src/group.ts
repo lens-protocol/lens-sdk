@@ -324,52 +324,6 @@ export const UpdateGroupRulesMutation = graphql(
 );
 export type UpdateGroupRulesRequest = RequestOf<typeof UpdateGroupRulesMutation>;
 
-const AddGroupMembersResponseFragment = graphql(
-  `fragment AddGroupMembersResponse on AddGroupMembersResponse {
-    __typename
-    hash
-  }`,
-);
-export type AddGroupMembersResponse = FragmentOf<typeof AddGroupMembersResponseFragment>;
-
-const AddGroupMembersResultFragment = graphql(
-  `fragment AddGroupMembersResult on AddGroupMembersResult {
-    ...on AddGroupMembersResponse {
-      ...AddGroupMembersResponse
-    }
-    ...on GroupOperationValidationFailed {
-      ...GroupOperationValidationFailed
-    }
-    ...on SponsoredTransactionRequest {
-      ...SponsoredTransactionRequest
-    }
-    ...on SelfFundedTransactionRequest {
-      ...SelfFundedTransactionRequest
-    }
-    ...on TransactionWillFail {
-      ...TransactionWillFail
-    }
-  }`,
-  [
-    AddGroupMembersResponseFragment,
-    GroupOperationValidationFailedFragment,
-    SponsoredTransactionRequestFragment,
-    SelfFundedTransactionRequestFragment,
-    TransactionWillFailFragment,
-  ],
-);
-export type AddGroupMembersResult = FragmentOf<typeof AddGroupMembersResultFragment>;
-
-export const AddGroupMembersMutation = graphql(
-  `mutation AddGroupMembers($request: AddGroupMembersRequest!) {
-    value: addGroupMembers(request: $request) {
-      ...AddGroupMembersResult
-    }
-  }`,
-  [AddGroupMembersResultFragment],
-);
-export type AddGroupMembersRequest = RequestOf<typeof AddGroupMembersMutation>;
-
 const ApproveGroupMembershipRequestsResponseFragment = graphql(
   `fragment ApproveGroupMembershipRequestsResponse on ApproveGroupMembershipRequestsResponse {
     __typename

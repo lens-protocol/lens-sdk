@@ -4,12 +4,16 @@ import { chains } from '@lens-chain/sdk/viem';
 import { StorageClient, immutable, walletOnly } from '@lens-chain/storage-client';
 import { type TextOnlyMetadata, textOnly } from '@lens-protocol/metadata';
 import { type URI, evmAddress, uuid } from '@lens-protocol/types';
-import type { AccessToken } from '@lens-protocol/types';
-import type { Account, Transport, WalletClient } from 'viem';
-import { http, createWalletClient } from 'viem';
+import { type AccessToken, ResultAsync, type TxHash } from '@lens-protocol/types';
+import {
+  http,
+  type WalletClient,
+  createPublicClient as createViemPublicClient,
+  createWalletClient,
+} from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { GraphQLErrorCode, PublicClient, Role, local, staging, testnet } from '.';
+import { GraphQLErrorCode, PublicClient, Role, UnexpectedError, local, staging, testnet } from '.';
 import { type AccessTokenClaims, ROLE_CLAIM, SPONSORED_CLAIM } from './tokens';
 
 export const CHAIN = chains.testnet;
@@ -26,12 +30,12 @@ export const environment =
       ? staging
       : testnet;
 
-export const wallet: WalletClient<Transport, chains.LensChain, Account> = createWalletClient({
+export const wallet: WalletClient = createWalletClient({
   account: signer,
   chain: CHAIN,
   transport: http(),
 });
-export const TEST_SIGNER = evmAddress(wallet.account.address);
+export const TEST_SIGNER = evmAddress(signer.address);
 
 export function createPublicClient() {
   return PublicClient.create({
@@ -130,4 +134,15 @@ export function mockAccessToken(claims: Partial<AccessTokenClaims>): AccessToken
   };
 
   return createFakeJwt(defaultClaims) as AccessToken;
+}
+
+export function waitForTransactionReceipt(hash: TxHash): ResultAsync<void, UnexpectedError> {
+  const publicClient = createViemPublicClient({
+    chain: CHAIN,
+    transport: http(),
+  });
+
+  return ResultAsync.fromPromise(publicClient.waitForTransactionReceipt({ hash }), (err) =>
+    UnexpectedError.from(err),
+  ).map(() => undefined);
 }

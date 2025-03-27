@@ -43,10 +43,9 @@ export const RecipientPercentFragment = graphql(
 );
 export type RecipientPercent = FragmentOf<typeof RecipientPercentFragment>;
 
-export const SimpleCollectActionFragment = graphql(
-  `fragment SimpleCollectAction on SimpleCollectAction {
+export const PayToCollectConfigFragment = graphql(
+  `fragment PayToCollectConfig on PayToCollectConfig {
     __typename
-    address
     amount {
       ...Erc20Amount
     }
@@ -54,6 +53,18 @@ export const SimpleCollectActionFragment = graphql(
       ...RecipientPercent
     }
     referralShare
+  }`,
+  [Erc20AmountFragment, RecipientPercentFragment],
+);
+export type PayToCollectConfig = FragmentOf<typeof PayToCollectConfigFragment>;
+
+export const SimpleCollectActionFragment = graphql(
+  `fragment SimpleCollectAction on SimpleCollectAction {
+    __typename
+    address
+    payToCollect {
+      ...PayToCollectConfig
+    }
     collectLimit
     followerOnGraph {
       ...FollowerOn
@@ -62,7 +73,7 @@ export const SimpleCollectActionFragment = graphql(
     isImmutable
     collectNftAddress
   }`,
-  [Erc20AmountFragment, RecipientPercentFragment, FollowerOnFragment],
+  [PayToCollectConfigFragment, FollowerOnFragment],
 );
 export type SimpleCollectAction = FragmentOf<typeof SimpleCollectActionFragment>;
 
