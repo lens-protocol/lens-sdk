@@ -5,5 +5,5 @@ export * from './invariant';
 export * from './never';
 export * from './refinements';
 export * from './result';
-export * from './throws';
+export * from './fail';
 export * from './typeguards';
