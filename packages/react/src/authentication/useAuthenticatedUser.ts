@@ -43,7 +43,7 @@ export function useAuthenticatedUser(
   args: { suspense: boolean } = { suspense: false },
 ): ReadResult<AuthenticatedUser | null> | SuspenseResult<AuthenticatedUser | null> {
   const result = useSessionState(args);
-  console.log(result);
+
   if (result.data) {
     return {
       ...result,

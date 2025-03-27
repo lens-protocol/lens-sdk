@@ -608,6 +608,6 @@ export const GroupFragment = graphql(
       ...LoggedInGroupOperations
     }
   }`,
-  [GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment, FeedFragment],
+  [FeedFragment, GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
 );
 export type Group = FragmentOf<typeof GroupFragment>;

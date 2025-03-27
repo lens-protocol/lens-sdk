@@ -5,7 +5,7 @@ import {
   RefreshMutation,
   Role,
 } from '@lens-protocol/graphql';
-import { url, assertErr, assertOk, signatureFrom } from '@lens-protocol/types';
+import { url, assertErr, assertOk } from '@lens-protocol/types';
 import { HttpResponse, graphql, passthrough } from 'msw';
 import { setupServer } from 'msw/node';
 
@@ -42,7 +42,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
       const authenticated = await client.authenticate({
         id: challenge.value.id,
-        signature: signatureFrom(await wallet.signMessage({ message: challenge.value.text })),
+        signature: signMessageWith(wallet),
       });
 
       assertOk(authenticated);

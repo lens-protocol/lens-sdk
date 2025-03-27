@@ -11,7 +11,7 @@ import {
   okAsync,
   txHash,
 } from '@lens-protocol/types';
-import type { Account, Chain, Hash, Transport, WalletActions, WalletClient } from 'viem';
+import type { Account, CustomSource, Hash, Transport, WalletClient } from 'viem';
 import { sendTransaction as sendEip1559Transaction } from 'viem/actions';
 import { sendEip712Transaction } from 'viem/zksync';
 import type { SignMessage } from '../clients';
@@ -99,7 +99,13 @@ export const handleWith = handleOperationWith;
 
 /**
  * Sign an Ethereum message with the provided wallet client.
+ *
+ * @param signer - A WalletClient or a custom source (e.g., a viem's LocalAccount)
+ * @returns A function that signs a message.
  */
-export function signMessageWith(walletClient: WalletActions<Chain, Account>): SignMessage {
-  return (message: string) => walletClient.signMessage({ message });
+export function signMessageWith(signer: CustomSource | WalletClient): SignMessage {
+  if ('request' in signer) {
+    invariant(hasHoistedAccount(signer), 'Expected a WalletClient with a hoisted account.');
+  }
+  return (message: string) => signer.signMessage({ message });
 }
