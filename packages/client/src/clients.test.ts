@@ -22,6 +22,7 @@ import {
   createGraphQLErrorObject,
   createPublicClient,
   mockAccessToken,
+  signer,
   wallet,
 } from './test-utils';
 import { delay } from './utils';
@@ -43,7 +44,9 @@ describe(`Given an instance of the '${PublicClient.name}'`, () => {
 
       const authenticated = await client.authenticate({
         id: challenge.value.id,
-        signature: signMessageWith(wallet),
+        signature: await signer.signMessage({
+          message: challenge.value.text,
+        }),
       });
 
       assertOk(authenticated);
