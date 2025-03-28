@@ -18,7 +18,8 @@ export const LoggedInUsernameOperationsFragment = graphql(
   }`,
   [NamespaceOperationValidationOutcomeFragment],
 );
-export type LoggedInUsernameOperations = FragmentOf<typeof LoggedInUsernameOperationsFragment>;
+export interface LoggedInUsernameOperations
+  extends FragmentOf<typeof LoggedInUsernameOperationsFragment> {}
 
 export const UsernameFragment = graphql(
   `fragment Username on Username {

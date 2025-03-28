@@ -375,7 +375,7 @@ export const LoggedInPostOperationsFragment = graphql(
     SimpleCollectValidationOutcomeFragment,
   ],
 );
-export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
+export interface LoggedInPostOperations extends FragmentOf<typeof LoggedInPostOperationsFragment> {}
 
 export const MentionReplaceFragment = graphql(
   `fragment MentionReplace on MentionReplace {
@@ -477,7 +477,7 @@ export const NftMetadataFragment = graphql(
   }`,
   [MarketplaceMetadataAttributeFragment],
 );
-export type NftMetadata = FragmentOf<typeof NftMetadataFragment>;
+export interface NftMetadata extends FragmentOf<typeof NftMetadataFragment> {}
 
 export const PostGroupInfoFragment = graphql(
   `fragment PostGroupInfo on PostGroupInfo {
@@ -489,7 +489,7 @@ export const PostGroupInfoFragment = graphql(
   }`,
   [GroupMetadataFragment],
 );
-export type PostGroupInfo = FragmentOf<typeof PostGroupInfoFragment>;
+export interface PostGroupInfo extends FragmentOf<typeof PostGroupInfoFragment> {}
 
 export const PostFeedInfoFragment = graphql(
   `fragment PostFeedInfo on PostFeedInfo {
@@ -504,7 +504,7 @@ export const PostFeedInfoFragment = graphql(
   }`,
   [FeedMetadataFragment, PostGroupInfoFragment],
 );
-export type PostFeedInfo = FragmentOf<typeof PostFeedInfoFragment>;
+export interface PostFeedInfo extends FragmentOf<typeof PostFeedInfoFragment> {}
 
 const PostFieldsFragment = graphql(
   `fragment PostFields on Post {
@@ -557,13 +557,14 @@ const PostFieldsFragment = graphql(
 );
 export interface PostFields extends FragmentOf<typeof PostFieldsFragment> {}
 
-export type ReferencedPost = Prettify<
-  {
-    __typename: 'Post';
-    id: PostId;
-    author: Account;
-  } & PostFields
->;
+export interface ReferencedPost
+  extends Prettify<
+    {
+      __typename: 'Post';
+      id: PostId;
+      author: Account;
+    } & PostFields
+  > {}
 
 // mitigates error TS7056: The inferred type of this node exceeds the maximum length
 // the compiler will serialize. An explicit type annotation is needed.
@@ -601,7 +602,7 @@ export const PostFragment = graphql(
   }`,
   [AccountFragment, PostFieldsFragment, ReferencedPostFragment],
 );
-export type Post = FragmentOf<typeof PostFragment>;
+export interface Post extends FragmentOf<typeof PostFragment> {}
 
 export const RepostFragment = graphql(
   `fragment Repost on Repost {
@@ -622,7 +623,7 @@ export const RepostFragment = graphql(
   }`,
   [AppFragment, AccountFragment, PostFragment],
 );
-export type Repost = FragmentOf<typeof RepostFragment>;
+export interface Repost extends FragmentOf<typeof RepostFragment> {}
 
 export type AnyPost = Post | Repost;
 

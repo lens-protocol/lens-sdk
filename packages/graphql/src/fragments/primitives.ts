@@ -162,7 +162,8 @@ export const LoggedInFeedPostOperationsFragment = graphql(
   }`,
   [FeedOperationValidationOutcomeFragment],
 );
-export type LoggedInFeedPostOperations = FragmentOf<typeof LoggedInFeedPostOperationsFragment>;
+export interface LoggedInFeedPostOperations
+  extends FragmentOf<typeof LoggedInFeedPostOperationsFragment> {}
 
 export const FeedRulesFragment = graphql(
   `fragment FeedRules on FeedRules {
@@ -389,9 +390,8 @@ export const LoggedInUsernameNamespaceOperationsFragment = graphql(
   }`,
   [NamespaceOperationValidationOutcomeFragment],
 );
-export type LoggedInUsernameNamespaceOperations = FragmentOf<
-  typeof LoggedInUsernameNamespaceOperationsFragment
->;
+export interface LoggedInUsernameNamespaceOperations
+  extends FragmentOf<typeof LoggedInUsernameNamespaceOperationsFragment> {}
 
 const UsernameNamespaceStatsFragment = graphql(
   `fragment UsernameNamespaceStats on UsernameNamespaceStats {
@@ -580,7 +580,8 @@ export const LoggedInGroupOperationsFragment = graphql(
   }`,
   [GroupOperationValidationOutcomeFragment],
 );
-export type LoggedInGroupOperations = FragmentOf<typeof LoggedInGroupOperationsFragment>;
+export interface LoggedInGroupOperations
+  extends FragmentOf<typeof LoggedInGroupOperationsFragment> {}
 
 export const GroupFragment = graphql(
   `fragment Group on Group {
@@ -605,4 +606,4 @@ export const GroupFragment = graphql(
   }`,
   [FeedFragment, GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
 );
-export type Group = FragmentOf<typeof GroupFragment>;
+export interface Group extends FragmentOf<typeof GroupFragment> {}
