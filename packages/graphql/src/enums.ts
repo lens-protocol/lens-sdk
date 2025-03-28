@@ -977,12 +977,18 @@ export enum AppUsersOrderBy {
   BestMatch = 'BEST_MATCH',
 }
 
+/**
+ * Enum for IndexingStatus.
+ */
 export enum IndexingStatus {
   Finished = 'FINISHED',
   Pending = 'PENDING',
   Failed = 'FAILED',
 }
 
+/**
+ * Enum for SponsorshipRateLimitWindow.
+ */
 export enum SponsorshipRateLimitWindow {
   Hour = 'HOUR',
   Day = 'DAY',
@@ -990,24 +996,37 @@ export enum SponsorshipRateLimitWindow {
   Month = 'MONTH',
 }
 
+/**
+ * Enum for SponsorshipsOrderBy.
+ *
+ */
 export enum SponsorshipsOrderBy {
   LatestFirst = 'LATEST_FIRST',
   OldestFirst = 'OLDEST_FIRST',
   Alphabetical = 'ALPHABETICAL',
 }
 
+/**
+ * Enum for SponsorshipSignersOrderBy.
+ */
 export enum SponsorshipSignersOrderBy {
   LatestFirst = 'LATEST_FIRST',
   OldestFirst = 'OLDEST_FIRST',
   Alphabetical = 'ALPHABETICAL',
 }
 
+/**
+ * Enum for SponsorshipLimitExclusionsOrderBy.
+ */
 export enum SponsorshipLimitExclusionsOrderBy {
   LatestFirst = 'LATEST_FIRST',
   OldestFirst = 'OLDEST_FIRST',
   Alphabetical = 'ALPHABETICAL',
 }
 
+/**
+ * Enum for FeedRuleUnsatisfiedReason.
+ */
 export enum FeedRuleUnsatisfiedReason {
   GroupGatedNotAMember = 'GROUP_GATED_NOT_A_MEMBER',
   TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
@@ -1015,6 +1034,9 @@ export enum FeedRuleUnsatisfiedReason {
   SimplePaymentNotEnoughBalance = 'SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
 }
 
+/**
+ * Enum for GroupRuleUnsatisfiedReason.
+ */
 export enum GroupRuleUnsatisfiedReason {
   TokenGatedAccountJoiningNotATokenHolder = 'TOKEN_GATED_ACCOUNT_JOINING_NOT_A_TOKEN_HOLDER',
   TokenGatedAccountRemovalStillTokenHolder = 'TOKEN_GATED_ACCOUNT_REMOVAL_STILL_TOKEN_HOLDER',
@@ -1022,6 +1044,9 @@ export enum GroupRuleUnsatisfiedReason {
   MembershipApprovalRequired = 'MEMBERSHIP_APPROVAL_REQUIRED',
 }
 
+/**
+ * Enum for NamespaceRuleUnsatisfiedReason.
+ */
 export enum NamespaceRuleUnsatisfiedReason {
   TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
   UsernameLengthNotWithinRange = 'USERNAME_LENGTH_NOT_WITHIN_RANGE',
@@ -1030,6 +1055,9 @@ export enum NamespaceRuleUnsatisfiedReason {
   UsernamePricePerLengthNotEnoughBalance = 'USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE',
 }
 
+/**
+ * Enum for PostRuleUnsatisfiedReason.
+ */
 export enum PostRuleUnsatisfiedReason {
   PostNotAFollower = 'POST_NOT_A_FOLLOWER',
   FeedGroupGatedNotAMember = 'FEED_GROUP_GATED_NOT_A_MEMBER',
@@ -1038,6 +1066,9 @@ export enum PostRuleUnsatisfiedReason {
   FeedSimplePaymentNotEnoughBalance = 'FEED_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
 }
 
+/**
+ * Enum for AccountFollowRuleUnsatisfiedReason.
+ */
 export enum AccountFollowRuleUnsatisfiedReason {
   GraphTokenGatedNotATokenHolder = 'GRAPH_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
   GraphAccountBlocked = 'GRAPH_ACCOUNT_BLOCKED',
@@ -1046,6 +1077,9 @@ export enum AccountFollowRuleUnsatisfiedReason {
   FollowTokenGatedNotATokenHolder = 'FOLLOW_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
 }
 
+/**
+ * Enum for FeedRuleType.
+ */
 export enum FeedRuleType {
   TokenGated = 'TOKEN_GATED',
   RestrictedSigners = 'RESTRICTED_SIGNERS',
@@ -1055,17 +1089,26 @@ export enum FeedRuleType {
   Unknown = 'UNKNOWN',
 }
 
+/**
+ * Enum for PostRuleType.
+ */
 export enum PostRuleType {
   FollowersOnly = 'FOLLOWERS_ONLY',
   Unknown = 'UNKNOWN',
 }
 
+/**
+ * Enum for AccountFollowRuleType.
+ */
 export enum AccountFollowRuleType {
   TokenGated = 'TOKEN_GATED',
   SimplePayment = 'SIMPLE_PAYMENT',
   Unknown = 'UNKNOWN',
 }
 
+/**
+ * Enum for GraphRuleType.
+ */
 export enum GraphRuleType {
   TokenGated = 'TOKEN_GATED',
   AccountBlocking = 'ACCOUNT_BLOCKING',
@@ -1073,6 +1116,9 @@ export enum GraphRuleType {
   Unknown = 'UNKNOWN',
 }
 
+/**
+ * Enum for FeedRuleExecuteOn.
+ */
 export enum FeedRuleExecuteOn {
   CreatingPost = 'CREATING_POST',
   EditingPost = 'EDITING_POST',
@@ -1080,6 +1126,9 @@ export enum FeedRuleExecuteOn {
   ChangingPostRule = 'CHANGING_POST_RULE',
 }
 
+/**
+ * Enum for GroupRuleExecuteOn.
+ */
 export enum GroupRuleExecuteOn {
   Adding = 'ADDING',
   Removing = 'REMOVING',
@@ -1087,6 +1136,9 @@ export enum GroupRuleExecuteOn {
   Leaving = 'LEAVING',
 }
 
+/**
+ * Enum for GroupRuleType.
+ */
 export enum GroupRuleType {
   TokenGated = 'TOKEN_GATED',
   SimplePayment = 'SIMPLE_PAYMENT',
@@ -1095,6 +1147,9 @@ export enum GroupRuleType {
   Unknown = 'UNKNOWN',
 }
 
+/**
+ * Enum for NamespaceRuleExecuteOn.
+ */
 export enum NamespaceRuleExecuteOn {
   Creating = 'CREATING',
   Removing = 'REMOVING',
@@ -1102,6 +1157,9 @@ export enum NamespaceRuleExecuteOn {
   Unassigning = 'UNASSIGNING',
 }
 
+/**
+ * Enum for NamespaceRuleType.
+ */
 export enum NamespaceRuleType {
   TokenGated = 'TOKEN_GATED',
   PricePerLength = 'PRICE_PER_LENGTH',
@@ -1111,23 +1169,35 @@ export enum NamespaceRuleType {
   Unknown = 'UNKNOWN',
 }
 
+/**
+ * Enum for PostRuleExecuteOn.
+ */
 export enum PostRuleExecuteOn {
   CreatingPost = 'CREATING_POST',
   EditingPost = 'EDITING_POST',
 }
 
+/**
+ * Enum for GraphRuleExecuteOn.
+ */
 export enum GraphRuleExecuteOn {
   Following = 'FOLLOWING',
   Unfollowing = 'UNFOLLOWING',
   ChangingFollowRules = 'CHANGING_FOLLOW_RULES',
 }
 
+/**
+ * Enum for MarketplaceMetadataAttributeType.
+ */
 export enum MarketplaceMetadataAttributeType {
   Number = 'NUMBER',
   String = 'STRING',
   Date = 'DATE',
 }
 
+/**
+ * Enum for SimpleCollectValidationFailedReason.
+ */
 export enum SimpleCollectValidationFailedReason {
   NotEnabled = 'NOT_ENABLED',
   EndDateReached = 'END_DATE_REACHED',
@@ -1137,6 +1207,9 @@ export enum SimpleCollectValidationFailedReason {
   PostDeleted = 'POST_DELETED',
 }
 
+/**
+ * Enum for FrameVerifySignatureResult.
+ */
 export enum FrameVerifySignatureResult {
   Verified = 'VERIFIED',
   PostDoesntExist = 'POST_DOESNT_EXIST',
@@ -1149,4 +1222,12 @@ export enum FrameVerifySignatureResult {
   SignatureNotValid = 'SIGNATURE_NOT_VALID',
   DeadlineExpired = 'DEADLINE_EXPIRED',
   SignerAddressCannotUseAccount = 'SIGNER_ADDRESS_CANNOT_USE_ACCOUNT',
+}
+
+/**
+ * Enum for AccountActionType.
+ */
+export enum AccountActionType {
+  Tipping = 'TIPPING',
+  Unknown = 'UNKNOWN',
 }

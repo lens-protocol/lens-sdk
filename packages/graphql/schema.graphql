@@ -7839,6 +7839,7 @@ type UsernameNamespace {
   namespace: String!
   createdAt: DateTime!
   metadata: UsernameNamespaceMetadata
+  collectionMetadata: UsernameNamespaceMetadataStandard
   owner: EvmAddress!
   stats: UsernameNamespaceStats!
   rules: NamespaceRules!
@@ -7860,6 +7861,48 @@ type UsernameNamespaceMetadata {
   Use a UUID if unsure.
   """
   id: String!
+}
+
+type UsernameNamespaceMetadataStandard {
+  """
+  A URI pointing to a resource with mime type image/* that represents the contract, displayed
+  as a banner image for the contract.
+  """
+  bannerImage: URI
+
+  """
+  An array of Ethereum addresses representing collaborators (authorized editors) of the
+  contract.
+  """
+  collaborators: [EvmAddress!]!
+
+  """The description of the contract."""
+  description: String
+
+  """The external link of the contract."""
+  externalLink: URI
+
+  """
+  A URI pointing to a resource with mime type image/* that represents the featured image for
+  the contract, typically used for a highlight section.
+  """
+  featuredImage: URI
+
+  """
+  A URI pointing to a resource with mime type image/* that represents the contract, typically
+  displayed as a profile picture for the contract.
+  """
+  image: URI
+
+  """The name of the contract."""
+  name: String!
+  schema: String!
+
+  """A cryptographic signature of the Lens metadata."""
+  signature: Signature
+
+  """The symbol of the contract."""
+  symbol: String
 }
 
 type UsernameNamespaceStats {
