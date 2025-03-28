@@ -402,6 +402,25 @@ const UsernameNamespaceStatsFragment = graphql(
 );
 export type UsernameNamespaceStats = FragmentOf<typeof UsernameNamespaceStatsFragment>;
 
+const UsernameNamespaceMetadataStandardFragment = graphql(
+  `fragment UsernameNamespaceMetadataStandard on UsernameNamespaceMetadataStandard {
+    __typename
+    bannerImage
+    collaborators
+    description
+    externalLink
+    featuredImage
+    image
+    name
+    schema
+    signature
+    symbol
+  }`,
+);
+export type UsernameNamespaceMetadataStandard = FragmentOf<
+  typeof UsernameNamespaceMetadataStandardFragment
+>;
+
 export const UsernameNamespaceFragment = graphql(
   `fragment UsernameNamespace on UsernameNamespace {
     __typename
@@ -412,7 +431,7 @@ export const UsernameNamespaceFragment = graphql(
       ...UsernameNamespaceMetadata
     }
     collectionMetadata {
-      ...NftMetadata
+      ...UsernameNamespaceMetadataStandard
     }
     owner
     rules {
@@ -427,7 +446,7 @@ export const UsernameNamespaceFragment = graphql(
   }`,
   [
     UsernameNamespaceMetadataFragment,
-    NftMetadataFragment,
+    UsernameNamespaceMetadataStandardFragment,
     NamespaceRulesFragment,
     LoggedInUsernameNamespaceOperationsFragment,
     UsernameNamespaceStatsFragment,
