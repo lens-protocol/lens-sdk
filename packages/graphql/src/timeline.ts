@@ -19,9 +19,8 @@ export type TimelineItem = Prettify<{
 
 // mitigates error TS7056: The inferred type of this node exceeds the maximum length
 // the compiler will serialize. An explicit type annotation is needed.
-const TimelineItemFragment: FragmentDocumentFor<TimelineItem, 'TimelineItem', 'TimelineItem'> =
-  graphql(
-    `fragment TimelineItem on TimelineItem {
+const TimelineItemFragment: FragmentDocumentFor<TimelineItem> = graphql(
+  `fragment TimelineItem on TimelineItem {
     __typename
     id
     primary {
@@ -34,8 +33,8 @@ const TimelineItemFragment: FragmentDocumentFor<TimelineItem, 'TimelineItem', 'T
       ...Repost
     }
   }`,
-    [PostFragment, RepostFragment],
-  );
+  [PostFragment, RepostFragment],
+);
 
 export const TimelineQuery = graphql(
   `query Timeline($request: TimelineRequest!) {

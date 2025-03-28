@@ -1,11 +1,18 @@
-import type { FragmentOf } from 'gql.tada';
-import { graphql } from '../graphql';
+import { type FragmentDocumentFor, graphql } from '../graphql';
 
-export const PaginatedResultInfoFragment = graphql(
+export type PaginatedResultInfo = {
+  __typename: 'PaginatedResultInfo';
+  prev: string | null;
+  next: string | null;
+};
+
+export const PaginatedResultInfoFragment: FragmentDocumentFor<
+  PaginatedResultInfo,
+  'PaginatedResultInfo'
+> = graphql(
   `fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
     prev
     next
   }`,
 );
-export type PaginatedResultInfo = FragmentOf<typeof PaginatedResultInfoFragment>;
