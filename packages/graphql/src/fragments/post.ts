@@ -624,7 +624,9 @@ export const RepostFragment = graphql(
 );
 export type Repost = FragmentOf<typeof RepostFragment>;
 
-export const AnyPostFragment = graphql(
+export type AnyPost = Post | Repost;
+
+export const AnyPostFragment: FragmentDocumentFor<AnyPost, 'AnyPost'> = graphql(
   `fragment AnyPost on AnyPost {
     ...on Post {
       ...Post
@@ -636,7 +638,6 @@ export const AnyPostFragment = graphql(
   }`,
   [PostFragment, RepostFragment],
 );
-export type AnyPost = FragmentOf<typeof AnyPostFragment>;
 
 export const PostReactionFragment = graphql(
   `fragment PostReaction on PostReaction {
