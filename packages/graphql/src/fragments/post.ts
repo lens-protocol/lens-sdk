@@ -622,7 +622,7 @@ export interface Repost {
   slug: PostId;
   isDeleted: boolean;
   timestamp: DateTime;
-  app: App;
+  app?: App | null;
   author: Account;
   repostOf: Post;
 }
