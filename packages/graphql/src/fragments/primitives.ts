@@ -423,9 +423,8 @@ const UsernameNamespaceMetadataStandardFragment = graphql(
     symbol
   }`,
 );
-export type UsernameNamespaceMetadataStandard = FragmentOf<
-  typeof UsernameNamespaceMetadataStandardFragment
->;
+export interface UsernameNamespaceMetadataStandard
+  extends FragmentOf<typeof UsernameNamespaceMetadataStandardFragment> {}
 
 export const UsernameNamespaceFragment = graphql(
   `fragment UsernameNamespace on UsernameNamespace {
