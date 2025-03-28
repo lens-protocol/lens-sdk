@@ -413,7 +413,6 @@ const UsernameNamespaceMetadataStandardFragment = graphql(
     image
     name
     schema
-    signature
     symbol
   }`,
 );
