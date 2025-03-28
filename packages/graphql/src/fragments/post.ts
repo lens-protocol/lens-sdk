@@ -1,4 +1,4 @@
-import type { PostId, Prettify } from '@lens-protocol/types';
+import type { DateTime, PostId, Prettify } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
 import { type FragmentDocumentFor, graphql } from '../graphql';
 import { type Account, AccountFragment } from './account';
@@ -27,6 +27,7 @@ import {
   VideoMetadataFragment,
 } from './metadata';
 import {
+  type App,
   AppFragment,
   FeedMetadataFragment,
   type FeedRule,
@@ -581,7 +582,19 @@ export const ReferencedPostFragment: FragmentDocumentFor<ReferencedPost, 'Post',
     [AccountFragment, PostFieldsFragment],
   );
 
-export const PostFragment = graphql(
+export interface Post
+  extends Prettify<
+    {
+      __typename: 'Post';
+      id: PostId;
+      author: Account;
+      root?: ReferencedPost | null;
+      quoteOf?: ReferencedPost | null;
+      commentOn?: ReferencedPost | null;
+    } & PostFields
+  > {}
+
+export const PostFragment: FragmentDocumentFor<Post> = graphql(
   `fragment Post on Post {
     __typename
     id
@@ -602,9 +615,19 @@ export const PostFragment = graphql(
   }`,
   [AccountFragment, PostFieldsFragment, ReferencedPostFragment],
 );
-export interface Post extends FragmentOf<typeof PostFragment> {}
 
-export const RepostFragment = graphql(
+export interface Repost {
+  __typename: 'Repost';
+  id: PostId;
+  slug: PostId;
+  isDeleted: boolean;
+  timestamp: DateTime;
+  app: App;
+  author: Account;
+  repostOf: Post;
+}
+
+export const RepostFragment: FragmentDocumentFor<Repost, 'Repost'> = graphql(
   `fragment Repost on Repost {
     __typename
     id
@@ -623,7 +646,6 @@ export const RepostFragment = graphql(
   }`,
   [AppFragment, AccountFragment, PostFragment],
 );
-export interface Repost extends FragmentOf<typeof RepostFragment> {}
 
 export type AnyPost = Post | Repost;
 
