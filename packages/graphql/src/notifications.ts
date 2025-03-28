@@ -456,7 +456,7 @@ export type Notification =
   | QuoteNotification
   | MentionNotification;
 
-const NotificationFragment: FragmentDocumentFor<Notification> = graphql(
+const NotificationFragment: FragmentDocumentFor<Notification, 'Notification'> = graphql(
   `fragment Notification on Notification {
     __typename
     ... on AccountActionExecutedNotification {
