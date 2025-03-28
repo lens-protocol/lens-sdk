@@ -13,6 +13,7 @@ import {
   type TxHash,
   errAsync,
   invariant,
+  never,
   ok,
   okAsync,
   signatureFrom,
@@ -525,7 +526,7 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
           refreshAuth: async () => {
             const result = await utils.mutate(RefreshMutation, {
               request: {
-                refreshToken: credentials?.refreshToken,
+                refreshToken: credentials?.refreshToken ?? never('Missing refresh token'),
               },
             });
 
