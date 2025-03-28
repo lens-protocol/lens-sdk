@@ -147,11 +147,11 @@ export class FragmentResolver {
       for (const definition of fragment.definitions) {
         invariant(
           definition.kind === 'FragmentDefinition',
-          `FragmentResolver: expected a fragment definition, got ${fragment.definitions[0]?.kind}`,
+          `expected a fragment definition, got ${fragment.definitions[0]?.kind}`,
         );
         invariant(
           !fragments.has(definition.name.value),
-          `FragmentResolver: duplicate fragment name "${definition.name.value}"`,
+          `Duplicate fragment detected. A fragment named "${definition.name.value}" has already been provided, either directly or as part of another fragment document.`,
         );
         fragments.set(definition.name.value, definition);
       }

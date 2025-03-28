@@ -52,8 +52,10 @@ describe(`Given an instance of the '${FragmentResolver.name}' helper`, () => {
         }`,
       );
 
-      expect(() => FragmentResolver.from([AccountFragment, PostFieldsFragment])).toThrow(
-        'FragmentResolver: duplicate fragment name "Account',
+      expect(() =>
+        FragmentResolver.from([AccountFragment, PostFieldsFragment]),
+      ).toThrowErrorMatchingInlineSnapshot(
+        `[InvariantError: Duplicate fragment detected. A fragment named "Account" has already been provided, either directly or as part of another fragment document.]`,
       );
     });
   });
