@@ -15,12 +15,18 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./test-utils": {
+      "import": "./dist/test-utils.js",
+      "require": "./dist/test-utils.cjs",
+      "types": "./dist/test-utils.d.cts"
     }
   },
   "typesVersions": {
     "*": {
       "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
+      "require": ["./dist/index.d.cts"],
+      "test-utils": ["./dist/test-utils.d.ts"]
     }
   },
   "files": ["dist"],
@@ -33,8 +39,7 @@
     "gql:download:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
     "gql:download:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
     "gql:generate": "gql-tada generate output",
-    "gql:turbo": "gql-tada turbo",
-    "prebuild": "pnpm run gql:turbo"
+    "gql:turbo": "gql-tada turbo"
   },
   "dependencies": {
     "@lens-protocol/types": "workspace:*",

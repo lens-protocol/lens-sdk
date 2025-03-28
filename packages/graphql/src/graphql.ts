@@ -108,6 +108,8 @@ import type {
 import type { introspection } from './graphql-env';
 import type { ServerAPIKey } from './scalars';
 
+export type { FragmentOf } from 'gql.tada';
+
 export const graphql = initGraphQLTada<{
   disableMasking: true;
   introspection: introspection;
@@ -247,9 +249,16 @@ type GetDocumentNode<
 > = ReturnType<typeof graphql<In, Fragments>>;
 
 /**
+ * Used in unions to future-proof against new types being added.
+ *
+ * ⚠️ DO NOT MATCH ON THIS — it's here to block exhaustive checks.
+ */
+export type __FutureProofUnion = { __typename: string };
+
+/**
  * @internal
  */
-export type AnySelectionSet = Record<string, unknown>;
+export type AnySelectionSet = object;
 
 /**
  * @internal

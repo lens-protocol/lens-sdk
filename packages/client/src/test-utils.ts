@@ -2,9 +2,14 @@
 
 import { chains } from '@lens-chain/sdk/viem';
 import { StorageClient, immutable, walletOnly } from '@lens-chain/storage-client';
+import { Role } from '@lens-protocol/graphql';
+import { schema } from '@lens-protocol/graphql/test-utils';
 import { type TextOnlyMetadata, textOnly } from '@lens-protocol/metadata';
 import { type URI, evmAddress, uuid } from '@lens-protocol/types';
 import { type AccessToken, ResultAsync, type TxHash } from '@lens-protocol/types';
+import type { TypedDocumentNode } from '@urql/core';
+import { validate } from 'graphql';
+import type { ValidationRule } from 'graphql/validation/ValidationContext';
 import {
   http,
   type WalletClient,
@@ -12,8 +17,18 @@ import {
   createWalletClient,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
+import { expect } from 'vitest';
 
-import { GraphQLErrorCode, PublicClient, Role, UnexpectedError, local, staging, testnet } from '.';
+import {
+  type AnyVariables,
+  type ClientConfig,
+  GraphQLErrorCode,
+  PublicClient,
+  UnexpectedError,
+  local,
+  staging,
+  testnet,
+} from '.';
 import { type AccessTokenClaims, ROLE_CLAIM, SPONSORED_CLAIM } from './tokens';
 
 export const CHAIN = chains.testnet;
@@ -37,10 +52,11 @@ export const wallet: WalletClient = createWalletClient({
 });
 export const TEST_SIGNER = evmAddress(signer.address);
 
-export function createPublicClient() {
+export function createPublicClient(config: Partial<ClientConfig> = {}) {
   return PublicClient.create({
     environment,
     origin: 'http://example.com',
+    ...config,
   });
 }
 
@@ -145,4 +161,11 @@ export function waitForTransactionReceipt(hash: TxHash): ResultAsync<void, Unexp
   return ResultAsync.fromPromise(publicClient.waitForTransactionReceipt({ hash }), (err) =>
     UnexpectedError.from(err),
   ).map(() => undefined);
+}
+
+export function assertTypedDocumentSatisfies<TResult, TVariables extends AnyVariables>(
+  document: TypedDocumentNode<TResult, TVariables>,
+  rules: ReadonlyArray<ValidationRule>,
+) {
+  expect(validate(schema, document, rules)).toEqual([]);
 }

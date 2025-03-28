@@ -15,5 +15,5 @@
     }
   },
   "include": ["**/*.ts"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules", "examples"]
 }

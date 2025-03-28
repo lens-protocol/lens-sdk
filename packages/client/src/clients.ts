@@ -13,6 +13,7 @@ import {
   type TxHash,
   errAsync,
   invariant,
+  never,
   ok,
   okAsync,
   signatureFrom,
@@ -121,7 +122,8 @@ abstract class AbstractClient<TContext extends Context, TError> {
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
   ): ResultAsync<TValue, TError | UnexpectedError> {
-    return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
+    const mutation = this.context.fragments.replaceFrom(document);
+    return this.resultFrom(this.urql.mutation(mutation, variables)).map(takeValue);
   }
 
   protected exchanges(): Exchange[] {
@@ -273,7 +275,8 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
   ): ResultAsync<TValue, UnexpectedError> {
-    return this.resultFrom(this.urql.query(document, variables)).map(takeValue);
+    const query = this.context.fragments.replaceFrom(document);
+    return this.resultFrom(this.urql.query(query, variables)).map(takeValue);
   }
 
   /**
@@ -417,7 +420,8 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
   ): ResultAsync<TValue, UnauthenticatedError | UnexpectedError> {
-    return this.resultFrom(this.urql.query(document, variables))
+    const query = this.context.fragments.replaceFrom(document);
+    return this.resultFrom(this.urql.query(query, variables))
       .andThen(this.handleAuthentication)
       .map(takeValue);
   }
@@ -435,7 +439,8 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
   ): ResultAsync<TValue, UnauthenticatedError | UnexpectedError> {
-    return this.resultFrom(this.urql.mutation(document, variables))
+    const mutation = this.context.fragments.replaceFrom(document);
+    return this.resultFrom(this.urql.mutation(mutation, variables))
       .andThen(this.handleAuthentication)
       .map(takeValue);
   }
@@ -521,7 +526,7 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
           refreshAuth: async () => {
             const result = await utils.mutate(RefreshMutation, {
               request: {
-                refreshToken: credentials?.refreshToken,
+                refreshToken: credentials?.refreshToken ?? never('Missing refresh token'),
               },
             });
 

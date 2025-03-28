@@ -65,6 +65,9 @@ importers:
       '@urql/exchange-auth':
         specifier: ^2.2.0
         version: 2.2.0(@urql/core@5.0.8(graphql@16.9.0))
+      graphql:
+        specifier: ^16.9.0
+        version: 16.9.0
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0

@@ -144,7 +144,8 @@ export const LoggedInAccountOperationsFragment = graphql(
   }`,
   [AccountFollowOperationValidationOutcomeFragment],
 );
-export type LoggedInAccountOperations = FragmentOf<typeof LoggedInAccountOperationsFragment>;
+export interface LoggedInAccountOperations
+  extends FragmentOf<typeof LoggedInAccountOperationsFragment> {}
 
 export const AccountMetadataFragment = graphql(
   `fragment AccountMetadata on AccountMetadata {
@@ -160,7 +161,7 @@ export const AccountMetadataFragment = graphql(
   }`,
   [MetadataAttributeFragment],
 );
-export type AccountMetadata = FragmentOf<typeof AccountMetadataFragment>;
+export interface AccountMetadata extends FragmentOf<typeof AccountMetadataFragment> {}
 
 export const AccountFollowRulesFragment = graphql(
   `fragment AccountFollowRules on AccountFollowRules {
@@ -244,7 +245,7 @@ export const AccountFragment = graphql(
     AccountActionFragment,
   ],
 );
-export type Account = FragmentOf<typeof AccountFragment>;
+export interface Account extends FragmentOf<typeof AccountFragment> {}
 
 const AccountManagerPermissionsFragment = graphql(
   `fragment AccountManagerPermissions on AccountManagerPermissions {

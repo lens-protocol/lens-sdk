@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { graphql } from '../graphql';
+import { type FragmentDocumentFor, graphql } from '../graphql';
 import { AnyKeyValueFragment } from './common';
 
 export const AppMetadataFragment = graphql(
@@ -16,7 +16,7 @@ export const AppMetadataFragment = graphql(
     url
   }`,
 );
-export type AppMetadata = FragmentOf<typeof AppMetadataFragment>;
+export interface AppMetadata extends FragmentOf<typeof AppMetadataFragment> {}
 
 export const AppFragment = graphql(
   `fragment App on App {
@@ -37,7 +37,7 @@ export const AppFragment = graphql(
   }`,
   [AppMetadataFragment],
 );
-export type App = FragmentOf<typeof AppFragment>;
+export interface App extends FragmentOf<typeof AppFragment> {}
 
 export const FeedMetadataFragment = graphql(
   `fragment FeedMetadata on FeedMetadata {
@@ -47,7 +47,7 @@ export const FeedMetadataFragment = graphql(
     name
   }`,
 );
-export type FeedMetadata = FragmentOf<typeof FeedMetadataFragment>;
+export interface FeedMetadata extends FragmentOf<typeof FeedMetadataFragment> {}
 
 export const FeedOperationValidationPassedFragment = graphql(
   `fragment FeedOperationValidationPassed on FeedOperationValidationPassed {
@@ -128,7 +128,15 @@ export type FeedOperationValidationFailed = FragmentOf<
   typeof FeedOperationValidationFailedFragment
 >;
 
-export const FeedOperationValidationOutcomeFragment = graphql(
+export type FeedOperationValidationOutcome =
+  | FeedOperationValidationPassed
+  | FeedOperationValidationUnknown
+  | FeedOperationValidationFailed;
+
+export const FeedOperationValidationOutcomeFragment: FragmentDocumentFor<
+  FeedOperationValidationOutcome,
+  'FeedOperationValidationOutcome'
+> = graphql(
   `fragment FeedOperationValidationOutcome on FeedOperationValidationOutcome {
     __typename
     ... on FeedOperationValidationPassed {
@@ -147,10 +155,6 @@ export const FeedOperationValidationOutcomeFragment = graphql(
     FeedOperationValidationFailedFragment,
   ],
 );
-export type FeedOperationValidationOutcome =
-  | FeedOperationValidationPassed
-  | FeedOperationValidationUnknown
-  | FeedOperationValidationFailed;
 
 export const LoggedInFeedPostOperationsFragment = graphql(
   `fragment LoggedInFeedPostOperations on LoggedInFeedPostOperations {
@@ -162,7 +166,8 @@ export const LoggedInFeedPostOperationsFragment = graphql(
   }`,
   [FeedOperationValidationOutcomeFragment],
 );
-export type LoggedInFeedPostOperations = FragmentOf<typeof LoggedInFeedPostOperationsFragment>;
+export interface LoggedInFeedPostOperations
+  extends FragmentOf<typeof LoggedInFeedPostOperationsFragment> {}
 
 export const FeedRulesFragment = graphql(
   `fragment FeedRules on FeedRules {
@@ -196,7 +201,7 @@ export const FeedFragment = graphql(
   }`,
   [FeedMetadataFragment, LoggedInFeedPostOperationsFragment, FeedRulesFragment],
 );
-export type Feed = FragmentOf<typeof FeedFragment>;
+export interface Feed extends FragmentOf<typeof FeedFragment> {}
 
 export const GraphMetadataFragment = graphql(
   `fragment GraphMetadata on GraphMetadata {
@@ -206,7 +211,7 @@ export const GraphMetadataFragment = graphql(
       name
   }`,
 );
-export type GraphMetadata = FragmentOf<typeof GraphMetadataFragment>;
+export interface GraphMetadata extends FragmentOf<typeof GraphMetadataFragment> {}
 
 export const GraphRuleFragment = graphql(
   `fragment GraphRule on GraphRule {
@@ -252,7 +257,7 @@ export const GraphFragment = graphql(
   }`,
   [GraphMetadataFragment, GraphRulesFragment],
 );
-export type Graph = FragmentOf<typeof GraphFragment>;
+export interface Graph extends FragmentOf<typeof GraphFragment> {}
 
 export const UsernameNamespaceMetadataFragment = graphql(
   `fragment UsernameNamespaceMetadata on UsernameNamespaceMetadata {
@@ -276,7 +281,7 @@ export const NamespaceRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export type NamespaceRule = FragmentOf<typeof NamespaceRuleFragment>;
+export interface NamespaceRule extends FragmentOf<typeof NamespaceRuleFragment> {}
 
 export const NamespaceRulesFragment = graphql(
   `fragment NamespaceRules on NamespaceRules {
@@ -355,7 +360,15 @@ export type NamespaceOperationValidationFailed = FragmentOf<
   typeof NamespaceOperationValidationFailedFragment
 >;
 
-export const NamespaceOperationValidationOutcomeFragment = graphql(
+export type NamespaceOperationValidationOutcome =
+  | NamespaceOperationValidationPassed
+  | NamespaceOperationValidationUnknown
+  | NamespaceOperationValidationFailed;
+
+export const NamespaceOperationValidationOutcomeFragment: FragmentDocumentFor<
+  NamespaceOperationValidationOutcome,
+  'NamespaceOperationValidationOutcome'
+> = graphql(
   `fragment NamespaceOperationValidationOutcome on NamespaceOperationValidationOutcome {
     __typename
     ... on NamespaceOperationValidationPassed {
@@ -374,10 +387,6 @@ export const NamespaceOperationValidationOutcomeFragment = graphql(
     NamespaceOperationValidationFailedFragment,
   ],
 );
-export type NamespaceOperationValidationOutcome =
-  | NamespaceOperationValidationPassed
-  | NamespaceOperationValidationUnknown
-  | NamespaceOperationValidationFailed;
 
 export const LoggedInUsernameNamespaceOperationsFragment = graphql(
   `fragment LoggedInUsernameNamespaceOperations on LoggedInUsernameNamespaceOperations {
@@ -389,9 +398,8 @@ export const LoggedInUsernameNamespaceOperationsFragment = graphql(
   }`,
   [NamespaceOperationValidationOutcomeFragment],
 );
-export type LoggedInUsernameNamespaceOperations = FragmentOf<
-  typeof LoggedInUsernameNamespaceOperationsFragment
->;
+export interface LoggedInUsernameNamespaceOperations
+  extends FragmentOf<typeof LoggedInUsernameNamespaceOperationsFragment> {}
 
 const UsernameNamespaceStatsFragment = graphql(
   `fragment UsernameNamespaceStats on UsernameNamespaceStats {
@@ -450,7 +458,7 @@ export const UsernameNamespaceFragment = graphql(
     UsernameNamespaceStatsFragment,
   ],
 );
-export type UsernameNamespace = FragmentOf<typeof UsernameNamespaceFragment>;
+export interface UsernameNamespace extends FragmentOf<typeof UsernameNamespaceFragment> {}
 
 export const GroupMetadataFragment = graphql(
   `fragment GroupMetadata on GroupMetadata {
@@ -462,7 +470,7 @@ export const GroupMetadataFragment = graphql(
       coverPicture
   }`,
 );
-export type GroupMetadata = FragmentOf<typeof GroupMetadataFragment>;
+export interface GroupMetadata extends FragmentOf<typeof GroupMetadataFragment> {}
 
 export const GroupRuleFragment = graphql(
   `fragment GroupRule on GroupRule {
@@ -557,7 +565,15 @@ export type GroupOperationValidationFailed = FragmentOf<
   typeof GroupOperationValidationFailedFragment
 >;
 
-export const GroupOperationValidationOutcomeFragment = graphql(
+export type GroupOperationValidationOutcome =
+  | GroupOperationValidationPassed
+  | GroupOperationValidationUnknown
+  | GroupOperationValidationFailed;
+
+export const GroupOperationValidationOutcomeFragment: FragmentDocumentFor<
+  GroupOperationValidationOutcome,
+  'GroupOperationValidationOutcome'
+> = graphql(
   `fragment GroupOperationValidationOutcome on GroupOperationValidationOutcome {
     __typename
     ... on GroupOperationValidationPassed {
@@ -576,10 +592,6 @@ export const GroupOperationValidationOutcomeFragment = graphql(
     GroupOperationValidationFailedFragment,
   ],
 );
-export type GroupOperationValidationOutcome =
-  | GroupOperationValidationPassed
-  | GroupOperationValidationUnknown
-  | GroupOperationValidationFailed;
 
 export const LoggedInGroupOperationsFragment = graphql(
   `fragment LoggedInGroupOperations on LoggedInGroupOperations {
@@ -602,7 +614,8 @@ export const LoggedInGroupOperationsFragment = graphql(
   }`,
   [GroupOperationValidationOutcomeFragment],
 );
-export type LoggedInGroupOperations = FragmentOf<typeof LoggedInGroupOperationsFragment>;
+export interface LoggedInGroupOperations
+  extends FragmentOf<typeof LoggedInGroupOperationsFragment> {}
 
 export const GroupFragment = graphql(
   `fragment Group on Group {
@@ -627,4 +640,4 @@ export const GroupFragment = graphql(
   }`,
   [FeedFragment, GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
 );
-export type Group = FragmentOf<typeof GroupFragment>;
+export interface Group extends FragmentOf<typeof GroupFragment> {}

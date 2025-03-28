@@ -1,4 +1,4 @@
-import type { PostId, Prettify } from '@lens-protocol/types';
+import type { DateTime, PostId, Prettify } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
 import { type FragmentDocumentFor, graphql } from '../graphql';
 import { type Account, AccountFragment } from './account';
@@ -27,6 +27,7 @@ import {
   VideoMetadataFragment,
 } from './metadata';
 import {
+  type App,
   AppFragment,
   FeedMetadataFragment,
   type FeedRule,
@@ -156,7 +157,9 @@ export const PostMetadataFragment = graphql(
     UnknownPostMetadataFragment,
   ],
 );
-export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
+// The following type is purposefully named so that a PostMetadata type can be defined
+// by the consumer's code as module augmentation.
+export type FullPostMetadata = FragmentOf<typeof PostMetadataFragment>;
 
 export const PostOperationValidationPassedFragment = graphql(
   `fragment PostOperationValidationPassed on PostOperationValidationPassed {
@@ -373,7 +376,7 @@ export const LoggedInPostOperationsFragment = graphql(
     SimpleCollectValidationOutcomeFragment,
   ],
 );
-export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
+export interface LoggedInPostOperations extends FragmentOf<typeof LoggedInPostOperationsFragment> {}
 
 export const MentionReplaceFragment = graphql(
   `fragment MentionReplace on MentionReplace {
@@ -475,7 +478,7 @@ export const NftMetadataFragment = graphql(
   }`,
   [MarketplaceMetadataAttributeFragment],
 );
-export type NftMetadata = FragmentOf<typeof NftMetadataFragment>;
+export interface NftMetadata extends FragmentOf<typeof NftMetadataFragment> {}
 
 export const PostGroupInfoFragment = graphql(
   `fragment PostGroupInfo on PostGroupInfo {
@@ -487,7 +490,7 @@ export const PostGroupInfoFragment = graphql(
   }`,
   [GroupMetadataFragment],
 );
-export type PostGroupInfo = FragmentOf<typeof PostGroupInfoFragment>;
+export interface PostGroupInfo extends FragmentOf<typeof PostGroupInfoFragment> {}
 
 export const PostFeedInfoFragment = graphql(
   `fragment PostFeedInfo on PostFeedInfo {
@@ -502,7 +505,7 @@ export const PostFeedInfoFragment = graphql(
   }`,
   [FeedMetadataFragment, PostGroupInfoFragment],
 );
-export type PostFeedInfo = FragmentOf<typeof PostFeedInfoFragment>;
+export interface PostFeedInfo extends FragmentOf<typeof PostFeedInfoFragment> {}
 
 const PostFieldsFragment = graphql(
   `fragment PostFields on Post {
@@ -553,14 +556,17 @@ const PostFieldsFragment = graphql(
     NftMetadataFragment,
   ],
 );
-export type PostFields = FragmentOf<typeof PostFieldsFragment>;
+export interface PostFields extends FragmentOf<typeof PostFieldsFragment> {}
 
-export type ReferencedPost = Prettify<
-  {
-    id: PostId;
-    author: Account;
-  } & PostFields
->;
+export interface ReferencedPost
+  extends Prettify<
+    {
+      __typename: 'Post';
+      id: PostId;
+      author: Account;
+    } & PostFields
+  > {}
+
 // mitigates error TS7056: The inferred type of this node exceeds the maximum length
 // the compiler will serialize. An explicit type annotation is needed.
 export const ReferencedPostFragment: FragmentDocumentFor<ReferencedPost, 'Post', 'ReferencedPost'> =
@@ -576,7 +582,19 @@ export const ReferencedPostFragment: FragmentDocumentFor<ReferencedPost, 'Post',
     [AccountFragment, PostFieldsFragment],
   );
 
-export const PostFragment = graphql(
+export interface Post
+  extends Prettify<
+    {
+      __typename: 'Post';
+      id: PostId;
+      author: Account;
+      root?: ReferencedPost | null;
+      quoteOf?: ReferencedPost | null;
+      commentOn?: ReferencedPost | null;
+    } & PostFields
+  > {}
+
+export const PostFragment: FragmentDocumentFor<Post> = graphql(
   `fragment Post on Post {
     __typename
     id
@@ -594,13 +612,22 @@ export const PostFragment = graphql(
     commentOn {
       ...ReferencedPost
     }
-  }
-  `,
+  }`,
   [AccountFragment, PostFieldsFragment, ReferencedPostFragment],
 );
-export type Post = FragmentOf<typeof PostFragment>;
 
-export const RepostFragment = graphql(
+export interface Repost {
+  __typename: 'Repost';
+  id: PostId;
+  slug: PostId;
+  isDeleted: boolean;
+  timestamp: DateTime;
+  app?: App | null;
+  author: Account;
+  repostOf: Post;
+}
+
+export const RepostFragment: FragmentDocumentFor<Repost, 'Repost'> = graphql(
   `fragment Repost on Repost {
     __typename
     id
@@ -619,9 +646,10 @@ export const RepostFragment = graphql(
   }`,
   [AppFragment, AccountFragment, PostFragment],
 );
-export type Repost = FragmentOf<typeof RepostFragment>;
 
-export const AnyPostFragment = graphql(
+export type AnyPost = Post | Repost;
+
+export const AnyPostFragment: FragmentDocumentFor<AnyPost, 'AnyPost'> = graphql(
   `fragment AnyPost on AnyPost {
     ...on Post {
       ...Post
@@ -633,7 +661,6 @@ export const AnyPostFragment = graphql(
   }`,
   [PostFragment, RepostFragment],
 );
-export type AnyPost = FragmentOf<typeof AnyPostFragment>;
 
 export const PostReactionFragment = graphql(
   `fragment PostReaction on PostReaction {
