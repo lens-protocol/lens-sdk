@@ -44,8 +44,19 @@ export const CreateGroupMutation = graphql(
 );
 export type CreateGroupRequest = RequestOf<typeof CreateGroupMutation>;
 
+const SetGroupMetadataResponseFragment = graphql(
+  `fragment SetGroupMetadataResponse on SetGroupMetadataResponse {
+    __typename
+    hash
+  }`,
+);
+export type SetGroupMetadataResponse = FragmentOf<typeof SetGroupMetadataResponseFragment>;
+
 const SetGroupMetadataResultFragment = graphql(
   `fragment SetGroupMetadataResult on SetGroupMetadataResult {
+    ...on SetGroupMetadataResponse {
+      ...SetGroupMetadataResponse
+    }
     ... on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -57,6 +68,7 @@ const SetGroupMetadataResultFragment = graphql(
     }
   }`,
   [
+    SetGroupMetadataResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
@@ -302,8 +314,19 @@ export const GroupBannedAccountsQuery = graphql(
 );
 export type GroupBannedAccountsRequest = RequestOf<typeof GroupBannedAccountsQuery>;
 
+export const UpdateGroupRulesResponseFragment = graphql(
+  `fragment UpdateGroupRulesResponse on UpdateGroupRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdateGroupRulesResponse = FragmentOf<typeof UpdateGroupRulesResponseFragment>;
+
 const UpdateGroupRulesResultFragment = graphql(
   `fragment UpdateGroupRulesResult on UpdateGroupRulesResult {
+    ...on UpdateGroupRulesResponse {
+      ...UpdateGroupRulesResponse
+    }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -315,6 +338,7 @@ const UpdateGroupRulesResultFragment = graphql(
     }
   }`,
   [
+    UpdateGroupRulesResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,

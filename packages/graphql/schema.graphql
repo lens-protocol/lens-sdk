@@ -3684,84 +3684,84 @@ type Mutation {
   """
   Create a new app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   createApp(request: CreateAppRequest!): CreateAppResult!
 
   """
   Add an app authorization endpoint.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   addAppAuthorizationEndpoint(request: AddAppAuthorizationEndpointRequest!): Void!
 
   """
   Remove an app authorization endpoint.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   removeAppAuthorizationEndpoint(request: RemoveAppAuthorizationEndpointRequest!): Void!
 
   """
   Add feeds to an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   addAppFeeds(request: AddAppFeedsRequest!): AddAppFeedsResult!
 
   """
   Add groups to an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   addAppGroups(request: AddAppGroupsRequest!): AddAppGroupsResult!
 
   """
   Add signers to an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   addAppSigners(request: AddAppSignersRequest!): AddAppSignersResult!
 
   """
   Remove feeds to an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   removeAppFeeds(request: RemoveAppFeedsRequest!): RemoveAppFeedsResult!
 
   """
   Remove groups to an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   removeAppGroups(request: RemoveAppGroupsRequest!): RemoveAppGroupsResult!
 
   """
   Remove signers to an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   removeAppSigners(request: RemoveAppSignersRequest!): RemoveAppSignersResult!
 
   """
   Set graph for an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setAppGraph(request: SetAppGraphRequest!): SetAppGraphResult!
 
   """
   Set default feed for an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setDefaultAppFeed(request: SetDefaultAppFeedRequest!): SetDefaultAppFeedResult!
 
   """
   Set metadata for an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setAppMetadata(request: SetAppMetadataRequest!): SetAppMetadataResult!
 
@@ -3770,35 +3770,35 @@ type Mutation {
   App needs to have authorization endpoint enabled
   App needs to return `verification_endpoint` from the authorization endpoint
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setAppVerification(request: SetAppVerificationRequest!): SetAppVerificationResult!
 
   """
   Set sponsorship for an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setAppSponsorship(request: SetAppSponsorshipRequest!): SetAppSponsorshipResult!
 
   """
   Set treasury for an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setAppTreasury(request: SetAppTreasuryRequest!): SetAppTreasuryResult!
 
   """
   Set username namespace for an app
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setAppUsernameNamespace(request: SetAppUsernameNamespaceRequest!): SetAppUsernameNamespaceResult!
 
   """
   Generate a new app server side api key
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   generateNewAppServerApiKey(request: GenerateNewAppServerApiKeyRequest!): ServerAPIKey!
 
@@ -4106,8 +4106,8 @@ type Mutation {
   """
   Configure the given post action for the given post.
   
-  You MUST be authenticated as the owner or manager of the account that authored this Post to
-  use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager of the Account
+  that authored this Post to use this mutation.
   """
   configurePostAction(request: ConfigurePostActionRequest!): ConfigurePostActionResult!
 
@@ -4122,8 +4122,8 @@ type Mutation {
   """
   Enable the given post action for the authenticated post.
   
-  You MUST be authenticated as the owner or manager of the account that authored this Post to
-  use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager of the Account
+  that authored this Post to use this mutation.
   """
   enablePostAction(request: EnablePostActionRequest!): EnablePostActionResult!
 
@@ -4165,14 +4165,14 @@ type Mutation {
   """
   Create a new graph
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   createGraph(request: CreateGraphRequest!): CreateGraphResult!
 
   """
   Update graph rules
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   updateGraphRules(request: UpdateGraphRulesRequest!): UpdateGraphRulesResult!
 
@@ -4237,21 +4237,27 @@ type Mutation {
   """
   Add admins to a graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Builder to use this mutation.
+  You MUST be authenticated as Builder, Account Manager, or Account Owner.
+  In case of Account Manager or Account Owner, the Lens Account needs to be the owner or an
+  admin of the primitive.
   """
   addAdmins(request: AddAdminsRequest!): AddAdminsResult!
 
   """
   Remove admins from a graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Builder to use this mutation.
+  You MUST be authenticated as Builder, Account Manager, or Account Owner.
+  In case of Account Manager or Account Owner, the Lens Account needs to be the owner or an
+  admin of the primitive.
   """
   removeAdmins(request: RemoveAdminsRequest!): RemoveAdminsResult!
 
   """
   Transfer primitive ownership for the graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Builder to use this mutation.
+  You MUST be authenticated as Builder, Account Manager, or Account Owner.
+  In case of Account Manager or Account Owner, the Lens Account needs to be the owner of the
+  primitive.
   """
   transferPrimitiveOwnership(request: TransferPrimitiveOwnershipRequest!): TransferPrimitiveOwnershipResult!
   mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
@@ -4267,7 +4273,7 @@ type Mutation {
   """
   Create a new feed
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   createFeed(request: CreateFeedRequest!): CreateFeedResult!
 
@@ -4281,7 +4287,7 @@ type Mutation {
   """
   Update feed rules
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   updateFeedRules(request: UpdateFeedRulesRequest!): UpdateFeedRulesResult!
 
@@ -4297,8 +4303,9 @@ type Mutation {
   """
   Update group rules
   
-  You MUST be authenticated as Account Owner or Account Manager or Builder to use this
-  mutation.
+  You MUST be authenticated as:
+  - Builder and be the owner/admin of the group
+  - Account Manager or Account Owner for a Lens Account that is the owner/admin of the group
   """
   updateGroupRules(request: UpdateGroupRulesRequest!): UpdateGroupRulesResult!
 
@@ -4319,7 +4326,9 @@ type Mutation {
   """
   Set metadata for a group
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as:
+  - Builder and be the owner/admin of the group
+  - Account Manager or Account Owner for a Lens Account that is the owner/admin of the group
   """
   setGroupMetadata(request: SetGroupMetadataRequest!): SetGroupMetadataResult!
 
@@ -4388,49 +4397,49 @@ type Mutation {
   """
   Create a new sponsorship.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   createSponsorship(request: CreateSponsorshipRequest!): CreateSponsorshipResult!
 
   """
   Pause a sponsorship.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   pauseSponsorship(request: PausingRequest!): PausingResult!
 
   """
   Unpause a sponsorship.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   unpauseSponsorship(request: PausingRequest!): PausingResult!
 
   """
   Set metadata for a sponsorship
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   setSponsorshipMetadata(request: SetSponsorshipMetadataRequest!): SetSponsorshipMetadataResult!
 
   """
   Update a sponsorship rate limits.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   updateSponsorshipLimits(request: UpdateSponsorshipLimitsRequest!): UpdateSponsorshipLimitsResult!
 
   """
   Update a sponsorship exclusion list from the rate limits.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   updateSponsorshipExclusionList(request: UpdateSponsorshipExclusionListRequest!): UpdateSponsorshipExclusionListResult!
 
   """
   Update a sponsorship signers list.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   updateSponsorshipSigners(request: UpdateSponsorshipSignersRequest!): UpdateSponsorshipSignersResult!
 }
@@ -5569,7 +5578,7 @@ type Query {
   """
   Get the server side API key for the app you must be the owner of the app to see it.
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated as a Builder to use this mutation.
   """
   appServerApiKey(request: AppServerApiKeyRequest!): String
 
@@ -6086,7 +6095,11 @@ input SetGroupMetadataRequest {
   metadataUri: String!
 }
 
-union SetGroupMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+type SetGroupMetadataResponse {
+  hash: TxHash!
+}
+
+union SetGroupMetadataResult = SetGroupMetadataResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input SetNamespaceMetadataRequest {
   """The namespace to update"""
@@ -7703,7 +7716,11 @@ input UpdateGroupRulesRequest {
   toRemove: [RuleId!]! = []
 }
 
-union UpdateGroupRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+type UpdateGroupRulesResponse {
+  hash: TxHash!
+}
+
+union UpdateGroupRulesResult = UpdateGroupRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateNamespaceRulesRequest {
   """The namespace to update rules for"""
@@ -7897,9 +7914,6 @@ type UsernameNamespaceMetadataStandard {
   """The name of the contract."""
   name: String!
   schema: String!
-
-  """A cryptographic signature of the Lens metadata."""
-  signature: Signature
 
   """The symbol of the contract."""
   symbol: String
