@@ -1,3 +1,13 @@
+input AccessControlRequest {
+  """The access control address"""
+  address: EvmAddress!
+}
+
+type AccessControlResult {
+  address: EvmAddress!
+  createdAt: DateTime!
+}
+
 scalar AccessToken
 
 type Account {
@@ -5645,6 +5655,9 @@ type Query {
 
   """Get admins for a graph/app/sponsor/feed/username/group address"""
   adminsFor(request: AdminsForRequest!): PaginatedAdminsResult!
+
+  """Get access control information"""
+  accessControl(request: AccessControlRequest!): AccessControlResult
 
   """
   Get account timeline.
