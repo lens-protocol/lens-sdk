@@ -933,6 +933,9 @@ input AppsFilter {
   """The optional filter to get apps linked to graph"""
   linkedToGraph: EvmAddress
 
+  """The optional filter to get apps linked to sponsorship"""
+  linkedToSponsorship: EvmAddress
+
   """
   The optional filter to narrow apps by search query.
   Uses fuzzy search on app name
