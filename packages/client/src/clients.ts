@@ -491,20 +491,13 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
   protected override exchanges(): Exchange[] {
     return [
       authExchange(async (utils): Promise<AuthConfig> => {
-        let exp = 0;
-        let credentials = this.getCredentials()
-          .andTee(async (value) => {
-            if (value) {
-              decodeAccessToken(value.accessToken).andTee((claims) => {
-                exp = claims.exp;
-              });
-            }
-          })
-          .unwrapOr(null);
-
         return {
           addAuthToOperation: (operation) => {
-            if (!credentials) return operation;
+            const credentials = this.getCredentials().unwrapOr(null);
+
+            if (!credentials) {
+              return operation;
+            }
 
             return utils.appendHeaders(operation, {
               Authorization: `Bearer ${credentials.accessToken}`,
@@ -512,7 +505,12 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
           },
 
           willAuthError: (_) => {
+            const credentials = this.getCredentials().unwrapOr(null);
+
             if (!credentials) return false;
+
+            const { exp } = decodeAccessToken(credentials.accessToken).unwrapOr({ exp: 0 });
+
             // Check if the token is about to expire in the next 30 seconds
             const tokenExpiryTime = exp * 1000;
             const currentTime = Date.now();
@@ -524,20 +522,17 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
           didAuthError: (error) => hasExtensionCode(error, GraphQLErrorCode.UNAUTHENTICATED),
 
           refreshAuth: async () => {
+            const credentials =
+              this.getCredentials().unwrapOr(null) ?? never('Missing refresh token');
             const result = await utils.mutate(RefreshMutation, {
               request: {
-                refreshToken: credentials?.refreshToken ?? never('Missing refresh token'),
+                refreshToken: credentials.refreshToken,
               },
             });
 
             if (result.data) {
               switch (result.data.value.__typename) {
                 case 'AuthenticationTokens':
-                  credentials = result.data?.value;
-
-                  await decodeAccessToken(credentials.accessToken).andTee((claims) => {
-                    exp = claims.exp;
-                  });
                   await this.storage.set(result.data?.value);
                   break;
 
