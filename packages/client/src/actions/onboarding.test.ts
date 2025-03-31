@@ -2,11 +2,12 @@ import { account } from '@lens-protocol/metadata';
 import { assertOk, never } from '@lens-protocol/types';
 import { describe, expect, it } from 'vitest';
 
-import { type Account, Role } from '@lens-protocol/graphql';
+import type { Account } from '@lens-protocol/graphql';
 import { uri } from '@lens-protocol/types';
 import { TEST_SIGNER, loginAsOnboardingUser, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
 import { createAccountWithUsername, fetchAccount } from './account';
+import { fetchMeDetails } from './authentication';
 
 const metadata = account({
   name: 'John Doe',
@@ -43,15 +44,21 @@ describe('Given an onboarding user', { timeout: 10000 }, () => {
             sessionClient.switchAccount({
               account: account?.address ?? never('Account not found'),
             }),
-          ),
+          )
+
+          // Ensure the switche account is what we expect
+          .andThen(() => fetchMeDetails(sessionClient)),
       );
       assertOk(result);
 
-      const user = await result.value.getAuthenticatedUser().unwrapOr(null);
-      expect(user).toMatchObject({
-        role: Role.AccountOwner,
-        address: newAccount!.address.toLowerCase(),
-        signer: TEST_SIGNER.toLowerCase(),
+      expect(result.value).toMatchObject({
+        loggedInAs: {
+          __typename: 'AccountOwned',
+          account: {
+            address: newAccount!.address,
+            owner: TEST_SIGNER,
+          },
+        },
       });
     });
   });
