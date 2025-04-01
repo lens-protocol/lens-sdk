@@ -63,7 +63,7 @@
     "loglevel": "^1.9.2"
   },
   "peerDependencies": {
-    "@lens-chain/sdk": "canary",
+    "@lens-chain/sdk": "^1.0.0",
     "ethers": "^6.13.4",
     "viem": "^2.21.53",
     "zksync-ethers": "^6.15.3"
@@ -83,7 +83,7 @@
     }
   },
   "devDependencies": {
-    "@lens-chain/sdk": "canary",
+    "@lens-chain/sdk": "^1.0.0",
     "@lens-chain/storage-client": "^1.0.2",
     "@lens-protocol/metadata": "^2.0.0",
     "ethers": "^6.13.4",

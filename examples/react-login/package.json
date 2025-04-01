@@ -8,7 +8,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@lens-chain/sdk": "canary",
+    "@lens-chain/sdk": "latest",
     "@lens-protocol/react": "canary",
     "@tanstack/react-query": "^5.63.0",
     "react": "^18.3.1",

@@ -6,7 +6,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@lens-chain/sdk": "canary",
+    "@lens-chain/sdk": "latest",
     "@lens-protocol/client": "canary",
     "@lens-protocol/metadata": "latest",
     "@lens-protocol/storage-node-client": "next",

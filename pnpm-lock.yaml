@@ -76,8 +76,8 @@ importers:
         version: 1.9.2
     devDependencies:
       '@lens-chain/sdk':
-        specifier: canary
-        version: 0.0.0-canary-20250304124140(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
+        specifier: ^1.0.0
+        version: 1.0.0(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-chain/storage-client':
         specifier: ^1.0.2
         version: 1.0.2
@@ -878,8 +878,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@lens-chain/sdk@0.0.0-canary-20250304124140':
-    resolution: {integrity: sha512-qVhqFSgW6hxXnOLzg93dhgmvNSlqGJqtg3ltQEhq/zvegpkgAKx1zNNeLZtXEy03ioOMaxJ7YQtVdtuZ2ksCRw==}
+  '@lens-chain/sdk@1.0.0':
+    resolution: {integrity: sha512-hbCV3LGoX0rNkjSzKYRrEw6QHfsuEOHMsEc0FEvVk3we5C+5kGN74HRRfDTEfhiC9Qx9k7lDfsUeDIXGymqDqg==}
     engines: {node: '>=18', pnpm: '>=9.1.2'}
     peerDependencies:
       ethers: ^6.12.1
@@ -3498,7 +3498,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lens-chain/sdk@0.0.0-canary-20250304124140(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
+  '@lens-chain/sdk@1.0.0(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
     optionalDependencies:
       ethers: 6.13.4
       viem: 2.22.4(typescript@5.7.2)(zod@3.23.8)
