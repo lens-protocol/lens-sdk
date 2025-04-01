@@ -1,4 +1,4 @@
-import { ResultAsync, errAsync, okAsync, txHash } from '@lens-protocol/types';
+import { ResultAsync, errAsync, nonNullable, okAsync, txHash } from '@lens-protocol/types';
 import type { TxHash } from '@lens-protocol/types';
 import type { Signer } from 'ethers';
 import { types } from 'zksync-ethers';
@@ -41,13 +41,19 @@ function signWith(
     });
 
     return ResultAsync.fromPromise(
-      signer.sendTransaction(tx).then((tx) => txHash(tx.hash)),
+      signer
+        .sendTransaction(tx)
+        .then((response) => response.wait())
+        .then((receipt) => txHash(nonNullable(receipt).hash)),
       (err) => SigningError.from(err),
     );
   }
   const { __typename, from, ...transactionLike } = request.raw;
   return ResultAsync.fromPromise(
-    signer.sendTransaction(transactionLike).then((tx) => txHash(tx.hash)),
+    signer
+      .sendTransaction(transactionLike)
+      .then((response) => response.wait())
+      .then((receipt) => txHash(nonNullable(receipt).hash)),
     (err) => SigningError.from(err),
   );
 }
