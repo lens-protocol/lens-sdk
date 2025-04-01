@@ -8,8 +8,8 @@
   "dependencies": {
     "@lens-chain/sdk": "canary",
     "@lens-protocol/client": "canary",
-    "@lens-protocol/metadata": "next",
-    "@lens-chain/storage-client": "next",
+    "@lens-protocol/metadata": "latest",
+    "@lens-chain/storage-client": "latest",
     "viem": "^2.21.55"
   },
   "devDependencies": {

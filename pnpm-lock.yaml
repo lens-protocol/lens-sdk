@@ -77,13 +77,13 @@ importers:
     devDependencies:
       '@lens-chain/sdk':
         specifier: canary
-        version: 0.0.0-canary-20250304104100(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
+        version: 0.0.0-canary-20250304124140(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-chain/storage-client':
         specifier: ^1.0.2
         version: 1.0.2
       '@lens-protocol/metadata':
-        specifier: next
-        version: 2.0.0-next.6(typescript@5.7.2)(zod@3.23.8)
+        specifier: ^2.0.0
+        version: 2.0.0(typescript@5.7.2)(zod@3.23.8)
       ethers:
         specifier: ^6.13.4
         version: 6.13.4
@@ -878,8 +878,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@lens-chain/sdk@0.0.0-canary-20250304104100':
-    resolution: {integrity: sha512-OSWd3fhplg8SJuExD78DBIwI9k95uwHjslQtgpjrmHvTB5LvqbxCEGnT57lus7drqmAGuE0yzpEo9rj+EsmCxg==}
+  '@lens-chain/sdk@0.0.0-canary-20250304124140':
+    resolution: {integrity: sha512-qVhqFSgW6hxXnOLzg93dhgmvNSlqGJqtg3ltQEhq/zvegpkgAKx1zNNeLZtXEy03ioOMaxJ7YQtVdtuZ2ksCRw==}
     engines: {node: '>=18', pnpm: '>=9.1.2'}
     peerDependencies:
       ethers: ^6.12.1
@@ -896,8 +896,8 @@ packages:
   '@lens-chain/storage-client@1.0.2':
     resolution: {integrity: sha512-D1jsobIDAejVpVIY7jiE26XjGDU965vKrd0unipLD64JXnYHtOxvuPH1KtIQKzjW+2sSANXkqj5qeY+CeKtPsA==}
 
-  '@lens-protocol/metadata@2.0.0-next.6':
-    resolution: {integrity: sha512-om7HYTdhpeWJLeQy+NNCOexYe1gPSnBPc5bR6EhLLs1YNhQmvWgQG/j92/283sQlMopo7Rsqk9KggUgdtEbHvg==}
+  '@lens-protocol/metadata@2.0.0':
+    resolution: {integrity: sha512-KLm9hQvPw8zCYOxnZFA02Cnzfrphbt6i1YIzAK5fBki1ZTMqAnlSoKxCesEXVjDd6m9MM6dd3neRxmvDGwer4Q==}
     engines: {node: '>=20'}
     peerDependencies:
       zod: ^3.22.3
@@ -3498,7 +3498,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lens-chain/sdk@0.0.0-canary-20250304104100(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
+  '@lens-chain/sdk@0.0.0-canary-20250304124140(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
     optionalDependencies:
       ethers: 6.13.4
       viem: 2.22.4(typescript@5.7.2)(zod@3.23.8)
@@ -3506,7 +3506,7 @@ snapshots:
 
   '@lens-chain/storage-client@1.0.2': {}
 
-  '@lens-protocol/metadata@2.0.0-next.6(typescript@5.7.2)(zod@3.23.8)':
+  '@lens-protocol/metadata@2.0.0(typescript@5.7.2)(zod@3.23.8)':
     dependencies:
       abitype: 1.0.8(typescript@5.7.2)(zod@3.23.8)
       json-stable-stringify: 1.1.1

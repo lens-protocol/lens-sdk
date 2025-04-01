@@ -9,7 +9,7 @@
     "@halliday-sdk/commerce": "^3.2.2",
     "@lens-chain/sdk": "canary",
     "@lens-protocol/client": "link:../../packages/client",
-    "@lens-protocol/metadata": "next",
+    "@lens-protocol/metadata": "latest",
     "@lens-protocol/storage-node-client": "next",
     "viem": "^2.21.55"
   },

@@ -8,7 +8,7 @@
   "dependencies": {
     "@lens-chain/sdk": "canary",
     "@lens-protocol/client": "canary",
-    "@lens-protocol/metadata": "next",
+    "@lens-protocol/metadata": "latest",
     "@lens-protocol/storage-node-client": "next",
     "@tanstack/react-query": "^5.66.8",
     "react": "^18.3.1",
