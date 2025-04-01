@@ -1479,7 +1479,7 @@ type CreateGroupResponse {
   hash: TxHash!
 }
 
-union CreateGroupResult = CreateGroupResponse | SelfFundedTransactionRequest | TransactionWillFail
+union CreateGroupResult = CreateGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type CreateNamespaceResponse {
   hash: TxHash!
@@ -2705,10 +2705,17 @@ input GroupFeedParams {
   Note: Group feed has GroupGated rule set by default
   """
   rules: FeedRulesConfigInput
+
+  """Whether replies are restricted to group members."""
+  repliesRestricted: Boolean! = true
 }
 
 input GroupGatedFeedRuleConfig {
+  """The group one must be a member of to post."""
   group: EvmAddress!
+
+  """Whether replies are restricted to group members."""
+  repliesRestricted: Boolean! = true
 }
 
 input GroupGatedGraphRuleConfig {

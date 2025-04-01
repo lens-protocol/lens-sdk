@@ -23,6 +23,9 @@ const CreateGroupResultFragment = graphql(
     ...on CreateGroupResponse {
       ...CreateGroupResponse
     }
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
@@ -30,7 +33,12 @@ const CreateGroupResultFragment = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateGroupResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+  [
+    CreateGroupResponseFragment,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type CreateGroupResult = FragmentOf<typeof CreateGroupResultFragment>;
 
