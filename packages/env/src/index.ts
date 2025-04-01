@@ -15,19 +15,12 @@ export type EnvironmentConfig = {
  *
  * Use this environment for the live instance of your application, involving real users, real accounts, and real data.
  */
-export const mainnet: EnvironmentConfig = new Proxy(
-  {
-    name: 'mainnet',
-    backend: url('https://example.com'),
-    indexingTimeout: 10000,
-    pollingInterval: 100,
-  },
-  {
-    get: (_target, _prop) => {
-      never('Mainnet is not supported at this time');
-    },
-  },
-);
+export const mainnet: EnvironmentConfig = {
+  name: 'mainnet',
+  backend: url('https://api.lens.dev/graphql'),
+  indexingTimeout: 10000,
+  pollingInterval: 100,
+};
 
 /**
  * The testnet environment configuration.
