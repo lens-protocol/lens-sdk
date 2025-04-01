@@ -12,8 +12,9 @@ import {
   txHash,
 } from '@lens-protocol/types';
 import type { Account, CustomSource, Hash, Transport, WalletClient } from 'viem';
-import { sendTransaction as sendEip1559Transaction } from 'viem/actions';
+import { sendTransaction as sendEip1559Transaction, waitForTransactionReceipt } from 'viem/actions';
 import { sendEip712Transaction } from 'viem/zksync';
+
 import type { SignMessage } from '../clients';
 import { SigningError, ValidationError } from '../errors';
 import { type OperationHandler, type OperationResult, isTransactionRequest } from '../types';
@@ -60,9 +61,11 @@ function sendTransactionWith(
   walletClient: WalletClient<Transport, chains.LensChain, Account>,
   request: SponsoredTransactionRequest | SelfFundedTransactionRequest,
 ): ResultAsync<TxHash, SigningError> {
-  return ResultAsync.fromPromise(sendTransaction(walletClient, request).then(txHash), (err) =>
+  return ResultAsync.fromPromise(sendTransaction(walletClient, request), (err) =>
     SigningError.from(err),
-  );
+  )
+    .map(async (hash) => waitForTransactionReceipt(walletClient, { hash }))
+    .map((receipt) => txHash(receipt.transactionHash));
 }
 
 /**

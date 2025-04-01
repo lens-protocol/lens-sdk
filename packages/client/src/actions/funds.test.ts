@@ -4,13 +4,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import type { Erc20Amount, NativeAmount } from '@lens-protocol/graphql';
 import { zeroAddress } from 'viem';
 import type { SessionClient } from '../clients';
-import {
-  CHAIN,
-  TEST_ERC20,
-  loginAsAccountOwner,
-  waitForTransactionReceipt,
-  wallet,
-} from '../test-utils';
+import { CHAIN, TEST_ERC20, loginAsAccountOwner, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
 import { deposit, fetchAccountBalances, unwrapTokens, withdraw, wrapTokens } from './funds';
 import { findErc20Amount, findNativeAmount } from './helpers';
@@ -112,9 +106,7 @@ describe('Given a Lens Account', () => {
 
           const result = await deposit(sessionClient, {
             native: bigDecimal(1),
-          })
-            .andThen(handleOperationWith(wallet))
-            .andThen(waitForTransactionReceipt);
+          }).andThen(handleOperationWith(wallet));
 
           assertOk(result);
           const [newNative] = await fetchBalances(sessionClient);
@@ -129,9 +121,7 @@ describe('Given a Lens Account', () => {
 
           const result = await wrapTokens(sessionClient, {
             amount: bigDecimal(1),
-          })
-            .andThen(handleOperationWith(wallet))
-            .andThen(waitForTransactionReceipt);
+          }).andThen(handleOperationWith(wallet));
 
           assertOk(result);
           const [newNative, newWrapped] = await fetchBalances(sessionClient);
@@ -150,9 +140,7 @@ describe('Given a Lens Account', () => {
               currency: TEST_ERC20,
               value: bigDecimal(1),
             },
-          })
-            .andThen(handleOperationWith(wallet))
-            .andThen(waitForTransactionReceipt);
+          }).andThen(handleOperationWith(wallet));
 
           assertOk(result);
           const [, newWrapped] = await fetchBalances(sessionClient);
@@ -169,9 +157,7 @@ describe('Given a Lens Account', () => {
               currency: TEST_ERC20,
               value: bigDecimal(1),
             },
-          })
-            .andThen(handleOperationWith(wallet))
-            .andThen(waitForTransactionReceipt);
+          }).andThen(handleOperationWith(wallet));
 
           assertOk(result);
           const [, newWrapped] = await fetchBalances(sessionClient);
@@ -186,9 +172,7 @@ describe('Given a Lens Account', () => {
 
           const result = await unwrapTokens(sessionClient, {
             amount: bigDecimal(1),
-          })
-            .andThen(handleOperationWith(wallet))
-            .andThen(waitForTransactionReceipt);
+          }).andThen(handleOperationWith(wallet));
 
           assertOk(result);
           const [newNative, newWrapped] = await fetchBalances(sessionClient);
@@ -204,9 +188,7 @@ describe('Given a Lens Account', () => {
 
           const result = await withdraw(sessionClient, {
             native: bigDecimal(1),
-          })
-            .andThen(handleOperationWith(wallet))
-            .andThen(waitForTransactionReceipt);
+          }).andThen(handleOperationWith(wallet));
 
           assertOk(result);
           const [newNative] = await fetchBalances(sessionClient);
