@@ -37,7 +37,7 @@ function signWith(
     const { __typename, from, customData, ...transactionLike } = request.raw;
     const tx: types.TransactionLike = types.Transaction.from({
       ...transactionLike,
-      ...nullableToOptional(customData),
+      customData: customData ? { ...nullableToOptional(customData) } : null,
     });
 
     return ResultAsync.fromPromise(
