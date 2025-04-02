@@ -23,7 +23,7 @@ const CreateGroupResultFragment = graphql(
     ...on CreateGroupResponse {
       ...CreateGroupResponse
     }
-    ... on SponsoredTransactionRequest {
+    ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
     ...on SelfFundedTransactionRequest {

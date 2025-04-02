@@ -249,9 +249,11 @@ export type AccountActionExecuted =
   | TippingAccountActionExecuted
   | UnknownAccountActionExecuted;
 
-export const AccountActionExecutedFragment: FragmentDocumentFor<AccountActionExecuted> = graphql(
+export const AccountActionExecutedFragment: FragmentDocumentFor<
+  AccountActionExecuted,
+  'AccountActionExecuted'
+> = graphql(
   `fragment AccountActionExecuted on AccountActionExecuted {
-    __typename
     ... on TippingAccountActionExecuted{
       ...TippingAccountActionExecuted
     }
@@ -274,7 +276,6 @@ export const AccountActionExecutedNotificationFragment: FragmentDocumentFor<Acco
       __typename
       id
       actions {
-        __typename
         ...AccountActionExecuted
       }
     }`,
@@ -401,7 +402,10 @@ export type PostActionExecuted =
   | TippingPostActionExecuted
   | UnknownPostActionExecuted;
 
-export const PostActionExecutedFragment: FragmentDocumentFor<PostActionExecuted> = graphql(
+export const PostActionExecutedFragment: FragmentDocumentFor<
+  PostActionExecuted,
+  'PostActionExecuted'
+> = graphql(
   `fragment PostActionExecuted on PostActionExecuted {
     ... on SimpleCollectPostActionExecuted {
       ...SimpleCollectPostActionExecuted
@@ -436,7 +440,6 @@ const PostActionExecutedNotificationFragment: FragmentDocumentFor<PostActionExec
         ...ReferencedPost
       }
       actions{
-        __typename
         ...PostActionExecuted
       }
     }`,
