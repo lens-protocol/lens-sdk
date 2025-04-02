@@ -17,7 +17,7 @@ export type EnvironmentConfig = {
  */
 export const mainnet: EnvironmentConfig = {
   name: 'mainnet',
-  backend: url('https://api.lens.dev/graphql'),
+  backend: url('https://api.lens.xyz/graphql'),
   indexingTimeout: 10000,
   pollingInterval: 100,
 };
@@ -29,7 +29,7 @@ export const mainnet: EnvironmentConfig = {
  */
 export const testnet: EnvironmentConfig = {
   name: 'testnet',
-  backend: url('https://api.testnet.lens.dev/graphql'),
+  backend: url('https://api.testnet.lens.xyz/graphql'),
   indexingTimeout: 10000,
   pollingInterval: 100,
 };
