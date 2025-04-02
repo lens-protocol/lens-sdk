@@ -20,5 +20,8 @@ export function fetchNotifications(
   client: SessionClient,
   request: NotificationsRequest = {},
 ): ResultAsync<Paginated<Notification>, UnexpectedError> {
-  return client.query(NotificationsQuery, { request });
+  return client.query(NotificationsQuery, { request }) as ResultAsync<
+    Paginated<Notification>,
+    UnexpectedError
+  >;
 }
