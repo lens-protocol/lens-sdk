@@ -253,7 +253,7 @@ type GetDocumentNode<
  *
  * ⚠️ DO NOT MATCH ON THIS — it's here to block exhaustive checks.
  */
-export type __FutureProofUnion = { __typename: string };
+export type __FutureProofUnion = { __typename: symbol };
 
 /**
  * @internal
