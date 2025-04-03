@@ -417,6 +417,20 @@ type AccountPostReaction {
   reactions: [PostReaction!]!
 }
 
+input AccountRecommendationsRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The account to get recommendations for."""
+  account: EvmAddress!
+
+  """Shuffle the recommendations."""
+  shuffle: Boolean! = false
+}
+
 enum AccountReportReason {
   IMPERSONATION
   REPETITIVE_SPAM
@@ -3652,52 +3666,9 @@ type MintMetadata {
   content: String!
 }
 
-input MlaccountRecommendationsRequest {
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
-
-  """The account to get recommendations for."""
-  account: EvmAddress!
-
-  """Shuffle the recommendations."""
-  shuffle: Boolean! = false
-}
-
-input MlexplorePostsFilter {
-  since: Int
-}
-
-input MlexplorePostsRequest {
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
-  filter: MlexplorePostsFilter
-}
-
 input MlinternalForYouRequest {
   secret: String!
   account: EvmAddress
-}
-
-input MlpostsForYouRequest {
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
-
-  """
-  The account to get for you for. If not provided, defaults to the authenticated account.
-  """
-  account: EvmAddress
-
-  """Shuffle the for you posts."""
-  shuffle: Boolean! = false
 }
 
 type Mutation {
@@ -5476,6 +5447,28 @@ enum PostVisibilityFilter {
   VISIBLE
 }
 
+input PostsExploreFilter {
+  """Only return posts after this timestamp, defaults to 3 days ago."""
+  since: Int! = 1743424349
+
+  """Metadata filters to apply to posts"""
+  metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
+}
+
+input PostsExploreRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """Filter for posts"""
+  filter: PostsExploreFilter! = {since: 1743424349, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+
+  """Shuffle the results, defaults to false."""
+  shuffle: Boolean! = false
+}
+
 input PostsFilter {
   """The feeds where the posts are published."""
   feeds: [FeedOneOf!]
@@ -5497,6 +5490,22 @@ input PostsFilter {
 
   """The account that collected the posts."""
   collectedBy: CollectedBy
+}
+
+input PostsForYouRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """
+  The account to get for you for. If not provided, defaults to the authenticated account.
+  """
+  account: EvmAddress
+
+  """Shuffle the for you posts."""
+  shuffle: Boolean! = false
 }
 
 input PostsRequest {
@@ -5690,9 +5699,9 @@ type Query {
   """
   notifications(request: NotificationRequest!): PaginatedNotificationResult!
   getSnsSubscriptions(request: GetSnsSubscriptionsRequest!): [SnsSubscription!]!
-  mlAccountRecommendations(request: MlaccountRecommendationsRequest!): PaginatedAccountsResult!
-  mlPostsForYou(request: MlpostsForYouRequest!): PaginatedPostsForYouResult!
-  mlPostsExplore(request: MlexplorePostsRequest!): PaginatedPostsResult
+  mlAccountRecommendations(request: AccountRecommendationsRequest!): PaginatedAccountsResult!
+  mlPostsForYou(request: PostsForYouRequest!): PaginatedPostsForYouResult!
+  mlPostsExplore(request: PostsExploreRequest!): PaginatedAnyPostsResult!
 
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!

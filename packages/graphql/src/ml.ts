@@ -3,7 +3,7 @@ import { AccountFragment, PaginatedResultInfoFragment, PostFragment } from './fr
 import { type RequestOf, graphql } from './graphql';
 
 export const MlAccountRecommendationsQuery = graphql(
-  `query MlAccountRecommendations($request: MlaccountRecommendationsRequest!) {
+  `query MlAccountRecommendations($request: AccountRecommendationsRequest!) {
     value: mlAccountRecommendations(request: $request) {
       __typename
       items {
@@ -31,7 +31,7 @@ export const PostForYouFragment = graphql(
 export type PostForYou = FragmentOf<typeof PostForYouFragment>;
 
 export const MlPostsForYouQuery = graphql(
-  `query MlPostsForYou($request: MlpostsForYouRequest!) {
+  `query MlPostsForYou($request: PostsForYouRequest!) {
     value: mlPostsForYou(request: $request) {
       __typename
       items {
@@ -47,7 +47,7 @@ export const MlPostsForYouQuery = graphql(
 export type MlPostsForYouRequest = RequestOf<typeof MlPostsForYouQuery>;
 
 export const MlPostsExploreQuery = graphql(
-  `query MlPostsExplore($request: MlexplorePostsRequest!) {
+  `query MlPostsExplore($request: PostsExploreRequest!) {
     value: mlPostsExplore(request: $request) {
       __typename
       items {
