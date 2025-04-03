@@ -1,7 +1,7 @@
 import type { AnyVariables, StandardData } from '@lens-protocol/graphql';
 import { type TypedDocumentNode, useQuery } from 'urql';
 
-import { never } from '@lens-protocol/types';
+import { invariant } from '@lens-protocol/types';
 import { useMemo } from 'react';
 import { ReadResult, type SuspendableResult } from './results';
 
@@ -42,5 +42,7 @@ export function useSuspendableQuery<Value, Variables extends AnyVariables>({
     return ReadResult.Failure(error) as any;
   }
 
-  return ReadResult.Success(data?.value ?? never('No data returned'));
+  invariant(data, 'No data returned');
+
+  return ReadResult.Success(data.value);
 }
