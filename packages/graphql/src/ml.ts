@@ -1,10 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import {
-  AccountFragment,
-  AnyPostFragment,
-  PaginatedResultInfoFragment,
-  PostFragment,
-} from './fragments';
+import { AccountFragment, PaginatedResultInfoFragment, PostFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 export const MlAccountRecommendationsQuery = graphql(
@@ -56,14 +51,14 @@ export const MlPostsExploreQuery = graphql(
     value: mlPostsExplore(request: $request) {
       __typename
       items {
-        ...AnyPost
+        ...Post
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [AnyPostFragment, PaginatedResultInfoFragment],
+  [PostFragment, PaginatedResultInfoFragment],
 );
 export type PostsExploreRequest = RequestOf<typeof MlPostsExploreQuery>;
 

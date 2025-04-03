@@ -5449,7 +5449,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1743424349
+  since: Int! = 1743429715
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5463,7 +5463,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1743424349, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1743429715, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """Shuffle the results, defaults to false."""
   shuffle: Boolean! = false
@@ -5701,7 +5701,7 @@ type Query {
   getSnsSubscriptions(request: GetSnsSubscriptionsRequest!): [SnsSubscription!]!
   mlAccountRecommendations(request: AccountRecommendationsRequest!): PaginatedAccountsResult!
   mlPostsForYou(request: PostsForYouRequest!): PaginatedPostsForYouResult!
-  mlPostsExplore(request: PostsExploreRequest!): PaginatedAnyPostsResult!
+  mlPostsExplore(request: PostsExploreRequest!): PaginatedPostsResult!
 
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!

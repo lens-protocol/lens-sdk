@@ -1,9 +1,9 @@
 import type {
   Account,
   AccountRecommendationsRequest,
-  AnyPost,
   DismissRecommendedAccountsRequest,
   Paginated,
+  Post,
   PostForYou,
   PostNotInterestedRequest,
   PostsExploreRequest,
@@ -76,7 +76,7 @@ export function fetchPostsForYou(
 export function fetchPostsToExplore(
   client: AnyClient,
   request: PostsExploreRequest,
-): ResultAsync<Paginated<AnyPost> | null, UnexpectedError> {
+): ResultAsync<Paginated<Post> | null, UnexpectedError> {
   return client.query(MlPostsExploreQuery, { request });
 }
 
