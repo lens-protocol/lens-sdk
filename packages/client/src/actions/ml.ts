@@ -1,13 +1,13 @@
 import type {
   Account,
+  AccountRecommendationsRequest,
+  AnyPost,
   DismissRecommendedAccountsRequest,
-  MlAccountRecommendationsRequest,
-  MlPostsExploreRequest,
-  MlPostsForYouRequest,
   Paginated,
-  Post,
   PostForYou,
   PostNotInterestedRequest,
+  PostsExploreRequest,
+  PostsForYouRequest,
 } from '@lens-protocol/graphql';
 import {
   AddPostNotInterestedMutation,
@@ -37,7 +37,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  */
 export function fetchAccountRecommendations(
   client: AnyClient,
-  request: MlAccountRecommendationsRequest,
+  request: AccountRecommendationsRequest,
 ): ResultAsync<Paginated<Account> | null, UnexpectedError> {
   return client.query(MlAccountRecommendationsQuery, { request });
 }
@@ -57,7 +57,7 @@ export function fetchAccountRecommendations(
  */
 export function fetchPostsForYou(
   client: AnyClient,
-  request: MlPostsForYouRequest,
+  request: PostsForYouRequest,
 ): ResultAsync<Paginated<PostForYou> | null, UnexpectedError> {
   return client.query(MlPostsForYouQuery, { request });
 }
@@ -75,8 +75,8 @@ export function fetchPostsForYou(
  */
 export function fetchPostsToExplore(
   client: AnyClient,
-  request: MlPostsExploreRequest,
-): ResultAsync<Paginated<Post> | null, UnexpectedError> {
+  request: PostsExploreRequest,
+): ResultAsync<Paginated<AnyPost> | null, UnexpectedError> {
   return client.query(MlPostsExploreQuery, { request });
 }
 

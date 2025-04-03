@@ -1,5 +1,10 @@
 import type { FragmentOf } from 'gql.tada';
-import { AccountFragment, PaginatedResultInfoFragment, PostFragment } from './fragments';
+import {
+  AccountFragment,
+  AnyPostFragment,
+  PaginatedResultInfoFragment,
+  PostFragment,
+} from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 export const MlAccountRecommendationsQuery = graphql(
@@ -16,7 +21,7 @@ export const MlAccountRecommendationsQuery = graphql(
   }`,
   [AccountFragment, PaginatedResultInfoFragment],
 );
-export type MlAccountRecommendationsRequest = RequestOf<typeof MlAccountRecommendationsQuery>;
+export type AccountRecommendationsRequest = RequestOf<typeof MlAccountRecommendationsQuery>;
 
 export const PostForYouFragment = graphql(
   `fragment PostForYou on PostForYou {
@@ -44,23 +49,23 @@ export const MlPostsForYouQuery = graphql(
   }`,
   [PostForYouFragment, PaginatedResultInfoFragment],
 );
-export type MlPostsForYouRequest = RequestOf<typeof MlPostsForYouQuery>;
+export type PostsForYouRequest = RequestOf<typeof MlPostsForYouQuery>;
 
 export const MlPostsExploreQuery = graphql(
   `query MlPostsExplore($request: PostsExploreRequest!) {
     value: mlPostsExplore(request: $request) {
       __typename
       items {
-        ...Post
+        ...AnyPost
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [PostFragment, PaginatedResultInfoFragment],
+  [AnyPostFragment, PaginatedResultInfoFragment],
 );
-export type MlPostsExploreRequest = RequestOf<typeof MlPostsExploreQuery>;
+export type PostsExploreRequest = RequestOf<typeof MlPostsExploreQuery>;
 
 export const MlDismissRecommendedAccountsMutation = graphql(
   `mutation MlDismissRecommendedAccounts($request: DismissRecommendedAccountsRequest!) {
