@@ -42,8 +42,19 @@ export const CreateFeedMutation = graphql(
 );
 export type CreateFeedRequest = RequestOf<typeof CreateFeedMutation>;
 
+const SetFeedMetadataResponseFragment = graphql(
+  `fragment SetFeedMetadataResponse on SetFeedMetadataResponse {
+    __typename
+    hash
+  }`,
+);
+export type SetFeedMetadataResponse = FragmentOf<typeof SetFeedMetadataResponseFragment>;
+
 const SetFeedMetadataResultFragment = graphql(
   `fragment SetFeedMetadataResult on SetFeedMetadataResult {
+    ...on SetFeedMetadataResponse {
+      ...SetFeedMetadataResponse
+    }
     ... on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -55,6 +66,7 @@ const SetFeedMetadataResultFragment = graphql(
     }
   }`,
   [
+    SetFeedMetadataResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
@@ -98,8 +110,19 @@ export const FeedsQuery = graphql(
 );
 export type FeedsRequest = RequestOf<typeof FeedsQuery>;
 
+const UpdateFeedRulesResponseFragment = graphql(
+  `fragment UpdateFeedRulesResponse on UpdateFeedRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdateFeedRulesResponse = FragmentOf<typeof UpdateFeedRulesResponseFragment>;
+
 const UpdateFeedRulesResultFragment = graphql(
   `fragment UpdateFeedRulesResult on UpdateFeedRulesResult {
+    ...on UpdateFeedRulesResponse {
+      ...UpdateFeedRulesResponse
+    }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -111,6 +134,7 @@ const UpdateFeedRulesResultFragment = graphql(
     }
   }`,
   [
+    UpdateFeedRulesResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,

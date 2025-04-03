@@ -3895,7 +3895,7 @@ type Mutation {
   """
   Create an account with a given username.
   
-  You MUST be authenticated as onboarding user or builder to use this mutation.
+  You MUST be authenticated to use this mutation.
   """
   createAccountWithUsername(request: CreateAccountWithUsernameRequest!): CreateAccountWithUsernameResult!
 
@@ -4150,7 +4150,7 @@ type Mutation {
   """
   Execute the given post action.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   executePostAction(request: ExecutePostActionRequest!): ExecutePostActionResult!
 
@@ -4300,14 +4300,18 @@ type Mutation {
   """
   Set metadata for a feed
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as:
+  - Builder and be the owner/admin of the feed
+  - Account Manager or Account Owner for a Lens Account that is the owner/admin of the feed
   """
   setFeedMetadata(request: SetFeedMetadataRequest!): SetFeedMetadataResult!
 
   """
   Update feed rules
   
-  You MUST be authenticated as a Builder to use this mutation.
+  You MUST be authenticated as:
+  - Builder and be the owner/admin of the feed
+  - Account Manager or Account Owner for a Lens Account that is the owner/admin of the feed
   """
   updateFeedRules(request: UpdateFeedRulesRequest!): UpdateFeedRulesResult!
 
@@ -6098,7 +6102,11 @@ input SetFeedMetadataRequest {
   metadataUri: String!
 }
 
-union SetFeedMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+type SetFeedMetadataResponse {
+  hash: TxHash!
+}
+
+union SetFeedMetadataResult = SetFeedMetadataResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input SetGraphMetadataRequest {
   """The graph to update"""
@@ -6253,6 +6261,7 @@ enum SnsNotificationType {
   ACCOUNT_ACTION_EXECUTED
   ACCOUNT_REPORTED
   ML_ACCOUNT_SIGNAL
+  ML_RECOMMENDED_ACCOUNT_DISMISSED
 }
 
 type SnsSubscription {
@@ -7713,7 +7722,11 @@ input UpdateFeedRulesRequest {
   toRemove: [RuleId!]! = []
 }
 
-union UpdateFeedRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+type UpdateFeedRulesResponse {
+  hash: TxHash!
+}
+
+union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateGraphRulesRequest {
   """The graph to update rules for"""
