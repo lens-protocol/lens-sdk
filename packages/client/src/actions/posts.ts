@@ -93,7 +93,7 @@ export function fetchPosts(
 }
 
 /**
- * Fetch availale Post Action contracts.
+ * Fetch available Post Action contracts.
  *
  * ```ts
  * const result = await fetchPostActionContracts(anyClient);
