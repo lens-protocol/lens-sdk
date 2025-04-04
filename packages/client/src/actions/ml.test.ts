@@ -4,8 +4,7 @@ import { describe, it } from 'vitest';
 import { TEST_ACCOUNT, createPublicClient } from '../test-utils';
 import { fetchAccountRecommendations, fetchPostsForYou, fetchPostsToExplore } from './ml';
 
-// TODO: Enable this test after release
-describe.skip('Given the ML query actions', () => {
+describe('Given the ML query actions', () => {
   const client = createPublicClient();
 
   describe(`When invoking the '${fetchAccountRecommendations.name}' action`, () => {
