@@ -4490,7 +4490,6 @@ input NamespaceRuleConfig {
   tokenGatedRule: TokenGatedNamespaceRuleConfig
   usernamePricePerLengthRule: UsernamePricePerLengthNamespaceRuleConfig
   usernameLengthRule: UsernameLengthNamespaceRuleConfig
-  usernameReservedRule: UsernameReservedNamespaceRuleConfig
   unknownRule: UnknownNamespaceRuleConfig
 }
 
@@ -5449,7 +5448,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1743429715
+  since: Int! = 1743506789
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5463,7 +5462,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1743429715, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1743506789, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """Shuffle the results, defaults to false."""
   shuffle: Boolean! = false
@@ -7987,10 +7986,6 @@ type UsernameReserved {
   ruleId: RuleId!
   namespace: EvmAddress!
   localName: String!
-}
-
-input UsernameReservedNamespaceRuleConfig {
-  reserved: [String!]
 }
 
 input UsernameSearchInput {
