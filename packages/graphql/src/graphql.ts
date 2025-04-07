@@ -89,6 +89,7 @@ import type {
   PostTagsOrderBy,
   PostType,
   PostVisibilityFilter,
+  ReferenceRelevancyFilter,
   SelfFundedFallbackReason,
   SimpleCollectValidationFailedReason,
   SponsorLimitType,
@@ -195,6 +196,7 @@ export const graphql = initGraphQLTada<{
     PostTagsOrderBy: PostTagsOrderBy;
     PostType: PostType;
     PostVisibilityFilter: PostVisibilityFilter;
+    ReferenceRelevancyFilter: ReferenceRelevancyFilter;
     RefreshToken: RefreshToken;
     RuleId: RuleId;
     SelfFundedFallbackReason: SelfFundedFallbackReason;

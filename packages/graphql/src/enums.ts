@@ -1231,3 +1231,12 @@ export enum AccountActionType {
   Tipping = 'TIPPING',
   Unknown = 'UNKNOWN',
 }
+
+/**
+ * Enum for ReferenceRelevancyFilter.
+ */
+export enum ReferenceRelevancyFilter {
+  All = 'ALL',
+  Relevant = 'RELEVANT',
+  NotRelevant = 'NOT_RELEVANT',
+}
