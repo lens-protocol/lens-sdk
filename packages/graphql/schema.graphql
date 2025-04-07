@@ -5265,6 +5265,9 @@ input PostReferencesRequest {
   """
   visibilityFilter: PostVisibilityFilter! = VISIBLE
 
+  """The relevancy filter to apply."""
+  relevancyFilter: ReferenceRelevancyFilter! = ALL
+
   """The page size."""
   pageSize: PageSize! = FIFTY
 
@@ -5448,7 +5451,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1743506789
+  since: Int! = 1743612337
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5462,7 +5465,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1743506789, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1743612337, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """Shuffle the results, defaults to false."""
   shuffle: Boolean! = false
@@ -5788,6 +5791,17 @@ input RecipientPercentInput {
 input RecommendAccount {
   """The account to recommend."""
   account: EvmAddress!
+}
+
+enum ReferenceRelevancyFilter {
+  """All comments."""
+  ALL
+
+  """Only the comments that are relevant"""
+  RELEVANT
+
+  """Only the comments that are not relevant"""
+  NOT_RELEVANT
 }
 
 input ReferencingPostInput {
