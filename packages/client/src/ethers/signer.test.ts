@@ -1,11 +1,10 @@
+import { Network, Wallet, getDefaultProvider } from '@lens-chain/sdk/ethers';
+import { assertOk, uri } from '@lens-protocol/types';
 import { describe, it } from 'vitest';
 
-import { assertOk, uri } from '@lens-protocol/types';
 import { post } from '../actions/post';
-import { handleOperationWith } from './signer';
-
-import { Network, Wallet, getDefaultProvider } from '@lens-chain/sdk/ethers';
 import { loginAsAccountOwner } from '../test-utils';
+import { handleOperationWith } from './signer';
 
 // biome-ignore lint/suspicious/noExplicitAny: needs a fix in @lens-chain/sdk
 const wallet = new Wallet(import.meta.env.PRIVATE_KEY, getDefaultProvider(Network.Testnet) as any);
