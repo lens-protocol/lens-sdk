@@ -3,6 +3,11 @@ import { type EvmAddress, never } from '@lens-protocol/types';
 import { type TransactionRequest, ethers } from 'ethers';
 import { type types, utils } from 'zksync-ethers';
 
+/**
+ * The configuration for the `SponsorshipApprovalSigner`.
+ *
+ * @experimental This is an experimental helper and may be subject to breaking changes.
+ */
 export type SponsorshipApprovalSignerConfig = {
   /**
    * The ethers.js signer to use for signing the sponsorship approval.
@@ -28,6 +33,8 @@ type SponsorshipApprovalSignerContext = {
 
 /**
  * An helper class to sign sponsorship approvals for arbitrary transactions using ethers.js.
+ *
+ * @experimental This is an experimental helper and may be subject to breaking changes.
  */
 export class SponsorshipApprovalSigner {
   private readonly context: SponsorshipApprovalSignerContext;
