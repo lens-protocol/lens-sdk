@@ -18,7 +18,7 @@ export const DOMAIN_NAME = 'Lens Source';
 export const DOMAIN_VERSION = '1';
 
 /**
- *
+ * An helper class to sign operation approval requests with viem.
  */
 export class OperationApprovalSigner {
   constructor(private readonly context: LocalOperationApprovalSignerContext) {}

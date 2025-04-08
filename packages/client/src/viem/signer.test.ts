@@ -14,7 +14,7 @@ const walletClient = createWalletClient({
 });
 
 describe(`Given the '${handleOperationWith.name}' helper for viem`, { timeout: 10000 }, () => {
-  describe('When handling the result of a transaction action', () => {
+  describe('When handling the result of a transaction mutation', () => {
     it('Then it should be possible to chain them with other helpers', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
         post(sessionClient, {
