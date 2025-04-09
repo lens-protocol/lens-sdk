@@ -11,8 +11,8 @@ import {
 } from 'viem';
 import { getBlock } from 'viem/actions';
 import {
-  type SendTransactionParameters,
   type ZksyncTransactionSerializable,
+  type ZksyncTransactionSerializableEIP712,
   getGeneralPaymasterInput,
 } from 'viem/zksync';
 
@@ -62,7 +62,7 @@ export class SponsorshipApprovalSigner<chain extends chains.LensChain> {
 
   async approveSponsorship(
     parameters: PrepareTransactionRequestParameters<chain>,
-  ): Promise<SendTransactionParameters> {
+  ): Promise<ZksyncTransactionSerializableEIP712> {
     const deadline = await this.computeDeadline();
     const request: ZksyncTransactionSerializable =
       await this.context.signer.prepareTransactionRequest({

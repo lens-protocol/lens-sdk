@@ -41,7 +41,8 @@ describe(
           value: 1n,
         });
 
-        const hash = await sendTransaction(user, approved);
+        // biome-ignore lint/suspicious/noExplicitAny: needs a fix in viem/zksync
+        const hash = await sendTransaction(user, approved as any);
         await waitForTransactionReceipt(user, { hash });
       });
     });

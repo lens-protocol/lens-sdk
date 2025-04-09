@@ -47,7 +47,7 @@ export class SponsorshipApprovalSigner {
     };
   }
 
-  async approveSponsorship(request: TransactionRequest): Promise<types.TransactionRequest> {
+  async approveSponsorship(request: TransactionRequest): Promise<types.TransactionLike> {
     const [deadline, nonce, { maxFeePerGas, maxPriorityFeePerGas }, chainId] = await Promise.all([
       this.computeDeadline(),
       this.context.signer.provider.getTransactionCount(
@@ -86,7 +86,7 @@ export class SponsorshipApprovalSigner {
     return {
       ...populatedTransactionRequest,
       customData: this.fillCustomData(deadline, approval),
-    };
+    } as types.TransactionLike;
   }
 
   private async computeDeadline(): Promise<number> {
