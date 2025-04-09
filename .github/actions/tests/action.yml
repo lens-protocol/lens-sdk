@@ -49,7 +49,7 @@ runs:
         echo "TEST_ACCOUNT=${{ inputs.test_account }}" >> .env
         echo "TEST_ERC20=${{ inputs.test_erc20 }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
-        echo "GLOBAL_SPONSORSHIP=${{ inputs.environment }}" >> .env
+        echo "GLOBAL_SPONSORSHIP=${{ inputs.global_sponsorship }}" >> .env
         echo "SPONSORSHIP_APPROVER_PRIVATE_KEY=${{ inputs.sponsorship_approver_private_key }}" >> .env
 
     - name: Run Tests
