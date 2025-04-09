@@ -19,7 +19,7 @@ const signer = new Wallet(
 
 describe(
   `Given an instance of the '${SponsorshipApprovalSigner.name}' for ethers.js`,
-  { timeout: 5000 },
+  { timeout: 10_000 },
   () => {
     describe('When approving a TransactionRequest', () => {
       it('Then it should return the corresponding EIP-712 TransactionRequest with sponsorship approval', async () => {

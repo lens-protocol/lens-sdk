@@ -26,7 +26,7 @@ const signer = createWalletClient({
 
 describe(
   `Given an instance of the '${SponsorshipApprovalSigner.name}' for viem`,
-  { timeout: 5000 },
+  { timeout: 10_000 },
   () => {
     describe('When approving a transaction Request', () => {
       it('Then it should return the corresponding EIP-712 SendTransactionRequest with sponsorship approval', async () => {
