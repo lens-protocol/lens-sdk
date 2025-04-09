@@ -9,6 +9,12 @@ inputs:
   private_key:
     description: 'Private key for authentication'
     required: true
+  global_sponsorship:
+    description: 'The Global Sponsorship address'
+    required: true
+  sponsorship_approver_private_key:
+    description: 'Private key for a Global Sponsorship Signer'
+    required: true
   publish_results:
     description: 'Publish test results'
     required: false
@@ -38,11 +44,13 @@ runs:
     - name: Setup Environment Variables
       shell: bash
       run: |
-        echo PRIVATE_KEY="${{ inputs.private_key }}" >> .env
+        echo "PRIVATE_KEY=${{ inputs.private_key }}" >> .env
         echo "TEST_APP=${{ inputs.test_app }}" >> .env
         echo "TEST_ACCOUNT=${{ inputs.test_account }}" >> .env
         echo "TEST_ERC20=${{ inputs.test_erc20 }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
+        echo "GLOBAL_SPONSORSHIP=${{ inputs.environment }}" >> .env
+        echo "SPONSORSHIP_APPROVER_PRIVATE_KEY=${{ inputs.sponsorship_approver_private_key }}" >> .env
 
     - name: Run Tests
       shell: bash
