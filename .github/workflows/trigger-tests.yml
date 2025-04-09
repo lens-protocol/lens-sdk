@@ -35,4 +35,6 @@ jobs:
           test_app: ${{ vars.TEST_APP }}
           test_account: ${{ vars.TEST_ACCOUNT }}
           test_erc20: ${{ vars.TEST_ERC20 }}
+          global_sponsorship: ${{ secrets.GLOBAL_SPONSORSHIP }}
+          sponsorship_approver_private_key: ${{ secrets.SPONSORSHIP_APPROVER_PRIVATE_KEY }}
           publish_results: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish_results || 'true' }}
