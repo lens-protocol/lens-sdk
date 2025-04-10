@@ -164,7 +164,7 @@ export function fetchMeDetails(
  * Get the last logged in account.
  *
  * ```ts
- * const result = await lastLoggedInAccount(sessionClient, {
+ * const result = await lastLoggedInAccount(anyClient, {
  *   address: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3'),
  * });
  * ```
@@ -174,7 +174,7 @@ export function fetchMeDetails(
  * @returns The last logged in account.
  */
 export function lastLoggedInAccount(
-  client: SessionClient,
+  client: AnyClient,
   request: LastLoggedInAccountRequest,
 ): ResultAsync<Account | null, UnauthenticatedError | UnexpectedError> {
   return client.query(LastLoggedInAccountQuery, { request });
