@@ -44,7 +44,10 @@ export function currentSession(
 }
 
 /**
- * Revoke the authentication of the authenticated Account.
+ * Revoke the authentication from the provided authentication ID.
+ *
+ * @remarks Use the {@link SessionClient#logout} method to logout instead.
+ * It's unlikely you'll need to use this action directly.
  *
  * ```ts
  * const result = await revokeAuthentication(sessionClient, {
