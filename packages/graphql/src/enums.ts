@@ -1140,6 +1140,7 @@ export enum GroupRuleExecuteOn {
  * Enum for GroupRuleType.
  */
 export enum GroupRuleType {
+  AdditionRemovalPid = 'ADDITION_REMOVAL_PID',
   TokenGated = 'TOKEN_GATED',
   SimplePayment = 'SIMPLE_PAYMENT',
   MembershipApproval = 'MEMBERSHIP_APPROVAL',
