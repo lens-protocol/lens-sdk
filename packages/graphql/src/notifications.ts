@@ -287,6 +287,7 @@ export interface GroupMembershipRequestApprovedNotification {
   id: ID;
   group: Group;
   approvedBy: Account;
+  approvedAt: DateTime;
 }
 
 export const GroupMembershipRequestApprovedNotificationFragment: FragmentDocumentFor<GroupMembershipRequestApprovedNotification> =
@@ -300,6 +301,7 @@ export const GroupMembershipRequestApprovedNotificationFragment: FragmentDocumen
       approvedBy {
         ...Account
       }
+      approvedAt
     }`,
     [AccountFragment, GroupFragment],
   );
@@ -309,6 +311,7 @@ export interface GroupMembershipRequestRejectedNotification {
   id: ID;
   group: Group;
   rejectedBy: Account;
+  rejectedAt: DateTime;
 }
 
 export const GroupMembershipRequestRejectedNotificationFragment: FragmentDocumentFor<GroupMembershipRequestRejectedNotification> =
@@ -322,6 +325,7 @@ export const GroupMembershipRequestRejectedNotificationFragment: FragmentDocumen
       rejectedBy {
         ...Account
       }
+      rejectedAt
     }`,
     [AccountFragment, GroupFragment],
   );

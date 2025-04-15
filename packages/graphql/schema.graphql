@@ -2780,12 +2780,14 @@ type GroupMembershipRequestApprovedNotification {
   id: GeneratedNotificationId!
   group: Group!
   approvedBy: Account!
+  approvedAt: DateTime!
 }
 
 type GroupMembershipRequestRejectedNotification {
   id: GeneratedNotificationId!
   group: Group!
   rejectedBy: Account!
+  rejectedAt: DateTime!
 }
 
 input GroupMembershipRequestsFilter {
@@ -2888,6 +2890,7 @@ enum GroupRuleExecuteOn {
 }
 
 enum GroupRuleType {
+  ADDITION_REMOVAL_PID
   TOKEN_GATED
   SIMPLE_PAYMENT
   MEMBERSHIP_APPROVAL
@@ -5265,7 +5268,11 @@ input PostReferencesRequest {
   """
   visibilityFilter: PostVisibilityFilter! = VISIBLE
 
-  """The relevancy filter to apply."""
+  """
+  The relevancy filter to apply.
+  
+  This filter is only applicable for `CommentOn` reference type.
+  """
   relevancyFilter: ReferenceRelevancyFilter! = ALL
 
   """The page size."""
@@ -5451,7 +5458,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1743612337
+  since: Int! = 1744453874
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5465,9 +5472,11 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1743612337, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1744453874, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
-  """Shuffle the results, defaults to false."""
+  """
+  Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
+  """
   shuffle: Boolean! = false
 }
 
@@ -5636,6 +5645,8 @@ type Query {
   feeds(request: FeedsRequest!): PaginatedFeedsResult!
   post(request: PostRequest!): AnyPost
   posts(request: PostsRequest!): PaginatedAnyPostsResult!
+
+  """Get any post references for a given post."""
   postReferences(request: PostReferencesRequest!): PaginatedAnyPostsResult!
   postTags(request: PostTagsRequest!): PaginatedPostTagsResult!
   postBookmarks(request: PostBookmarksRequest!): PaginatedAnyPostsResult!
