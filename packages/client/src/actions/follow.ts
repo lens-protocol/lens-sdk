@@ -130,9 +130,13 @@ export function fetchFollowersYouKnow(
  * Fetch follow status.
  *
  * ```ts
- * const result = await fetchFollowStatus(anyClient, {
- *   account: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
- *   follower: evmAddress('0xe5439696f4057aF073c0FB2dc6e5e755392922e1'),
+ * const result = await fetchFollowStatus(anyClient,
+ *   pairs: [
+ *     {
+ *       account: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *       follower: evmAddress('0xe5439696f4057aF073c0FB2dc6e5e755392922e1'),
+ *     }
+ *   ],
  * });
  * ```
  *
