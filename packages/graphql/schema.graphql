@@ -462,6 +462,15 @@ input AccountRulesConfigInput {
   anyOf: [AccountFollowRuleConfig!]! = []
 }
 
+"""
+Used to filter posts based on their author's account score.
+The account score is an integer between 1 and 10000, where 1 is the lowest and 10000 is the highest.
+"""
+input AccountScoreFilter @oneOf {
+  atLeast: Int
+  lessThan: Int
+}
+
 type AccountStats {
   """The stats for the feeds."""
   feedStats: AccountFeedsStats!
@@ -5458,7 +5467,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1744453874
+  since: Int! = 1744478275
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5472,7 +5481,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1744453874, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1744478275, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -5501,6 +5510,11 @@ input PostsFilter {
 
   """The account that collected the posts."""
   collectedBy: CollectedBy
+
+  """
+  A filter that returns only posts from authors with `Account Score` either `AtLeast` or `LessThan` the specified value.
+  """
+  accountScore: AccountScoreFilter
 }
 
 input PostsForYouRequest {
