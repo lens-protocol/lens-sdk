@@ -86,6 +86,9 @@ export enum EntityType {
   Post = 'POST',
   App = 'APP',
   Sponsorship = 'SPONSORSHIP',
+  AccountAction = 'ACCOUNT_ACTION',
+  PostAction = 'POST_ACTION',
+  Rule = 'RULE',
 }
 
 /**
@@ -1240,4 +1243,14 @@ export enum ReferenceRelevancyFilter {
   All = 'ALL',
   Relevant = 'RELEVANT',
   NotRelevant = 'NOT_RELEVANT',
+}
+
+/**
+ * Enum for GroupBannedAccountsOrderBy.
+ */
+export enum GroupBannedAccountsOrderBy {
+  LastBanned = 'LAST_BANNED',
+  FirstBanned = 'FIRST_BANNED',
+  LastActive = 'LAST_ACTIVE',
+  AccountScore = 'ACCOUNT_SCORE',
 }

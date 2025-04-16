@@ -54,6 +54,7 @@ import type {
   GraphRuleExecuteOn,
   GraphRuleType,
   GraphsOrderBy,
+  GroupBannedAccountsOrderBy,
   GroupMembersOrderBy,
   GroupRuleExecuteOn,
   GroupRuleType,
@@ -154,6 +155,7 @@ export const graphql = initGraphQLTada<{
     GraphRuleExecuteOn: GraphRuleExecuteOn;
     GraphRuleType: GraphRuleType;
     GraphsOrderBy: GraphsOrderBy;
+    GroupBannedAccountsOrderBy: GroupBannedAccountsOrderBy;
     GroupMembersOrderBy: GroupMembersOrderBy;
     GroupRuleExecuteOn: GroupRuleExecuteOn;
     GroupRuleType: GroupRuleType;
