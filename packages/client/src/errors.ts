@@ -78,7 +78,7 @@ export class MetadataIndexingError extends ResultAwareError {
  * Error indicating an operation was not executed due to a validation error.
  * See the `cause` property for more information.
  */
-export class ValidationError<T extends string> extends ResultAwareError {
+export class ValidationError<T extends string = string> extends ResultAwareError {
   name = 'ValidationError' as const;
 
   constructor(public readonly cause: ErrorResponse<T>) {
