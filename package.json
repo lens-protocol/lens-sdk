@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "^2.27.10",
+    "@changesets/cli": "^2.29.1",
     "@types/node": "^22.7.8",
     "jest-extended": "^4.0.2",
     "plop": "^4.0.1",
