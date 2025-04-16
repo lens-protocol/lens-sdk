@@ -28,6 +28,14 @@
       "jsxQuoteStyle": "single"
     }
   },
+  "json": {
+    "formatter": {
+      "enabled": false
+    },
+    "linter": {
+      "enabled": false
+    }
+  },
   "overrides": [
     {
       "include": ["./templates/*"],
