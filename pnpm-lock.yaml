@@ -162,6 +162,9 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1(graphql@16.9.0)(react@18.3.1)
     devDependencies:
+      '@lens-protocol/metadata':
+        specifier: ^2.0.0
+        version: 2.0.0(typescript@5.7.2)(zod@3.23.8)
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0

@@ -25,10 +25,17 @@ export type LensContextValue = {
 };
 
 function useCreateLensContextValue(publicClient: PublicClient): LensContextValue {
-  const [state, setState] = useState<SessionState>({
-    resolved: false,
-    client: publicClient,
-  });
+  const [state, setState] = useState<SessionState>(
+    publicClient.currentSession.isSessionClient()
+      ? {
+          resolved: true,
+          client: publicClient.currentSession,
+        }
+      : {
+          resolved: false,
+          client: publicClient,
+        },
+  );
 
   return {
     state,

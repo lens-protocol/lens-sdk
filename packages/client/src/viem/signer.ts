@@ -73,13 +73,15 @@ function sendTransactionWith(
  *
  * In case the result is a transaction request, it will be signed and sent using the provided wallet client.
  */
-export function handleOperationWith(walletClient: WalletClient): OperationHandler {
+export function handleOperationWith(walletClient: WalletClient | undefined): OperationHandler {
   return <T extends string, E extends string>(
     result: OperationResult<T, E>,
   ): ResultAsync<TxHash, SigningError | ValidationError<E>> => {
     if ('hash' in result) {
       return okAsync(result.hash);
     }
+
+    invariant(walletClient, 'Expected a WalletClient to handle the operation result.');
 
     invariant(
       isOnLensChain(walletClient),

@@ -1,3 +1,4 @@
+export * from './useCreatePost';
 export * from './usePost';
 export * from './usePostBookmarks';
 export * from './usePostReactions';

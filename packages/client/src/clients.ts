@@ -94,6 +94,7 @@ abstract class AbstractClient<TContext extends Context, TError> {
     this.urql = createClient({
       url: context.environment.backend,
       fetchOptions: {
+        credentials: 'omit',
         headers: {
           ...(this.context.origin ? { Origin: this.context.origin } : {}),
           ...(this.context.apiKey ? { 'x-lens-app': this.context.apiKey } : {}),

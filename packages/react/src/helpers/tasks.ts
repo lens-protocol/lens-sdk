@@ -1,12 +1,25 @@
-import { type ResultAsync, invariant } from '@lens-protocol/types';
-import { useCallback, useState } from 'react';
+import type { SessionClient } from '@lens-protocol/client';
+import { ResultAsync, invariant } from '@lens-protocol/types';
+import { Deferred } from '@lens-protocol/types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSessionClient } from '../authentication';
 
 /**
- * An deferrable task is a function that can be executed multiple times and that can be in a pending state.
+ * An async task is a function that can be executed multiple times and that can be in a pending state.
  *
  * @internal
  */
 export type AsyncTask<TInput, TResult extends ResultAsync<unknown, unknown>> = (
+  input: TInput,
+) => TResult;
+
+/**
+ * An async task that requires authentication.
+ *
+ * @internal
+ */
+export type AuthenticatedAsyncTask<TInput, TResult extends ResultAsync<unknown, unknown>> = (
+  sessionClient: SessionClient,
   input: TInput,
 ) => TResult;
 
@@ -160,4 +173,65 @@ export function useAsyncTask<TInput, TValue, TError, TResult extends ResultAsync
     ...state,
     execute,
   };
+}
+
+type DeferredCall<TInput, TValue, TError> = {
+  input: TInput;
+  result: ResultAsync<TValue, TError>;
+  deferred: Deferred<TValue>;
+};
+
+function createDeferredCall<TInput, TValue, TError>(
+  input: TInput,
+): DeferredCall<TInput, TValue, TError> {
+  const deferred = new Deferred<TValue>();
+
+  return {
+    input,
+    result: ResultAsync.fromPromise(deferred.promise, (err) => err as TError),
+    deferred,
+  };
+}
+
+/**
+ * @internal
+ */
+export function useAuthenticatedAsyncTask<
+  TInput,
+  TValue,
+  TError,
+  TResult extends ResultAsync<TValue, TError>,
+>(handler: AuthenticatedAsyncTask<TInput, TResult>): UseAsyncTask<TInput, TValue, TError> {
+  const { data: sessionClient, loading } = useSessionClient();
+
+  const pendingRequests = useRef<DeferredCall<TInput, TValue, TError>[]>([]);
+
+  const safeHandler = useCallback(
+    (input: TInput) => {
+      if (loading) {
+        const deferredCall: DeferredCall<TInput, TValue, TError> = createDeferredCall(input);
+        pendingRequests.current.push(deferredCall);
+
+        return deferredCall.result;
+      }
+
+      invariant(
+        sessionClient,
+        'It appears that you are not logged in. Please log in before attempting this.',
+      );
+
+      return handler(sessionClient, input);
+    },
+    [handler, sessionClient, loading],
+  );
+
+  useEffect(() => {
+    if (loading === false) {
+      for (const { input, deferred } of pendingRequests.current) {
+        safeHandler(input).match(deferred.resolve, deferred.reject);
+      }
+    }
+  }, [safeHandler, loading]);
+
+  return useAsyncTask(safeHandler);
 }
