@@ -31,7 +31,7 @@ const result = await client.resumeSession().orElse(() =>
 
       return client.login({
         ...loginAs,
-        signMessage: signMessageWith(walletClient as any),
+        signMessage: signMessageWith(walletClient),
       });
     },
   ),
