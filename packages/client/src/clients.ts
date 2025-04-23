@@ -29,7 +29,6 @@ import {
   fetchExchange,
 } from '@urql/core';
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
-import { type Logger, getLogger } from 'loglevel';
 
 import { CredentialsStorage } from '@lens-protocol/storage';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
@@ -45,6 +44,7 @@ import {
   UnexpectedError,
   hasExtensionCode,
 } from './errors';
+import { LogLevel, Logger } from './logger';
 import { decodeAccessToken, decodeIdToken } from './tokens';
 import { delay } from './utils';
 
@@ -88,8 +88,10 @@ abstract class AbstractClient<TContext extends Context, TError> {
      */
     public readonly context: TContext,
   ) {
-    this.logger = getLogger(this.constructor.name);
-    this.logger.setLevel(context.debug ? 'DEBUG' : 'SILENT', false);
+    this.logger = Logger.named(
+      this.constructor.name,
+      context.debug ? LogLevel.DEBUG : LogLevel.SILENT,
+    );
 
     this.urql = createClient({
       url: context.environment.backend,

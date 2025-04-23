@@ -39,13 +39,23 @@
   },
   "typesVersions": {
     "*": {
-      "actions": ["./dist/actions/index.d.ts"],
-      "ethers": ["./dist/ethers/index.d.ts"],
-      "viem": ["./dist/viem/index.d.ts"],
-      "test-utils": ["./dist/test-utils.d.ts"]
+      "actions": [
+        "./dist/actions/index.d.ts"
+      ],
+      "ethers": [
+        "./dist/ethers/index.d.ts"
+      ],
+      "viem": [
+        "./dist/viem/index.d.ts"
+      ],
+      "test-utils": [
+        "./dist/test-utils.d.ts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
@@ -59,8 +69,7 @@
     "@urql/core": "^5.0.8",
     "@urql/exchange-auth": "^2.2.0",
     "graphql": "^16.9.0",
-    "jwt-decode": "^4.0.0",
-    "loglevel": "^1.9.2"
+    "jwt-decode": "^4.0.0"
   },
   "peerDependencies": {
     "@lens-chain/sdk": "^1.0.0",
