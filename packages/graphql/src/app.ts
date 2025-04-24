@@ -1,3 +1,4 @@
+import type { EvmAddress, URL } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
 import {
   AccountFragment,
@@ -562,9 +563,12 @@ export const AddAppAuthorizationEndpointMutation = graphql(
     value: addAppAuthorizationEndpoint(request: $request)
   }`,
 );
-export type AddAppAuthorizationEndpointRequest = RequestOf<
-  typeof AddAppAuthorizationEndpointMutation
->;
+// manually defined to work around and issue with endpoint: URL using browser URL instead of specified scalar
+export type AddAppAuthorizationEndpointRequest = {
+  app: EvmAddress;
+  endpoint: URL;
+  bearerToken: string;
+};
 
 export const RemoveAppAuthorizationEndpointMutation = graphql(
   `mutation RemoveAppAuthorizationEndpoint($request: RemoveAppAuthorizationEndpointRequest!) {

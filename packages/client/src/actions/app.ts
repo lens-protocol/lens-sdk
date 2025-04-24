@@ -11,6 +11,7 @@ import type {
   AppFeedsRequest,
   AppGroupsRequest,
   AppRequest,
+  AppServerApiKeyRequest,
   AppSigner,
   AppSignersRequest,
   AppUser,
@@ -72,7 +73,6 @@ import {
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { AppServerApiKeyRequest } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -512,6 +512,7 @@ export function setAppUsernameNamespace(
  * const result = await addAppAuthorizationEndpoint(sessionClient, {
  *   endpoint: uri('https://example.com/auth'),
  *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *   bearerToken: 'Qdy136748…',
  * });
  * ```
  *
@@ -523,7 +524,8 @@ export function addAppAuthorizationEndpoint(
   client: SessionClient,
   request: AddAppAuthorizationEndpointRequest,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(AddAppAuthorizationEndpointMutation, { request });
+  // biome-ignore lint/suspicious/noExplicitAny: work around and issue with endpoint: URL using browser URL instead of specified scalar
+  return client.mutation(AddAppAuthorizationEndpointMutation, { request: request as any });
 }
 
 /**
