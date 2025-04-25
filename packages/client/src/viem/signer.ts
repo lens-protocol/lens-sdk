@@ -64,7 +64,14 @@ function sendTransactionWith(
   return ResultAsync.fromPromise(sendTransaction(walletClient, request), (err) =>
     SigningError.from(err),
   )
-    .map(async (hash) => waitForTransactionReceipt(walletClient, { hash }))
+    .map(async (hash) =>
+      waitForTransactionReceipt(walletClient, {
+        hash,
+        pollingInterval: 100,
+        retryCount: 20,
+        retryDelay: 50,
+      }),
+    )
     .map((receipt) => txHash(receipt.transactionHash));
 }
 
