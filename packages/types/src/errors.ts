@@ -22,11 +22,12 @@ export class ResultAwareError extends Error {
   static from<T extends typeof ResultAwareError>(this: T, cause: unknown): InstanceType<T>;
   static from<T extends typeof ResultAwareError>(this: T, args: unknown): InstanceType<T> {
     if (args instanceof Error) {
-      const message = ResultAwareError.formatMessage(args);
-      // biome-ignore lint/complexity/noThisInStatic: <explanation>
+      // biome-ignore lint/complexity/noThisInStatic: intentional
+      const message = this.formatMessage(args);
+      // biome-ignore lint/complexity/noThisInStatic: intentional
       return new this(message, { cause: args }) as InstanceType<T>;
     }
-    // biome-ignore lint/complexity/noThisInStatic: <explanation>
+    // biome-ignore lint/complexity/noThisInStatic: intentional
     return new this(String(args)) as InstanceType<T>;
   }
 
@@ -35,7 +36,15 @@ export class ResultAwareError extends Error {
     let currentError: unknown = cause;
 
     while (currentError instanceof Error) {
-      messages.push(currentError.message);
+      if ('errors' in currentError && Array.isArray(currentError.errors)) {
+        // Handle AggregateError
+        const inner = currentError.errors.map((e: unknown) =>
+          e instanceof Error ? e.message : String(e),
+        );
+        messages.push(inner.join(', '));
+      } else {
+        messages.push(currentError.message);
+      }
       currentError = currentError.cause;
     }
 
