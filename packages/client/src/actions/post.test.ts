@@ -1,4 +1,4 @@
-import { assertOk, nonNullable, uri } from '@lens-protocol/types';
+import { assertOk, nonNullable } from '@lens-protocol/types';
 
 import { justPost } from '@lens-protocol/graphql';
 import { textOnly } from '@lens-protocol/metadata';
