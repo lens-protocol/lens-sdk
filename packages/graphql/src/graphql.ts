@@ -103,6 +103,7 @@ import type {
   TimelineEventItemType,
   TokenStandard,
   TransactionType,
+  UsernamesOrderBy,
   WhoExecutedActionOnAccountOrderBy,
   WhoExecutedActionOnPostOrderBy,
   WhoReferencedPostOrderBy,
@@ -223,6 +224,7 @@ export const graphql = initGraphQLTada<{
     URI: URI;
     URL: URL;
     UsernameValue: UsernameValue;
+    UsernamesOrderBy: UsernamesOrderBy;
     UUID: UUID;
     Void: Void;
     WhoExecutedActionOnAccountOrderBy: WhoExecutedActionOnAccountOrderBy;

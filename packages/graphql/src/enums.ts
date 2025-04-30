@@ -1254,3 +1254,11 @@ export enum GroupBannedAccountsOrderBy {
   LastActive = 'LAST_ACTIVE',
   AccountScore = 'ACCOUNT_SCORE',
 }
+
+/**
+ * Enum for UsernamesOrderBy.
+ */
+export enum UsernamesOrderBy {
+  LastMinted = 'LAST_MINTED',
+  FirstMinted = 'FIRST_MINTED',
+}

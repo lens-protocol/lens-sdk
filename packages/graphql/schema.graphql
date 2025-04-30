@@ -1519,8 +1519,12 @@ type CreateNamespaceResponse {
 }
 
 input CreatePostRequest {
-  """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0x31232Cb7dE0dce17949ffA58E9E38EEeB367C871"
+  """
+  The feed to post to.
+  Defaults to the global feed for new posts, or the original post's feed for comments and
+  quotes.
+  """
+  feed: EvmAddress
 
   """The URI of the post metadata."""
   contentUri: URI!
@@ -5477,7 +5481,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1745315413
+  since: Int! = 1745750284
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5491,7 +5495,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1745315413, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1745750284, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
