@@ -1,0 +1,9 @@
+{
+  "startCommand": "pnpm start",
+  "env": {
+    "ENVIRONMENT": "testnet",
+    "WALLET_PRIVATE_KEY": "0x…",
+    "SPONSORSHIP_ADDRESS": "0x…",
+    "SPONSORSHIP_SIGNER_PRIVATE_KEY": "0x…"
+  }
+}
