@@ -53,7 +53,7 @@ input AccountActionConfigInput @oneOf {
 }
 
 input AccountActionExecuteInput @oneOf {
-  tipping: AmountInput
+  tipping: TippingAmountInput
   unknown: UnknownActionExecuteInput
 }
 
@@ -5042,7 +5042,7 @@ input PostActionContractsRequest {
 
 input PostActionExecuteInput @oneOf {
   simpleCollect: SimpleCollectExecuteInput
-  tipping: AmountInput
+  tipping: TippingAmountInput
   unknown: UnknownActionExecuteInput
 }
 
@@ -5481,7 +5481,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1745750284
+  since: Int! = 1745759306
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5495,7 +5495,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1745750284, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1745759306, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -6248,6 +6248,12 @@ type SimpleCollectActionContract {
 
 input SimpleCollectExecuteInput {
   selected: AlwaysTrue!
+
+  """
+  The list of referrers and their cut of the collect referral share.
+  This is calculated as a percentage of the referral share AFTER the
+  treasury fee is deducted.
+  """
   referrals: [ReferralCut!]
 }
 
@@ -7278,6 +7284,28 @@ type TippingAccountActionExecuted {
   amount: Erc20Amount!
   executedBy: Account!
   executedAt: DateTime!
+}
+
+input TippingAmountInput {
+  """
+  Token value in its main unit (e.g., 1.5 WGHO), NOT in the smallest fraction (e.g.,
+  wei).
+  """
+  value: BigDecimal!
+
+  """
+  The token address.
+  Currently, only ERC20 tokens are supported.
+  """
+  currency: EvmAddress!
+
+  """
+  The list of referrers and their cut of the referral share.
+  This is calculated as a percentage of the referral share AFTER the
+  treasury fee is deducted.
+  The tip referral share is capped at 20%.
+  """
+  referrals: [ReferralCut!]
 }
 
 type TippingPostActionContract {
