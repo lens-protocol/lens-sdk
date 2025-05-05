@@ -2,4 +2,4 @@
 
 This example demonstrates how to sponsor a transaction on Lens Chain using the Lens Protocol SDK.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/lens-protocol/sdk/tree/next/examples/sponsored-tx)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/lens-protocol/lens-sdk/tree/next/examples/sponsored-tx)
