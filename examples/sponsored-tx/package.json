@@ -1,0 +1,17 @@
+{
+  "name": "example-sponsored-tx",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "vite-node index.ts"
+  },
+  "dependencies": {
+    "@lens-chain/sdk": "latest",
+    "@lens-protocol/client": "canary",
+    "viem": "~2.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite-node": "^1.6.1"
+  }
+}
