@@ -8,24 +8,24 @@ import type {
 import { TimelineHighlightsQuery, TimelineQuery } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { AnyClient } from '../clients';
+import type { AnyClient, SessionClient } from '../clients';
 import type { UnexpectedError } from '../errors';
 
 /**
  * Fetch timeline from an account.
  *
  * ```ts
- * const result = await fetchTimeline(anyClient, {
+ * const result = await fetchTimeline(sessionClient, {
  *   account: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * });
  * ```
  *
- * @param client - Any Lens client.
+ * @param client - The session client for the authenticated Account.
  * @param request - The query request.
  * @returns The list of timeline items.
  */
 export function fetchTimeline(
-  client: AnyClient,
+  client: SessionClient,
   request: TimelineRequest,
 ): ResultAsync<Paginated<TimelineItem>, UnexpectedError> {
   return client.query(TimelineQuery, { request });
