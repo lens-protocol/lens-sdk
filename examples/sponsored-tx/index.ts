@@ -42,6 +42,7 @@ async function sendSponsoredTransaction({ to, value, data }: SponsorRequest): Pr
     data,
   });
 
+  // biome-ignore lint/suspicious/noExplicitAny: keep it simple
   return await sendTransaction(wallet, tx as any);
 }
 
