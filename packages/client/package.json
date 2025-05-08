@@ -62,6 +62,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@lens-chain/sdk": "^1.0.0",
     "@lens-protocol/env": "workspace:*",
     "@lens-protocol/graphql": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
@@ -72,15 +73,11 @@
     "jwt-decode": "^4.0.0"
   },
   "peerDependencies": {
-    "@lens-chain/sdk": "^1.0.0",
     "ethers": "^6.13.4",
     "viem": "^2.21.53",
     "zksync-ethers": "^6.15.3"
   },
   "peerDependenciesMeta": {
-    "@lens-chain/sdk": {
-      "optional": true
-    },
     "ethers": {
       "optional": true
     },
@@ -92,7 +89,6 @@
     }
   },
   "devDependencies": {
-    "@lens-chain/sdk": "^1.0.0",
     "@lens-chain/storage-client": "^1.0.2",
     "@lens-protocol/metadata": "^2.0.0",
     "ethers": "^6.13.4",

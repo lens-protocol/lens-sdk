@@ -47,6 +47,9 @@ importers:
 
   packages/client:
     dependencies:
+      '@lens-chain/sdk':
+        specifier: ^1.0.0
+        version: 1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-protocol/env':
         specifier: workspace:*
         version: link:../env
@@ -72,9 +75,6 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
     devDependencies:
-      '@lens-chain/sdk':
-        specifier: ^1.0.0
-        version: 1.0.0(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-chain/storage-client':
         specifier: ^1.0.2
         version: 1.0.2
@@ -86,10 +86,10 @@ importers:
         version: 6.13.4
       msw:
         specifier: ^2.7.0
-        version: 2.7.0(@types/node@22.7.5)(typescript@5.7.2)
+        version: 2.7.0(@types/node@22.10.2)(typescript@5.7.2)
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
       typescript:
         specifier: ^5.6.3
         version: 5.7.2
@@ -746,8 +746,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@lens-chain/sdk@1.0.0':
-    resolution: {integrity: sha512-hbCV3LGoX0rNkjSzKYRrEw6QHfsuEOHMsEc0FEvVk3we5C+5kGN74HRRfDTEfhiC9Qx9k7lDfsUeDIXGymqDqg==}
+  '@lens-chain/sdk@1.0.3':
+    resolution: {integrity: sha512-ysfCKyhC2CouFQbysnduwKGQU8L6MI1VVBcClMLisKAJAunHFowsBaUp+j8nuQyWmUETpokqpe2Mk0P9bSGhfw==}
     engines: {node: '>=18', pnpm: '>=9.1.2'}
     peerDependencies:
       ethers: ^6.12.1
@@ -3264,33 +3264,11 @@ snapshots:
       '@inquirer/core': 10.1.1(@types/node@22.10.2)
       '@inquirer/type': 3.0.1(@types/node@22.10.2)
       '@types/node': 22.10.2
-    optional: true
-
-  '@inquirer/confirm@5.1.0(@types/node@22.7.5)':
-    dependencies:
-      '@inquirer/core': 10.1.1(@types/node@22.7.5)
-      '@inquirer/type': 3.0.1(@types/node@22.7.5)
-      '@types/node': 22.7.5
 
   '@inquirer/core@10.1.1(@types/node@22.10.2)':
     dependencies:
       '@inquirer/figures': 1.0.8
       '@inquirer/type': 3.0.1(@types/node@22.10.2)
-      ansi-escapes: 4.3.2
-      cli-width: 4.1.0
-      mute-stream: 2.0.0
-      signal-exit: 4.1.0
-      strip-ansi: 6.0.1
-      wrap-ansi: 6.2.0
-      yoctocolors-cjs: 2.1.2
-    transitivePeerDependencies:
-      - '@types/node'
-    optional: true
-
-  '@inquirer/core@10.1.1(@types/node@22.7.5)':
-    dependencies:
-      '@inquirer/figures': 1.0.8
-      '@inquirer/type': 3.0.1(@types/node@22.7.5)
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
       mute-stream: 2.0.0
@@ -3308,11 +3286,6 @@ snapshots:
   '@inquirer/type@3.0.1(@types/node@22.10.2)':
     dependencies:
       '@types/node': 22.10.2
-    optional: true
-
-  '@inquirer/type@3.0.1(@types/node@22.7.5)':
-    dependencies:
-      '@types/node': 22.7.5
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -3344,7 +3317,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lens-chain/sdk@1.0.0(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
+  '@lens-chain/sdk@1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
     optionalDependencies:
       ethers: 6.13.4
       viem: 2.22.4(typescript@5.7.2)(zod@3.23.8)
@@ -4568,32 +4541,6 @@ snapshots:
       typescript: 5.7.2
     transitivePeerDependencies:
       - '@types/node'
-    optional: true
-
-  msw@2.7.0(@types/node@22.7.5)(typescript@5.7.2):
-    dependencies:
-      '@bundled-es-modules/cookie': 2.0.1
-      '@bundled-es-modules/statuses': 1.0.1
-      '@bundled-es-modules/tough-cookie': 0.1.6
-      '@inquirer/confirm': 5.1.0(@types/node@22.7.5)
-      '@mswjs/interceptors': 0.37.3
-      '@open-draft/deferred-promise': 2.2.0
-      '@open-draft/until': 2.1.0
-      '@types/cookie': 0.6.0
-      '@types/statuses': 2.0.5
-      graphql: 16.9.0
-      headers-polyfill: 4.0.3
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      path-to-regexp: 6.3.0
-      picocolors: 1.1.1
-      strict-event-emitter: 0.5.1
-      type-fest: 4.30.0
-      yargs: 17.7.2
-    optionalDependencies:
-      typescript: 5.7.2
-    transitivePeerDependencies:
-      - '@types/node'
 
   mute-stream@1.0.0: {}
 
@@ -4807,10 +4754,6 @@ snapshots:
       node-plop: 0.32.0
       ora: 8.1.0
       v8flags: 4.0.1
-
-  postcss-load-config@6.0.1:
-    dependencies:
-      lilconfig: 3.1.2
 
   postcss-load-config@6.0.1(postcss@8.5.3)(tsx@4.19.3):
     dependencies:
@@ -5189,32 +5132,6 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       postcss: 8.5.3
-      typescript: 5.7.2
-    transitivePeerDependencies:
-      - jiti
-      - supports-color
-      - tsx
-      - yaml
-
-  tsup@8.3.5(typescript@5.7.2):
-    dependencies:
-      bundle-require: 5.0.0(esbuild@0.24.0)
-      cac: 6.7.14
-      chokidar: 4.0.1
-      consola: 3.2.3
-      debug: 4.3.7
-      esbuild: 0.24.0
-      joycon: 3.1.1
-      picocolors: 1.1.1
-      postcss-load-config: 6.0.1
-      resolve-from: 5.0.0
-      rollup: 4.24.2
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tinyexec: 0.3.1
-      tinyglobby: 0.2.10
-      tree-kill: 1.2.2
-    optionalDependencies:
       typescript: 5.7.2
     transitivePeerDependencies:
       - jiti
