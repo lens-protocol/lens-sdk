@@ -90,6 +90,7 @@ import type {
   PostTagsOrderBy,
   PostType,
   PostVisibilityFilter,
+  PrimitiveMetadataSchema,
   ReferenceRelevancyFilter,
   SelfFundedFallbackReason,
   SimpleCollectValidationFailedReason,
@@ -186,6 +187,7 @@ export const graphql = initGraphQLTada<{
     NotificationOrderBy: NotificationOrderBy;
     NotificationType: NotificationType;
     PageSize: PageSize;
+    PrimitiveMetadataSchema: PrimitiveMetadataSchema;
     PostActionCategoryType: PostActionCategoryType;
     PostActionType: PostActionType;
     PostId: PostId;

@@ -64,12 +64,12 @@ type AccountActionExecutedNotification {
   actions: [AccountActionExecuted!]!
 }
 
-input AccountActionExecutedNotificationAttributes {
-  account: EvmAddress
-  executingAccount: EvmAddress
-  action: EvmAddress
-  actionType: AccountActionType
-  app: EvmAddress
+input AccountActionExecutedNotificationFilter {
+  account: [EvmAddress!]
+  executingAccount: [EvmAddress!]
+  action: [EvmAddress!]
+  actionType: [AccountActionType!]
+  app: [EvmAddress]
 }
 
 input AccountActionFilter @oneOf {
@@ -97,18 +97,18 @@ type AccountBlocked {
   blockedAt: DateTime!
 }
 
-input AccountBlockedNotificationAttributes {
-  graph: EvmAddress
-  app: EvmAddress
+input AccountBlockedNotificationFilter {
+  graph: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 type AccountBlockedResponse {
   hash: TxHash!
 }
 
-input AccountCreatedNotificationAttributes {
-  graph: EvmAddress
-  app: EvmAddress
+input AccountCreatedNotificationFilter {
+  graph: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 type AccountExecutedActions {
@@ -222,11 +222,11 @@ type AccountFollowUnsatisfiedRules {
   anyOf: [AccountFollowUnsatisfiedRule!]!
 }
 
-input AccountFollowedNotificationAttributes {
-  follower: EvmAddress
-  followedAccount: EvmAddress
-  graph: EvmAddress
-  app: EvmAddress
+input AccountFollowedNotificationFilter {
+  follower: [EvmAddress!]
+  followedAccount: [EvmAddress!]
+  graph: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 type AccountGraphsFollowStats {
@@ -275,9 +275,9 @@ type AccountManager {
   addedAt: DateTime!
 }
 
-input AccountManagerAddedNotificationAttributes {
-  managedAccount: EvmAddress
-  manager: EvmAddress
+input AccountManagerAddedNotificationFilter {
+  managedAccount: [EvmAddress!]
+  manager: [EvmAddress!]
 }
 
 input AccountManagerChallengeRequest {
@@ -325,14 +325,14 @@ input AccountManagerPermissionsInput {
   canSetMetadataUri: Boolean!
 }
 
-input AccountManagerRemovedNotificationAttributes {
-  managedAccount: EvmAddress
-  manager: EvmAddress
+input AccountManagerRemovedNotificationFilter {
+  managedAccount: [EvmAddress!]
+  manager: [EvmAddress!]
 }
 
-input AccountManagerUpdatedNotificationAttributes {
-  managedAccount: EvmAddress
-  manager: EvmAddress
+input AccountManagerUpdatedNotificationFilter {
+  managedAccount: [EvmAddress!]
+  manager: [EvmAddress!]
 }
 
 input AccountManagersRequest {
@@ -357,12 +357,12 @@ type AccountMention {
   replace: MentionReplace!
 }
 
-input AccountMentionedNotificationAttributes {
-  author: EvmAddress
-  feed: EvmAddress
-  mentionedAccount: EvmAddress
-  mentionedUsername: UsernameValue
-  app: EvmAddress
+input AccountMentionedNotificationFilter {
+  author: [EvmAddress!]
+  feed: [EvmAddress!]
+  mentionedAccount: [EvmAddress!]
+  mentionedUsername: [UsernameValue!]
+  app: [EvmAddress]
 }
 
 type AccountMetadata {
@@ -408,8 +408,8 @@ input AccountOwnerChallengeRequest {
   owner: EvmAddress!
 }
 
-input AccountOwnershipTransferredNotificationAttributes {
-  account: EvmAddress
+input AccountOwnershipTransferredNotificationFilter {
+  account: [EvmAddress!]
 }
 
 type AccountPostReaction {
@@ -437,10 +437,10 @@ enum AccountReportReason {
   OTHER
 }
 
-input AccountReportedNotificationAttributes {
-  reportedAccount: EvmAddress
-  reporter: EvmAddress
-  app: EvmAddress
+input AccountReportedNotificationFilter {
+  reportedAccount: [EvmAddress!]
+  reporter: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 input AccountRequest {
@@ -494,30 +494,30 @@ input AccountStatsRequest {
   forGraphs: [EvmAddress!]! = ["0x4d97287FF1A0e030cA4604EcDa9be355dd8A8BaC"]
 }
 
-input AccountUnblockedNotificationAttributes {
-  graph: EvmAddress
-  app: EvmAddress
+input AccountUnblockedNotificationFilter {
+  graph: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 type AccountUnblockedResponse {
   hash: TxHash!
 }
 
-input AccountUnfollowedNotificationAttributes {
-  unfollower: EvmAddress
-  unfollowedAccount: EvmAddress
-  graph: EvmAddress
-  app: EvmAddress
+input AccountUnfollowedNotificationFilter {
+  unfollower: [EvmAddress!]
+  unfollowedAccount: [EvmAddress!]
+  graph: [EvmAddress!]
+  app: [EvmAddress]
 }
 
-input AccountUsernameAssignedNotificationAttributes {
-  namespace: EvmAddress
-  account: EvmAddress
+input AccountUsernameAssignedNotificationFilter {
+  namespace: [EvmAddress!]
+  account: [EvmAddress!]
 }
 
-input AccountUsernameCreatedNotificationAttributes {
-  namespace: EvmAddress
-  account: EvmAddress
+input AccountUsernameCreatedNotificationFilter {
+  namespace: [EvmAddress!]
+  account: [EvmAddress!]
 }
 
 input AccountUsernameOneOf @oneOf {
@@ -532,9 +532,9 @@ input AccountUsernameOneOf @oneOf {
   autoResolve: AlwaysTrue
 }
 
-input AccountUsernameUnassignedNotificationAttributes {
-  namespace: EvmAddress
-  previousAccount: EvmAddress
+input AccountUsernameUnassignedNotificationFilter {
+  namespace: [EvmAddress!]
+  previousAccount: [EvmAddress!]
 }
 
 input AccountsAvailableRequest {
@@ -3521,8 +3521,8 @@ enum MediaImageType {
   X_MS_BMP
 }
 
-input MediaSnapshotNotificationAttributes {
-  source: PrimitiveId
+input MediaSnapshotNotificationFilter {
+  source: [PrimitiveId!]
 }
 
 type MediaVideo {
@@ -3659,8 +3659,8 @@ enum MetadataLicenseType {
   TBNL_NC_ND_NPL_LEDGER
 }
 
-input MetadataSnapshotNotificationAttributes {
-  source: PrimitiveId
+input MetadataSnapshotNotificationFilter {
+  source: [PrimitiveId!]
 }
 
 type MintMetadata {
@@ -3690,6 +3690,11 @@ type MintMetadata {
   """An arbitrary list of tags."""
   tags: [Tag!]
   content: String!
+}
+
+input MlinternalAccountRecommendationsRequest {
+  secret: String!
+  account: EvmAddress
 }
 
 input MlinternalForYouRequest {
@@ -4279,6 +4284,7 @@ type Mutation {
   transferPrimitiveOwnership(request: TransferPrimitiveOwnershipRequest!): TransferPrimitiveOwnershipResult!
   mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
   mlForYouInternal(request: MlinternalForYouRequest!): Void!
+  mlAccountRecommendationsInternal(request: MlinternalAccountRecommendationsRequest!): Void!
 
   """
   sign a frame action with the lens account manager
@@ -5054,13 +5060,13 @@ type PostActionExecutedNotification {
   post: Post!
 }
 
-input PostActionExecutedNotificationAttributes {
-  postId: PostId
-  executingAccount: EvmAddress
-  receivingAccount: EvmAddress
-  action: EvmAddress
-  actionType: PostActionType
-  app: EvmAddress
+input PostActionExecutedNotificationFilter {
+  postId: [PostId!]
+  executingAccount: [EvmAddress!]
+  receivingAccount: [EvmAddress!]
+  action: [EvmAddress!]
+  actionType: [PostActionType!]
+  app: [EvmAddress]
 }
 
 input PostActionFilter @oneOf {
@@ -5091,31 +5097,31 @@ input PostBookmarksRequest {
   cursor: Cursor
 }
 
-input PostCollectedNotificationAttributes {
-  postId: PostId
-  postAuthor: EvmAddress
-  collector: EvmAddress
-  app: EvmAddress
+input PostCollectedNotificationFilter {
+  postId: [PostId!]
+  author: [EvmAddress!]
+  collector: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 input PostContentUriRequest {
   useSnapshot: Boolean!
 }
 
-input PostCreatedNotificationAttributes {
-  author: EvmAddress
-  parentPostId: PostId
-  postTypes: [PostType!]
-  feed: EvmAddress
-  app: EvmAddress
+input PostCreatedNotificationFilter {
+  author: [EvmAddress!]
+  parentPostId: [PostId]
+  postTypes: [[PostType!]!]
+  feed: [EvmAddress!]
+  app: [EvmAddress]
 }
 
-input PostDeletedNotificationAttributes {
-  author: EvmAddress
-  parentPostId: PostId
-  postTypes: [PostType!]
-  feed: EvmAddress
-  app: EvmAddress
+input PostDeletedNotificationFilter {
+  author: [EvmAddress!]
+  parentPostId: [PostId]
+  postTypes: [[PostType!]!]
+  feed: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 type PostEdit {
@@ -5123,12 +5129,12 @@ type PostEdit {
   timestamp: DateTime!
 }
 
-input PostEditedNotificationAttributes {
-  author: EvmAddress
-  parentPostId: PostId
-  postTypes: [PostType!]
-  feed: EvmAddress
-  app: EvmAddress
+input PostEditedNotificationFilter {
+  author: [EvmAddress!]
+  parentPostId: [PostId]
+  postTypes: [[PostType!]!]
+  feed: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 input PostEditsRequest {
@@ -5219,11 +5225,11 @@ type PostReaction {
   app: EvmAddress
 }
 
-input PostReactionAddedNotificationAttributes {
-  postId: PostId
-  reactingAccount: EvmAddress
-  reactionType: PostReactionType
-  app: EvmAddress
+input PostReactionAddedNotificationFilter {
+  postId: [PostId!]
+  reactingAccount: [EvmAddress!]
+  reactionType: [PostReactionType!]
+  app: [EvmAddress!]
 }
 
 enum PostReactionOrderBy {
@@ -5231,11 +5237,11 @@ enum PostReactionOrderBy {
   ACCOUNT_SCORE
 }
 
-input PostReactionRemovedNotificationAttributes {
-  postId: PostId
-  reactingAccount: EvmAddress
-  reactionType: PostReactionType
-  app: EvmAddress
+input PostReactionRemovedNotificationFilter {
+  postId: [PostId!]
+  reactingAccount: [EvmAddress!]
+  reactionType: [PostReactionType!]
+  app: [EvmAddress!]
 }
 
 type PostReactionStatus {
@@ -5326,11 +5332,11 @@ enum PostReportReason {
   SOMETHING_ELSE
 }
 
-input PostReportedNotificationAttributes {
-  author: EvmAddress
-  reporter: EvmAddress
-  feed: EvmAddress
-  app: EvmAddress
+input PostReportedNotificationFilter {
+  author: [EvmAddress!]
+  reporter: [EvmAddress!]
+  feed: [EvmAddress!]
+  app: [EvmAddress]
 }
 
 """
@@ -5481,7 +5487,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1745759306
+  since: Int! = 1746440721
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5495,7 +5501,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1745759306, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1746440721, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -5570,6 +5576,18 @@ input PrimitiveId @oneOf {
   sponsorship: EvmAddress
   accountAction: EvmAddress
   postAction: EvmAddress
+}
+
+enum PrimitiveMetadataSchema {
+  ACCOUNT
+  APP
+  FEED
+  GRAPH
+  GROUP
+  RULE
+  SPONSORSHIP
+  USERNAME
+  ACTION
 }
 
 type Query {
@@ -6346,35 +6364,35 @@ type SnsSubscription {
 }
 
 input SnsTopicInput @oneOf {
-  mediaSnapshotSuccess: MediaSnapshotNotificationAttributes
-  mediaSnapshotError: MediaSnapshotNotificationAttributes
-  metadataSnapshotSuccess: MetadataSnapshotNotificationAttributes
-  metadataSnapshotError: MetadataSnapshotNotificationAttributes
-  refreshMetadataSuccess: MetadataSnapshotNotificationAttributes
-  refreshMetadataError: MetadataSnapshotNotificationAttributes
-  postCreated: PostCreatedNotificationAttributes
-  postEdited: PostEditedNotificationAttributes
-  postDeleted: PostDeletedNotificationAttributes
-  postReactionAdded: PostReactionAddedNotificationAttributes
-  postReactionRemoved: PostReactionRemovedNotificationAttributes
-  postReported: PostReportedNotificationAttributes
-  postCollected: PostCollectedNotificationAttributes
-  postActionExecuted: PostActionExecutedNotificationAttributes
-  accountCreated: AccountCreatedNotificationAttributes
-  accountMentioned: AccountMentionedNotificationAttributes
-  accountFollowed: AccountFollowedNotificationAttributes
-  accountUnfollowed: AccountUnfollowedNotificationAttributes
-  accountBlocked: AccountBlockedNotificationAttributes
-  accountUnblocked: AccountUnblockedNotificationAttributes
-  accountUsernameCreated: AccountUsernameCreatedNotificationAttributes
-  accountUsernameAssigned: AccountUsernameAssignedNotificationAttributes
-  accountUsernameUnassigned: AccountUsernameUnassignedNotificationAttributes
-  accountManagerAdded: AccountManagerAddedNotificationAttributes
-  accountManagerRemoved: AccountManagerRemovedNotificationAttributes
-  accountManagerUpdated: AccountManagerUpdatedNotificationAttributes
-  accountOwnershipTransferred: AccountOwnershipTransferredNotificationAttributes
-  accountReported: AccountReportedNotificationAttributes
-  accountActionExecuted: AccountActionExecutedNotificationAttributes
+  mediaSnapshotSuccess: MediaSnapshotNotificationFilter
+  mediaSnapshotError: MediaSnapshotNotificationFilter
+  metadataSnapshotSuccess: MetadataSnapshotNotificationFilter
+  metadataSnapshotError: MetadataSnapshotNotificationFilter
+  refreshMetadataSuccess: MetadataSnapshotNotificationFilter
+  refreshMetadataError: MetadataSnapshotNotificationFilter
+  postCreated: PostCreatedNotificationFilter
+  postEdited: PostEditedNotificationFilter
+  postDeleted: PostDeletedNotificationFilter
+  postReactionAdded: PostReactionAddedNotificationFilter
+  postReactionRemoved: PostReactionRemovedNotificationFilter
+  postReported: PostReportedNotificationFilter
+  postCollected: PostCollectedNotificationFilter
+  postActionExecuted: PostActionExecutedNotificationFilter
+  accountCreated: AccountCreatedNotificationFilter
+  accountMentioned: AccountMentionedNotificationFilter
+  accountFollowed: AccountFollowedNotificationFilter
+  accountUnfollowed: AccountUnfollowedNotificationFilter
+  accountBlocked: AccountBlockedNotificationFilter
+  accountUnblocked: AccountUnblockedNotificationFilter
+  accountUsernameCreated: AccountUsernameCreatedNotificationFilter
+  accountUsernameAssigned: AccountUsernameAssignedNotificationFilter
+  accountUsernameUnassigned: AccountUsernameUnassignedNotificationFilter
+  accountManagerAdded: AccountManagerAddedNotificationFilter
+  accountManagerRemoved: AccountManagerRemovedNotificationFilter
+  accountManagerUpdated: AccountManagerUpdatedNotificationFilter
+  accountOwnershipTransferred: AccountOwnershipTransferredNotificationFilter
+  accountReported: AccountReportedNotificationFilter
+  accountActionExecuted: AccountActionExecutedNotificationFilter
 }
 
 type SpaceMetadata {
@@ -8042,7 +8060,7 @@ type UsernameNamespaceMetadataStandard {
 
   """The name of the contract."""
   name: String!
-  schema: String!
+  schema: PrimitiveMetadataSchema!
 
   """The symbol of the contract."""
   symbol: String

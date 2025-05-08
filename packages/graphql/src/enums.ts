@@ -1262,3 +1262,18 @@ export enum UsernamesOrderBy {
   LastMinted = 'LAST_MINTED',
   FirstMinted = 'FIRST_MINTED',
 }
+
+/**
+ * Enum for PrimitiveMetadataSchema.
+ */
+export enum PrimitiveMetadataSchema {
+  Account = 'ACCOUNT',
+  App = 'APP',
+  Feed = 'FEED',
+  Graph = 'GRAPH',
+  Group = 'GROUP',
+  Rule = 'RULE',
+  Sponsorship = 'SPONSORSHIP',
+  Username = 'USERNAME',
+  Action = 'ACTION',
+}
