@@ -33,6 +33,7 @@ import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { CredentialsStorage } from '@lens-protocol/storage';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
+import { BatchQueryBuilder } from './batch';
 import type { ClientConfig } from './config';
 import { type Context, configureContext } from './context';
 import {
@@ -112,7 +113,7 @@ abstract class AbstractClient<TContext extends Context, TError> {
   public abstract isPublicClient(): this is PublicClient<TContext>;
 
   /**
-   *  that the client is a {@link SessionClient}.
+   * Asserts that the client is a {@link SessionClient}.
    */
   public abstract isSessionClient(): this is SessionClient<TContext>;
 
@@ -129,6 +130,249 @@ abstract class AbstractClient<TContext extends Context, TError> {
     return this.resultFrom(this.urql.mutation(mutation, variables)).map(takeValue);
   }
 
+  /**
+   * Execute a batch of GraphQL query operations.
+   *
+   * @alpha This is an alpha API and may be subject to breaking changes.
+   *
+   * ```ts
+   * const result = await sessionClient.batch((c) => [
+   *   fetchAccount(c, { address: evmAddress('0x1234…') }).map(nonNullable),
+   *   fetchBalancesBulk(c, {
+   *     includeNative: true,
+   *     tokens: [
+   *       evmAddress("0x5678…"),
+   *       evmAddress("0x9012…"),
+   *     ],
+   *   }),
+   * ]);
+   *
+   * // const result: Result<
+   * //   [
+   * //     Account,
+   * //     AnyAccountBalance[],
+   * //   ],
+   * //   UnauthenticatedError | UnexpectedError
+   * // >
+   * ```
+   *
+   * @param cb - The callback with the scoped client to execute the actions with.
+   * @returns The results of all queries in the same order as they were added.
+   */
+  batch<T1, T2, E1 extends Error, E2 extends Error>(
+    cb: (client: this) => [ResultAsync<T1, E1>, ResultAsync<T2, E2>],
+  ): ResultAsync<[T1, T2], E1 | E2>;
+  batch<T1, T2, T3, E1 extends Error, E2 extends Error, E3 extends Error>(
+    cb: (client: this) => [ResultAsync<T1, E1>, ResultAsync<T2, E2>, ResultAsync<T3, E3>],
+  ): ResultAsync<[T1, T2, T3], E1 | E2 | E3>;
+  batch<T1, T2, T3, T4, E1 extends Error, E2 extends Error, E3 extends Error, E4 extends Error>(
+    cb: (
+      client: this,
+    ) => [ResultAsync<T1, E1>, ResultAsync<T2, E2>, ResultAsync<T3, E3>, ResultAsync<T4, E4>],
+  ): ResultAsync<[T1, T2, T3, T4], E1 | E2 | E3 | E4>;
+  batch<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    E1 extends Error,
+    E2 extends Error,
+    E3 extends Error,
+    E4 extends Error,
+    E5 extends Error,
+  >(
+    cb: (
+      client: this,
+    ) => [
+      ResultAsync<T1, E1>,
+      ResultAsync<T2, E2>,
+      ResultAsync<T3, E3>,
+      ResultAsync<T4, E4>,
+      ResultAsync<T5, E5>,
+    ],
+  ): ResultAsync<[T1, T2, T3, T4, T5], E1 | E2 | E3 | E4 | E5>;
+  batch<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    T6,
+    E1 extends Error,
+    E2 extends Error,
+    E3 extends Error,
+    E4 extends Error,
+    E5 extends Error,
+    E6 extends Error,
+  >(
+    cb: (
+      client: this,
+    ) => [
+      ResultAsync<T1, E1>,
+      ResultAsync<T2, E2>,
+      ResultAsync<T3, E3>,
+      ResultAsync<T4, E4>,
+      ResultAsync<T5, E5>,
+      ResultAsync<T6, E6>,
+    ],
+  ): ResultAsync<[T1, T2, T3, T4, T5, T6], E1 | E2 | E3 | E4 | E5 | E6>;
+  batch<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    T6,
+    T7,
+    E1 extends Error,
+    E2 extends Error,
+    E3 extends Error,
+    E4 extends Error,
+    E5 extends Error,
+    E6 extends Error,
+    E7 extends Error,
+  >(
+    cb: (
+      client: this,
+    ) => [
+      ResultAsync<T1, E1>,
+      ResultAsync<T2, E2>,
+      ResultAsync<T3, E3>,
+      ResultAsync<T4, E4>,
+      ResultAsync<T5, E5>,
+      ResultAsync<T6, E6>,
+      ResultAsync<T7, E7>,
+    ],
+  ): ResultAsync<[T1, T2, T3, T4, T5, T6, T7], E1 | E2 | E3 | E4 | E5 | E6 | E7>;
+  batch<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    T6,
+    T7,
+    T8,
+    E1 extends Error,
+    E2 extends Error,
+    E3 extends Error,
+    E4 extends Error,
+    E5 extends Error,
+    E6 extends Error,
+    E7 extends Error,
+    E8 extends Error,
+  >(
+    cb: (
+      client: this,
+    ) => [
+      ResultAsync<T1, E1>,
+      ResultAsync<T2, E2>,
+      ResultAsync<T3, E3>,
+      ResultAsync<T4, E4>,
+      ResultAsync<T5, E5>,
+      ResultAsync<T6, E6>,
+      ResultAsync<T7, E7>,
+      ResultAsync<T8, E8>,
+    ],
+  ): ResultAsync<[T1, T2, T3, T4, T5, T6, T7, T8], E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8>;
+  batch<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    T6,
+    T7,
+    T8,
+    T9,
+    E1 extends Error,
+    E2 extends Error,
+    E3 extends Error,
+    E4 extends Error,
+    E5 extends Error,
+    E6 extends Error,
+    E7 extends Error,
+    E8 extends Error,
+    E9 extends Error,
+  >(
+    cb: (
+      client: this,
+    ) => [
+      ResultAsync<T1, E1>,
+      ResultAsync<T2, E2>,
+      ResultAsync<T3, E3>,
+      ResultAsync<T4, E4>,
+      ResultAsync<T5, E5>,
+      ResultAsync<T6, E6>,
+      ResultAsync<T7, E7>,
+      ResultAsync<T8, E8>,
+      ResultAsync<T9, E9>,
+    ],
+  ): ResultAsync<[T1, T2, T3, T4, T5, T6, T7, T8, T9], E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | E9>;
+  batch<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    T6,
+    T7,
+    T8,
+    T9,
+    T10,
+    E1 extends Error,
+    E2 extends Error,
+    E3 extends Error,
+    E4 extends Error,
+    E5 extends Error,
+    E6 extends Error,
+    E7 extends Error,
+    E8 extends Error,
+    E9 extends Error,
+    E10 extends Error,
+  >(
+    cb: (
+      client: this,
+    ) => [
+      ResultAsync<T1, E1>,
+      ResultAsync<T2, E2>,
+      ResultAsync<T3, E3>,
+      ResultAsync<T4, E4>,
+      ResultAsync<T5, E5>,
+      ResultAsync<T6, E6>,
+      ResultAsync<T7, E7>,
+      ResultAsync<T8, E8>,
+      ResultAsync<T9, E9>,
+      ResultAsync<T10, E10>,
+    ],
+  ): ResultAsync<
+    [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10],
+    E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | E9 | E10
+  >;
+  batch<T, E extends Error>(cb: (client: this) => ResultAsync<T, E>[]): ResultAsync<T[], E>;
+  batch(cb: (client: this) => ResultAsync<unknown[], unknown>[]): ResultAsync<unknown[], unknown> {
+    const builder = new BatchQueryBuilder();
+
+    const client: this = Object.create(this, {
+      query: {
+        value: builder.addQuery,
+      },
+    });
+
+    const combined = ResultAsync.combine(cb(client));
+    const [document, variables] = builder.build();
+
+    const query = this.context.fragments.replaceFrom(document);
+
+    return this.resultFrom(this.urql.query(query, variables))
+      .andTee(({ data, error }) => {
+        invariant(data, `Expected a value, got: ${error?.message}`);
+        builder.resolve(data);
+      })
+      .andThen(() => combined);
+  }
+
   protected exchanges(): Exchange[] {
     return [fetchExchange];
   }
@@ -138,6 +382,7 @@ abstract class AbstractClient<TContext extends Context, TError> {
   ): ResultAsync<OperationResult<TData, TVariables>, TError | UnexpectedError> {
     return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
       this.logger.error(err);
+      console.log(err);
       return UnexpectedError.from(err);
     }).andThen((result) => {
       if (result.error?.networkError) {
