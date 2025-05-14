@@ -7,12 +7,13 @@ import {
   UsernameFragment,
   graphql,
 } from '@lens-protocol/graphql';
-import { url, assertErr, assertOk } from '@lens-protocol/types';
+import type { Account } from '@lens-protocol/graphql';
+import { url, assertErr, assertOk, expectTypename, nonNullable } from '@lens-protocol/types';
 import * as msw from 'msw';
 import { setupServer } from 'msw/node';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, expectTypeOf, it } from 'vitest';
 
-import { currentSession, fetchAccount } from './actions';
+import { currentSession, fetchAccount, fetchPost } from './actions';
 import { PublicClient } from './clients';
 import { GraphQLErrorCode, UnauthenticatedError, UnexpectedError } from './errors';
 import {
@@ -313,6 +314,55 @@ describe(`Given an instance of the '${PublicClient.name}'`, () => {
           value: expect.any(String),
         },
       });
+    });
+  });
+
+  describe('When batching multiple queries', () => {
+    it('Then it should return the results of all queries in the same order', async () => {
+      const client = createPublicClient();
+
+      const result = await client.batch((c) => [
+        fetchAccount(c, { address: TEST_ACCOUNT }).map(nonNullable),
+        fetchPost(c, { post: '4evp0jgqap2awsxpvt' }).map(nonNullable).map(expectTypename('Post')),
+      ]);
+
+      assertOk(result);
+
+      expect(result.value[0]).toMatchObject({
+        __typename: 'Account',
+        address: TEST_ACCOUNT,
+      });
+      expect(result.value[1]).toMatchObject({
+        __typename: 'Post',
+        slug: '4evp0jgqap2awsxpvt',
+      });
+    });
+
+    it('Then it should be possible to batch dynamic queries up to the 10 maximum', async () => {
+      const client = createPublicClient();
+
+      const result = await client.batch((c) =>
+        [TEST_ACCOUNT, TEST_ACCOUNT].map((address) =>
+          fetchAccount(c, { address }).map(nonNullable),
+        ),
+      );
+
+      assertOk(result);
+      expectTypeOf(result.value).toEqualTypeOf<Account[]>();
+    });
+
+    it('Then it should warn if the batch size exceeds the maximum', () => {
+      const client = createPublicClient();
+
+      expect(() =>
+        client.batch((c) =>
+          Array.from({ length: 11 }, () =>
+            fetchAccount(c, { address: TEST_ACCOUNT }).map(nonNullable),
+          ),
+        ),
+      ).toThrowErrorMatchingInlineSnapshot(
+        '[InvariantError: Batch queries supports a maximum of 10 queries]',
+      );
     });
   });
 });

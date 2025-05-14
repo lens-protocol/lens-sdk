@@ -401,7 +401,7 @@ export const WhoReferencedPostQuery = graphql(
 );
 export type WhoReferencedPostRequest = RequestOf<typeof WhoReferencedPostQuery>;
 
-const PostExecutedActionsFragment = graphql(
+export const PostExecutedActionsFragment = graphql(
   `fragment PostExecutedActions on PostExecutedActions {
     __typename
     account {
