@@ -81,10 +81,10 @@ export function fetchPostsToExplore(
 }
 
 /**
- * Dismiss a recommended account.
+ * Dismiss recommended accounts.
  *
  * ```ts
- * const result = await dismissRecommendedAccount(sessionClient, {
+ * const result = await dismissRecommendedAccounts(sessionClient, {
  *   accounts: [evmAddress('0xe2f2...')],
  * });
  * ```
@@ -93,7 +93,7 @@ export function fetchPostsToExplore(
  * @param request - The list of accounts to dismiss.
  * @returns - void
  */
-export function dismissRecommendedAccount(
+export function dismissRecommendedAccounts(
   client: SessionClient,
   request: DismissRecommendedAccountsRequest,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
