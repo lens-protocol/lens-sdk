@@ -1,8 +1,9 @@
+import type { Erc20Amount, NativeAmount } from '@lens-protocol/graphql';
 import { Result, assertOk, bigDecimal, evmAddress } from '@lens-protocol/types';
+import { Big } from 'big.js';
+import { zeroAddress } from 'viem';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import type { Erc20Amount, NativeAmount } from '@lens-protocol/graphql';
-import { zeroAddress } from 'viem';
 import type { SessionClient } from '../clients';
 import { CHAIN, TEST_ERC20, loginAsAccountOwner, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
@@ -108,7 +109,7 @@ describe('Given a Lens Account', () => {
 
         assertOk(result);
         const [newNative] = await fetchBalances(sessionClient);
-        expect(Number(newNative.value)).toEqual(Number(native.value) + 1);
+        expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
       },
     );
 
@@ -123,8 +124,8 @@ describe('Given a Lens Account', () => {
 
         assertOk(result);
         const [newNative, newWrapped] = await fetchBalances(sessionClient);
-        expect(Number(newNative.value)).toEqual(Number(native.value) - 1);
-        expect(Number(newWrapped.value)).toEqual(Number(wrapped.value) + 1);
+        expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
+        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
       },
     );
 
@@ -142,7 +143,7 @@ describe('Given a Lens Account', () => {
 
         assertOk(result);
         const [, newWrapped] = await fetchBalances(sessionClient);
-        expect(Number(newWrapped.value)).toEqual(Number(wrapped.value) - 1);
+        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
       },
     );
 
@@ -159,7 +160,7 @@ describe('Given a Lens Account', () => {
 
         assertOk(result);
         const [, newWrapped] = await fetchBalances(sessionClient);
-        expect(Number(newWrapped.value)).toEqual(Number(wrapped.value) + 1);
+        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
       },
     );
 
@@ -174,8 +175,8 @@ describe('Given a Lens Account', () => {
 
         assertOk(result);
         const [newNative, newWrapped] = await fetchBalances(sessionClient);
-        expect(Number(newNative.value)).toEqual(Number(native.value) + 1);
-        expect(Number(newWrapped.value)).toEqual(Number(wrapped.value) - 1);
+        expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
+        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
       },
     );
 
@@ -190,7 +191,7 @@ describe('Given a Lens Account', () => {
 
         assertOk(result);
         const [newNative] = await fetchBalances(sessionClient);
-        expect(Number(newNative.value)).toEqual(Number(native.value) - 1);
+        expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
       },
     );
   });
