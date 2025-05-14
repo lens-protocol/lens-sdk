@@ -106,7 +106,7 @@ export function unassignUsernameFromAccount(
   client: SessionClient,
   request: UnassignUsernameFromAccountRequest = {},
 ): ResultAsync<UnassignUsernameToAccountResult, UnauthenticatedError | UnexpectedError> {
-  return client.query(UnassignUsernameFromAccountMutation, { request });
+  return client.mutation(UnassignUsernameFromAccountMutation, { request });
 }
 
 /**
