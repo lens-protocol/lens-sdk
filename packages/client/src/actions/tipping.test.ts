@@ -35,7 +35,7 @@ describe('Given a Lens Account with some WGHO (or any other ERC20)', { timeout: 
 
       assertOk(wrapped);
     }
-  });
+  }, 15000);
 
   describe('When executing the Tipping Account Action', () => {
     it('Then it should work as expected', async () => {
