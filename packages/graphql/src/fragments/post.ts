@@ -16,6 +16,7 @@ import {
   EmbedMetadataFragment,
   EventMetadataFragment,
   ImageMetadataFragment,
+  LinkMetadataFragment,
   LivestreamMetadataFragment,
   MintMetadataFragment,
   SpaceMetadataFragment,
@@ -117,6 +118,9 @@ export const PostMetadataFragment = graphql(
     ... on EventMetadata {
       ...EventMetadata
     }
+    ...on LinkMetadata {
+      ...LinkMetadata
+    }
     ... on LivestreamMetadata {
       ...LivestreamMetadata
     }
@@ -142,19 +146,20 @@ export const PostMetadataFragment = graphql(
   [
     ArticleMetadataFragment,
     AudioMetadataFragment,
-    TextOnlyMetadataFragment,
     CheckingInMetadataFragment,
-    ImageMetadataFragment,
-    VideoMetadataFragment,
     EmbedMetadataFragment,
     EventMetadataFragment,
+    ImageMetadataFragment,
+    LinkMetadataFragment,
     LivestreamMetadataFragment,
     MintMetadataFragment,
     SpaceMetadataFragment,
     StoryMetadataFragment,
+    TextOnlyMetadataFragment,
     ThreeDMetadataFragment,
     TransactionMetadataFragment,
     UnknownPostMetadataFragment,
+    VideoMetadataFragment,
   ],
 );
 // The following type is purposefully named so that a PostMetadata type can be defined
