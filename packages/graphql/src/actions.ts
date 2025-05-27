@@ -4,8 +4,8 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
 import { InsufficientFundsFragment } from './funds';
+import { type RequestOf, graphql } from './graphql';
 
 export const ConfigurePostActionResponseFragment = graphql(
   `fragment ConfigurePostActionResponse on ConfigurePostActionResponse {
