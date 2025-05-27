@@ -367,6 +367,6 @@ export const PayableAmountFragment = graphql(
       ...NativeAmount
     }
   }`,
-  [Erc20AmountFragment, NativeTokenFragment],
+  [Erc20AmountFragment, NativeAmountFragment],
 );
 export type PayableAmount = FragmentOf<typeof PayableAmountFragment>;
