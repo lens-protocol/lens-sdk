@@ -206,7 +206,8 @@ type AccountFollowRules {
   anyOf: [AccountFollowRule!]!
 }
 
-input AccountFollowRulesProcessingParams {
+input AccountFollowRulesProcessingParams @oneOf {
+  simplePaymentRule: SimplePaymentRuleProcessingParamsInput
   unknownRule: UnknownRuleProcessingParams
 }
 
@@ -755,20 +756,6 @@ input AdminsForRequest {
 }
 
 scalar AlwaysTrue
-
-input AmountInput {
-  """
-  The token address. To represent the native token, use the
-  0x000000000000000000000000000000000000800a.
-  """
-  currency: EvmAddress!
-
-  """
-  Token value in its main unit (e.g., 1.5 DAI), not in the smallest fraction (e.g.,
-  wei).
-  """
-  value: BigDecimal!
-}
 
 union AnyAccountBalance = NativeAmount | Erc20Amount | NativeBalanceError | Erc20BalanceError
 
@@ -1694,7 +1681,7 @@ input DeleteSnsSubscriptionRequest {
 }
 
 input DepositRequest @oneOf {
-  erc20: AmountInput
+  erc20: Erc20AmountInput
   native: BigDecimal
 }
 
@@ -1998,6 +1985,17 @@ type Erc20Amount {
   value: BigDecimal!
 }
 
+input Erc20AmountInput {
+  """The token address."""
+  currency: EvmAddress!
+
+  """
+  Token value in its main unit (e.g., 1.5 DAI), not in the smallest fraction (e.g.,
+  wei).
+  """
+  value: BigDecimal!
+}
+
 type Erc20BalanceError {
   """The reason for the failure."""
   reason: String!
@@ -2081,7 +2079,7 @@ type ExecuteAccountActionResponse {
   hash: TxHash!
 }
 
-union ExecuteAccountActionResult = ExecuteAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union ExecuteAccountActionResult = ExecuteAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail | InsufficientFunds
 
 input ExecutePostActionRequest {
   """The target post to execute the action on."""
@@ -2095,7 +2093,7 @@ type ExecutePostActionResponse {
   hash: TxHash!
 }
 
-union ExecutePostActionResult = ExecutePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union ExecutePostActionResult = ExecutePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail | InsufficientFunds
 
 input ExecutedUnknownActionRequest {
   address: EvmAddress!
@@ -3503,6 +3501,7 @@ The mime type of the image
 "image/svg+xml",
 "image/tiff",
 "image/webp",
+"image/avif",
 "image/x-ms-bmp"
 ]
 }
@@ -3519,6 +3518,7 @@ enum MediaImageType {
   TIFF
   WEBP
   X_MS_BMP
+  AVIF
 }
 
 input MediaSnapshotNotificationFilter {
@@ -3832,16 +3832,16 @@ type Mutation {
   reportAccount(request: ReportAccountRequest!): Void!
 
   """
-  Hides an account from the manager list of managed accounts.
+  Hides an account from the list of managed accounts.
   
-  You MUST be authenticated as Account Manager to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   hideManagedAccount(request: HideManagedAccountRequest!): Void!
 
   """
-  Undo the hiding of an account from the manager list of managed accounts.
+  Undo the hiding of an account from the list of managed accounts.
   
-  You MUST be authenticated as Account Manager to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   unhideManagedAccount(request: UnhideManagedAccountRequest!): Void!
 
@@ -4633,6 +4633,11 @@ type NativeToken {
 
   """The number of decimals the token uses."""
   decimals: Int!
+
+  """
+  The L2BaseToken address. This is exposed only for backwards compatibility reasons.
+  """
+  contract: NetworkAddress!
 }
 
 type NetworkAddress {
@@ -4942,16 +4947,25 @@ input PausingRequest {
 union PausingResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type PayToCollectConfig {
-  amount: Erc20Amount!
+  amount: Erc20Amount! @deprecated(reason: "Use `price` which supports native tokens")
+  price: PayableAmount!
   recipients: [RecipientPercent!]!
   referralShare: Float
 }
 
 input PayToCollectInput {
-  amount: AmountInput!
+  amount: Erc20AmountInput
+
+  """The ERC 20 token amount. Mutually exclusive with `native`"""
+  erc20: Erc20AmountInput
+
+  """The native token amount. Mutually exclusive with `erc20`"""
+  native: BigDecimal
   recipients: [RecipientPercentInput!]!
   referralShare: Float
 }
+
+union PayableAmount = NativeAmount | Erc20Amount
 
 type PaymasterParams {
   """The address of the paymaster."""
@@ -5451,7 +5465,8 @@ input PostTagsRequest {
 }
 
 type PostTip {
-  amount: Erc20Amount!
+  amount: Erc20Amount! @deprecated(reason: "Use `tipAmount` which supports native tokens")
+  tipAmount: PayableAmount!
   date: DateTime!
 }
 
@@ -5487,7 +5502,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1746440721
+  since: Int! = 1748072173
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5501,7 +5516,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1746440721, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1748072173, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -6302,18 +6317,54 @@ type SimpleCollectValidationPassed {
 }
 
 input SimplePaymentFeedRuleConfig {
-  cost: AmountInput!
+  """The feed post fee."""
+  cost: Erc20AmountInput!
+
+  """The feed post fee recipient."""
   recipient: EvmAddress!
+
+  """
+  The maximum percentage of the feed post fee that can be allocated to referrals.
+  This is calculated on the total amount after the treasury fee is deducted.
+  """
+  referralShare: Float! = 0
 }
 
 input SimplePaymentFollowRuleConfig {
-  cost: AmountInput!
+  """The follow fee."""
+  cost: Erc20AmountInput!
+
+  """The follow fee recipient."""
   recipient: EvmAddress!
+
+  """
+  The maximum percentage of the follow fee that can be allocated to referrals.
+  This is calculated on the total amount after the treasury fee is deducted.
+  """
+  referralShare: Float! = 0
 }
 
 input SimplePaymentGroupRuleConfig {
-  cost: AmountInput!
+  """The group joining fee."""
+  cost: Erc20AmountInput!
+
+  """The group joining fee recipient."""
   recipient: EvmAddress!
+
+  """
+  The maximum percentage of the group joining fee that can be allocated to referrals.
+  This is calculated on the total amount after the treasury fee is deducted.
+  """
+  referralShare: Float! = 0
+}
+
+input SimplePaymentRuleProcessingParamsInput {
+  """
+  The list of referrers and their cut of the follow referral share.
+  This is calculated as a percentage of the referral share AFTER the
+  treasury fee is deducted.
+  """
+  referrals: [ReferralCut!]!
 }
 
 enum SnsNotificationType {
@@ -7306,16 +7357,22 @@ type TippingAccountActionExecuted {
 
 input TippingAmountInput {
   """
-  Token value in its main unit (e.g., 1.5 WGHO), NOT in the smallest fraction (e.g.,
-  wei).
+  The token address.
+  Currently, only ERC20 tokens are supported.
   """
-  value: BigDecimal!
+  value: BigDecimal
 
   """
   The token address.
   Currently, only ERC20 tokens are supported.
   """
-  currency: EvmAddress!
+  currency: EvmAddress
+
+  """The ERC 20 token to tip. Mutually exclusive with `native`"""
+  erc20: Erc20AmountInput
+
+  """The native token amount to tip. Mutually exclusive with `erc20`"""
+  native: BigDecimal
 
   """
   The list of referrers and their cut of the referral share.
@@ -7339,10 +7396,7 @@ type TippingPostActionExecuted {
 input TokenAmountInput {
   standard: TokenStandard!
 
-  """
-  The token address. To represent the native token, use the
-  0x000000000000000000000000000000000000800a.
-  """
+  """The token address."""
   currency: EvmAddress!
 
   """
@@ -8071,7 +8125,7 @@ type UsernameNamespaceStats {
 }
 
 input UsernamePricePerLengthNamespaceRuleConfig {
-  cost: AmountInput!
+  cost: Erc20AmountInput!
   costOverrides: [LengthAmountPair!]
   recipient: EvmAddress!
 }
@@ -8256,7 +8310,7 @@ input WidthBasedTransform {
 }
 
 input WithdrawRequest @oneOf {
-  erc20: AmountInput
+  erc20: Erc20AmountInput
   native: BigDecimal
 }
 

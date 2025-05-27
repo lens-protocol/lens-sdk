@@ -338,6 +338,9 @@ export const NativeTokenFragment = graphql(
     name
     symbol
     decimals
+    contract {
+      ...NetworkAddress
+    }
   }`,
   [NetworkAddressFragment],
 );

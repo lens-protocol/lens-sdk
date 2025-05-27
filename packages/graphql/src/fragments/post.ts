@@ -7,6 +7,7 @@ import {
   BooleanValueFragment,
   Erc20AmountFragment,
   FollowerOnFragment,
+  NativeAmountFragment,
   UnknownPostActionFragment,
 } from './common';
 import {
@@ -51,12 +52,20 @@ export const PayToCollectConfigFragment = graphql(
     amount {
       ...Erc20Amount
     }
+    price {
+      ...on Erc20Amount {
+        ...Erc20Amount
+      }
+      ...on NativeAmount {
+        ...NativeAmount
+      }
+    }
     recipients {
       ...RecipientPercent
     }
     referralShare
   }`,
-  [Erc20AmountFragment, RecipientPercentFragment],
+  [Erc20AmountFragment, RecipientPercentFragment, NativeAmountFragment],
 );
 export type PayToCollectConfig = FragmentOf<typeof PayToCollectConfigFragment>;
 
@@ -287,9 +296,17 @@ export const PostTipFragment = graphql(
     amount {
       ...Erc20Amount
     }
+    tipAmount {
+      ...on Erc20Amount {
+        ...Erc20Amount
+      }
+      ...on NativeAmount {
+        ...NativeAmount
+      }
+    }
     date
   }`,
-  [Erc20AmountFragment],
+  [Erc20AmountFragment, NativeAmountFragment],
 );
 export type PostTip = FragmentOf<typeof PostTipFragment>;
 
