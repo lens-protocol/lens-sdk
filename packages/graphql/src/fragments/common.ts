@@ -346,6 +346,8 @@ export const NativeTokenFragment = graphql(
 );
 export type NativeToken = FragmentOf<typeof NativeTokenFragment>;
 
+export type PayableAmount = Erc20Amount | NativeAmount;
+
 export const NativeAmountFragment = graphql(
   `fragment NativeAmount on NativeAmount {
     __typename

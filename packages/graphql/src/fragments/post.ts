@@ -5,9 +5,11 @@ import { type Account, AccountFragment } from './account';
 import {
   AnyKeyValueFragment,
   BooleanValueFragment,
+  type Erc20Amount,
   Erc20AmountFragment,
   FollowerOnFragment,
   NativeAmountFragment,
+  type PayableAmount,
   UnknownPostActionFragment,
 } from './common';
 import {
@@ -46,7 +48,18 @@ export const RecipientPercentFragment = graphql(
 );
 export type RecipientPercent = FragmentOf<typeof RecipientPercentFragment>;
 
-export const PayToCollectConfigFragment = graphql(
+export type PayToCollectConfig = {
+  __typename: 'PayToCollectConfig';
+  /**
+   * @deprecated use `price` field instead.
+   */
+  amount: Erc20Amount;
+  price: PayableAmount;
+  recipients: RecipientPercent[];
+  referralShare: number | null;
+};
+
+export const PayToCollectConfigFragment: FragmentDocumentFor<PayToCollectConfig> = graphql(
   `fragment PayToCollectConfig on PayToCollectConfig {
     __typename
     amount {
@@ -67,7 +80,6 @@ export const PayToCollectConfigFragment = graphql(
   }`,
   [Erc20AmountFragment, RecipientPercentFragment, NativeAmountFragment],
 );
-export type PayToCollectConfig = FragmentOf<typeof PayToCollectConfigFragment>;
 
 export const SimpleCollectActionFragment = graphql(
   `fragment SimpleCollectAction on SimpleCollectAction {
@@ -290,7 +302,14 @@ export type OperationValidationOutcome =
   | PostOperationValidationUnknown
   | PostOperationValidationFailed;
 
-export const PostTipFragment = graphql(
+export type PostTip = {
+  __typename: 'PostTip';
+  amount: Erc20Amount;
+  tipAmount: PayableAmount;
+  date: DateTime;
+};
+
+export const PostTipFragment: FragmentDocumentFor<PostTip> = graphql(
   `fragment PostTip on PostTip {
     __typename
     amount {
@@ -308,7 +327,6 @@ export const PostTipFragment = graphql(
   }`,
   [Erc20AmountFragment, NativeAmountFragment],
 );
-export type PostTip = FragmentOf<typeof PostTipFragment>;
 
 export const SimpleCollectValidationPassedFragment = graphql(
   `fragment SimpleCollectValidationPassed on SimpleCollectValidationPassed {
