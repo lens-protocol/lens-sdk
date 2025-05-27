@@ -8,8 +8,8 @@ import {
   type Erc20Amount,
   Erc20AmountFragment,
   FollowerOnFragment,
-  NativeAmountFragment,
   type PayableAmount,
+  PayableAmountFragment,
   UnknownPostActionFragment,
 } from './common';
 import {
@@ -66,19 +66,14 @@ export const PayToCollectConfigFragment: FragmentDocumentFor<PayToCollectConfig>
       ...Erc20Amount
     }
     price {
-      ...on Erc20Amount {
-        ...Erc20Amount
-      }
-      ...on NativeAmount {
-        ...NativeAmount
-      }
+      ...PayableAmount
     }
     recipients {
       ...RecipientPercent
     }
     referralShare
   }`,
-  [Erc20AmountFragment, RecipientPercentFragment, NativeAmountFragment],
+  [Erc20AmountFragment, RecipientPercentFragment, PayableAmountFragment],
 );
 
 export const SimpleCollectActionFragment = graphql(
@@ -316,16 +311,11 @@ export const PostTipFragment: FragmentDocumentFor<PostTip> = graphql(
       ...Erc20Amount
     }
     tipAmount {
-      ...on Erc20Amount {
-        ...Erc20Amount
-      }
-      ...on NativeAmount {
-        ...NativeAmount
-      }
+      ...PayableAmount
     }
     date
   }`,
-  [Erc20AmountFragment, NativeAmountFragment],
+  [Erc20AmountFragment, PayableAmountFragment],
 );
 
 export const SimpleCollectValidationPassedFragment = graphql(
