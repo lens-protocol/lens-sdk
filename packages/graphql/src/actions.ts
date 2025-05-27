@@ -4,6 +4,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
+import { InsufficientFundsFragment } from './funds';
 import { type RequestOf, graphql } from './graphql';
 
 export const ConfigurePostActionResponseFragment = graphql(
@@ -158,12 +159,16 @@ export const ExecutePostActionResultFragment = graphql(
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
+    ...on InsufficientFunds {
+      ...InsufficientFunds
+    }
   }`,
   [
     ExecutePostActionResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
+    InsufficientFundsFragment,
   ],
 );
 export type ExecutePostActionResult = FragmentOf<typeof ExecutePostActionResultFragment>;
@@ -332,12 +337,16 @@ export const ExecuteAccountActionResultFragment = graphql(
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
+    ...on InsufficientFunds {
+      ...InsufficientFunds
+    }
   }`,
   [
     ExecuteAccountActionResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
+    InsufficientFundsFragment,
   ],
 );
 export type ExecuteAccountActionResult = FragmentOf<typeof ExecuteAccountActionResultFragment>;

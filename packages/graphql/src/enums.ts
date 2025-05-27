@@ -667,6 +667,7 @@ export enum MediaImageType {
   Tiff = 'TIFF',
   Webp = 'WEBP',
   XMsBmp = 'X_MS_BMP',
+  Avif = 'AVIF',
 }
 
 /**

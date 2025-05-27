@@ -258,6 +258,7 @@ export interface EventMetadata extends FragmentOf<typeof EventMetadataFragment> 
 
 export const LinkMetadataFragment = graphql(
   `fragment LinkMetadata on LinkMetadata {
+    __typename
     contentWarning
     id
     locale

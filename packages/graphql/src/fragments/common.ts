@@ -338,6 +338,9 @@ export const NativeTokenFragment = graphql(
     name
     symbol
     decimals
+    contract {
+      ...NetworkAddress
+    }
   }`,
   [NetworkAddressFragment],
 );
@@ -354,3 +357,16 @@ export const NativeAmountFragment = graphql(
   [NativeTokenFragment],
 );
 export type NativeAmount = FragmentOf<typeof NativeAmountFragment>;
+
+export const PayableAmountFragment = graphql(
+  `fragment PayableAmount on PayableAmount {
+    ...on Erc20Amount {
+      ...Erc20Amount
+    }
+    ...on NativeAmount {
+      ...NativeAmount
+    }
+  }`,
+  [Erc20AmountFragment, NativeAmountFragment],
+);
+export type PayableAmount = FragmentOf<typeof PayableAmountFragment>;
