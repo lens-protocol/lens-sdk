@@ -299,6 +299,9 @@ export type OperationValidationOutcome =
 
 export type PostTip = {
   __typename: 'PostTip';
+  /**
+   * @deprecated Use `tipAmount` field instead which supports both ERC20 and native amounts.
+   */
   amount: Erc20Amount;
   tipAmount: PayableAmount;
   date: DateTime;
