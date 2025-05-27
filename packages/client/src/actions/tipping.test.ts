@@ -88,7 +88,7 @@ describe('Given a Lens Account with some WGHO (or any other ERC20)', { timeout: 
         action: {
           tipping: {
             currency: TEST_ERC20,
-            value: '0.001',
+            value: bigDecimal(1),
             referrals: [
               {
                 address: TEST_SIGNER,
