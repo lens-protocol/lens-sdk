@@ -37,6 +37,9 @@ const CreateUsernameResultFragment = graphql(
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
+    ...on UsernameTaken {
+      ...UsernameTaken
+    }
   }`,
   [
     CreateUsernameResponseFragment,
@@ -44,6 +47,7 @@ const CreateUsernameResultFragment = graphql(
     SelfFundedTransactionRequestFragment,
     NamespaceOperationValidationFailedFragment,
     TransactionWillFailFragment,
+    UsernameTakenFragment,
   ],
 );
 export type CreateUsernameResult = FragmentOf<typeof CreateUsernameResultFragment>;
