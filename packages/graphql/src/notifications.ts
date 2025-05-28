@@ -8,6 +8,8 @@ import {
   type Group,
   GroupFragment,
   PaginatedResultInfoFragment,
+  type PayableAmount,
+  PayableAmountFragment,
   type PostReaction,
   PostReactionFragment,
   type RawKeyValue,
@@ -198,7 +200,11 @@ export const MentionNotificationFragment: FragmentDocumentFor<MentionNotificatio
 
 export interface TippingAccountActionExecuted {
   __typename: 'TippingAccountActionExecuted';
+  /**
+   * @deprecated Use `tipAmount` field instead which supports both ERC20 and native amounts.
+   */
   amount: Erc20Amount;
+  tipAmount: PayableAmount;
   executedBy: Account;
   executedAt: DateTime;
 }
@@ -210,12 +216,15 @@ export const TippingAccountActionExecutedFragment: FragmentDocumentFor<TippingAc
       amount {
         ...Erc20Amount
       }
+      tipAmount {
+        ...PayableAmount
+      }
       executedBy{
         ...Account
       }
       executedAt
     }`,
-    [AccountFragment, Erc20AmountFragment],
+    [AccountFragment, Erc20AmountFragment, PayableAmountFragment],
   );
 
 export interface UnknownAccountActionExecuted {
@@ -355,7 +364,11 @@ export const SimpleCollectPostActionExecutedFragment: FragmentDocumentFor<Simple
 export interface TippingPostActionExecuted {
   __typename: 'TippingPostActionExecuted';
   executedAt: DateTime;
+  /**
+   * @deprecated Use `tipAmount` field instead which supports both ERC20 and native amounts.
+   */
   amount: Erc20Amount;
+  tipAmount: PayableAmount;
   executedBy: Account;
 }
 
@@ -367,11 +380,14 @@ export const TippingPostActionExecutedFragment: FragmentDocumentFor<TippingPostA
       amount {
         ...Erc20Amount
       }
+      tipAmount {
+        ...PayableAmount
+      }
       executedBy {
         ...Account
       }
     }`,
-    [AccountFragment, Erc20AmountFragment],
+    [AccountFragment, Erc20AmountFragment, PayableAmountFragment],
   );
 
 export interface UnknownPostActionExecuted {

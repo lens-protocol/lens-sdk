@@ -1613,8 +1613,8 @@ input CreateUsernameNamespaceRequest {
   admins: [EvmAddress!]
 
   """
-  The namespace for example for lens this would be lens, and it means that the usernames will
-  be like lens/username
+  The namespace, for example, for lens this would be lens, and it means that the usernames
+  will be like lens/username
   """
   namespace: String!
 
@@ -1632,7 +1632,7 @@ input CreateUsernameRequest {
   autoAssign: Boolean! = true
 
   """The processing params for the namespace create rules."""
-  createUsernameRulesProcessingParams: [NamespaceRulesProcessingParams!]
+  createUsernameRulesProcessingParams: [CreateUsernameRulesProcessingParams!]
 
   """The processing params for the namespace assign rules from account"""
   assignAccountNamespaceRulesProcessingParams: [NamespaceRulesProcessingParams!]
@@ -1646,6 +1646,11 @@ type CreateUsernameResponse {
 }
 
 union CreateUsernameResult = CreateUsernameResponse | UsernameTaken | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input CreateUsernameRulesProcessingParams @oneOf {
+  usernamePricePerLengthRule: UsernamePricePerLengthRuleProcessingParamsInput
+  unknownRule: UnknownRuleProcessingParams
+}
 
 scalar Cursor
 
@@ -4215,7 +4220,8 @@ type Mutation {
   """
   Create a username.
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as Account Owner, Account Manager to use this
+  mutation.
   """
   createUsername(request: CreateUsernameRequest!): CreateUsernameResult!
 
@@ -4559,7 +4565,7 @@ input NamespaceRulesConfigInput {
   anyOf: [NamespaceRuleConfig!]! = []
 }
 
-input NamespaceRulesProcessingParams {
+input NamespaceRulesProcessingParams @oneOf {
   unknownRule: UnknownRuleProcessingParams
 }
 
@@ -5502,7 +5508,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1748097832
+  since: Int! = 1748170601
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5516,7 +5522,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1748097832, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1748170601, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -7350,7 +7356,8 @@ type TippingAccountAction {
 }
 
 type TippingAccountActionExecuted {
-  amount: Erc20Amount!
+  amount: Erc20Amount! @deprecated(reason: "Use `tipAmount` which supports native tokens")
+  tipAmount: PayableAmount!
   executedBy: Account!
   executedAt: DateTime!
 }
@@ -7388,7 +7395,8 @@ type TippingPostActionContract {
 }
 
 type TippingPostActionExecuted {
-  amount: Erc20Amount!
+  amount: Erc20Amount! @deprecated(reason: "Use `tipAmount` which supports native tokens")
+  tipAmount: PayableAmount!
   executedBy: Account!
   executedAt: DateTime!
 }
@@ -8125,9 +8133,31 @@ type UsernameNamespaceStats {
 }
 
 input UsernamePricePerLengthNamespaceRuleConfig {
+  """The default price for the username."""
   cost: Erc20AmountInput!
+
+  """
+  The price for each length. Specify only if different from the default price.
+  """
   costOverrides: [LengthAmountPair!]
+
+  """The payment recipient address."""
   recipient: EvmAddress!
+
+  """
+  The maximum percentage of the follow fee that can be allocated to referrals.
+  This is calculated on the total amount after the treasury fee is deducted.
+  """
+  referralShare: Float! = 0
+}
+
+input UsernamePricePerLengthRuleProcessingParamsInput {
+  """
+  The list of referrers and their cut of the username price referral share.
+  This is calculated as a percentage of the referral share AFTER the
+  treasury fee is deducted.
+  """
+  referrals: [ReferralCut!]!
 }
 
 """You must provide either an id or a username, not both."""
