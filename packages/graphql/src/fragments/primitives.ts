@@ -300,6 +300,8 @@ export type NamespaceRules = FragmentOf<typeof NamespaceRulesFragment>;
 export const NamespaceUnsatisfiedRuleFragment = graphql(
   `fragment NamespaceUnsatisfiedRule on NamespaceUnsatisfiedRule {
     __typename
+    id
+    type
     rule
     reason
     message

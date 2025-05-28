@@ -40,21 +40,13 @@ export function authenticatedUser(
       });
 
     case Role.OnboardingUser:
-      return ok({
-        address: claims.sub,
-        app: claims.aud,
-        authenticationId: claims.sid,
-        role: Role.OnboardingUser,
-        signer: claims.sub,
-        sponsored: claims[SPONSORED_CLAIM],
-      });
-
     case Role.Builder:
+    case Role.UnverifiedEOA:
       return ok({
         address: claims.sub,
         app: claims.aud,
         authenticationId: claims.sid,
-        role: Role.Builder,
+        role: claims[ROLE_CLAIM],
         signer: claims.sub,
         sponsored: claims[SPONSORED_CLAIM],
       });
