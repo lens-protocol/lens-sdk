@@ -40,6 +40,9 @@ type Account {
   """Get the rules for the account."""
   rules: AccountFollowRules!
   actions: [AccountAction!]!
+
+  """Check if a given account is a member of the group"""
+  isMemberOf(request: AccountIsMemberOfGroupRequest!): Boolean!
 }
 
 """
@@ -249,6 +252,10 @@ input AccountGraphsStatsRequest {
 
   """An optional filter to apply to the result."""
   filter: AccountGraphsStatsFilter
+}
+
+input AccountIsMemberOfGroupRequest {
+  group: EvmAddress!
 }
 
 type AccountManaged {
@@ -5508,7 +5515,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1748170601
+  since: Int! = 1748191880
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5522,7 +5529,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1748170601, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1748191880, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
