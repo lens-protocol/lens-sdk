@@ -466,7 +466,7 @@ export const PostStatsFragment = graphql(
     comments
     quotes
     upvotes: reactions(request: { type: UPVOTE })
-    downvotes: reactions(request: { type: UPVOTE })
+    downvotes: reactions(request: { type: DOWNVOTE })
     reposts
     tips
   }`,
