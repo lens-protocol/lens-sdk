@@ -1,21 +1,17 @@
-import { type EvmAddress, useAccount, useLogout } from '@lens-protocol/react';
+import { type EvmAddress, useAccount } from '@lens-protocol/react';
+import { LogoutButton } from './LogoutButton';
 
 export function MyAccount({ address }: { address: EvmAddress }) {
-  const { data, loading } = useAccount({ address });
-  const { execute } = useLogout();
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  const { data } = useAccount({ address, suspense: true });
 
   return (
     <div>
-      <h1>My Account</h1>
-      <p>Username: {data?.username?.value}</p>
-      <p>Account: {address}</p>
-      <button type='button' onClick={() => execute()}>
-        Log out
-      </button>
+      <h1>Welcome, {data?.metadata?.name ?? data?.username?.value ?? data?.address}!</h1>
+
+      <p>Created on: {data?.createdAt}</p>
+      <p>Account Score: {data?.score}</p>
+
+      <LogoutButton />
     </div>
   );
 }

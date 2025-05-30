@@ -1,6 +1,6 @@
-import { PublicClient, testnet } from '@lens-protocol/react';
+import { PublicClient, mainnet } from '@lens-protocol/react';
 
 export const client = PublicClient.create({
-  environment: testnet,
+  environment: mainnet,
   storage: window.localStorage,
 });
