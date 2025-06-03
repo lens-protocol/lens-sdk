@@ -19,11 +19,10 @@
     "lint:fix": "biome check --write",
     "new:package": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "prepublish": "pnpm run build",
-    "test:client": "vitest --project @lens-protocol/client --no-file-parallelism",
-    "test:cross-region": "vitest --project @lens-protocol/client crossRegion.test.ts",
-    "test:react": "vitest --project @lens-protocol/react --no-file-parallelism",
-    "test:storage": "vitest --project @lens-protocol/storage --no-file-parallelism",
-    "test": "vitest --no-file-parallelism"
+    "test:client": "vitest --project client",
+    "test:react": "vitest --project react",
+    "test:storage": "vitest --project storage",
+    "test": "vitest"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
