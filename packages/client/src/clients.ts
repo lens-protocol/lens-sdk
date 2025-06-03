@@ -5,7 +5,12 @@ import type {
   StandardData,
   SwitchAccountRequest,
 } from '@lens-protocol/graphql';
-import { AuthenticateMutation, ChallengeMutation, RefreshMutation } from '@lens-protocol/graphql';
+import {
+  AuthenticateMutation,
+  ChallengeMutation,
+  IssueUnverifiedCredentialsMutation,
+  RefreshMutation,
+} from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
 import {
   type Result,
@@ -30,6 +35,7 @@ import {
 } from '@urql/core';
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 
+import type { IssueUnverifiedCredentialsRequest } from '@lens-protocol/graphql';
 import { CredentialsStorage } from '@lens-protocol/storage';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
@@ -74,6 +80,11 @@ export type LoginParams = ChallengeRequest & {
    */
   signMessage: SignMessage;
 };
+
+/**
+ * @internal
+ */
+export type ImpersonationRequest = IssueUnverifiedCredentialsRequest;
 
 abstract class AbstractClient<TContext extends Context, TError> {
   /**
@@ -444,9 +455,12 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
         }
         return AuthenticationError.from(result.reason).asResultAsync();
       })
-      .andThen((tokens) => this.createCredentialsStorage().set(tokens))
-      .map((storage) => new SessionClient(storage, this))
-      .mapErr((err) => UnexpectedError.from(err));
+      .andThen((tokens) =>
+        this.createCredentialsStorage()
+          .set(tokens)
+          .mapErr((err) => UnexpectedError.from(err)),
+      )
+      .map((storage) => new SessionClient(storage, this));
   }
 
   /**
@@ -479,6 +493,27 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
           signature: signatureFrom(signature.value),
         });
       });
+  }
+
+  /**
+   * @internal
+   */
+  impersonate(
+    request: IssueUnverifiedCredentialsRequest,
+  ): ResultAsync<SessionClient<TContext>, AuthenticationError | UnexpectedError> {
+    return this.mutation(IssueUnverifiedCredentialsMutation, { request })
+      .andThen((result) => {
+        if (result.__typename === 'AuthenticationTokens') {
+          return okAsync(result);
+        }
+        return AuthenticationError.from(result.reason).asResultAsync();
+      })
+      .andThen((tokens) =>
+        this.createCredentialsStorage()
+          .set(tokens)
+          .mapErr((err) => UnexpectedError.from(err)),
+      )
+      .map((storage) => new SessionClient(storage, this));
   }
 
   /**

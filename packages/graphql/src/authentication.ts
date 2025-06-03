@@ -98,6 +98,43 @@ export const AuthenticateMutation = graphql(
 );
 export type SignedAuthChallenge = RequestOf<typeof AuthenticateMutation>;
 
+/**
+ * @internal
+ */
+export const UnverifiedCredentialsResult = graphql(
+  `fragment UnverifiedCredentialsResult on UnverifiedCredentialsResult {
+    ...on AuthenticationTokens {
+      ...AuthenticationTokens
+    }
+    ...on ForbiddenError {
+      ...ForbiddenError
+    }
+  }`,
+  [AuthenticationTokensFragment, ForbiddenErrorFragment],
+);
+/**
+ * @internal
+ */
+export type UnverifiedCredentialsResult = FragmentOf<typeof UnverifiedCredentialsResult>;
+
+/**
+ * @internal
+ */
+export const IssueUnverifiedCredentialsMutation = graphql(
+  `mutation IssueUnverifiedCredentials($request: IssueUnverifiedCredentialsRequest!) {
+    value: issueUnverifiedCredentials(request: $request) {
+      ...UnverifiedCredentialsResult
+    }
+  }`,
+  [UnverifiedCredentialsResult],
+);
+/**
+ * @internal
+ */
+export type IssueUnverifiedCredentialsRequest = RequestOf<
+  typeof IssueUnverifiedCredentialsMutation
+>;
+
 const AuthenticatedSessionFragment = graphql(
   `fragment AuthenticatedSession on AuthenticatedSession {
     authenticationId

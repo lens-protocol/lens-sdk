@@ -6,6 +6,10 @@ export enum Role {
   AccountManager = 'ACCOUNT_MANAGER',
   OnboardingUser = 'ONBOARDING_USER',
   Builder = 'BUILDER',
+  /**
+   * @internal
+   */
+  UnverifiedEOA = 'UNVERIFIED_EOA',
 }
 
 /**

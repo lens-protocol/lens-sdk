@@ -79,6 +79,24 @@ describe(`Given an instance of the '${PublicClient.name}'`, () => {
     });
   });
 
+  describe(`When invoking the internal '${PublicClient.prototype.impersonate.name}' method`, () => {
+    it('Then it should return a SessionClient instance associated with the provided identity', async () => {
+      const result = await client.impersonate({
+        signer: TEST_SIGNER,
+      });
+
+      assertOk(result);
+
+      const user = result.value.getAuthenticatedUser();
+      assertOk(user);
+      expect(user.value).toMatchObject({
+        role: Role.UnverifiedEOA,
+        address: TEST_SIGNER.toLowerCase(),
+        signer: TEST_SIGNER.toLowerCase(),
+      });
+    });
+  });
+
   describe('When resuming an authenticated session', () => {
     it('Then it should return a SessionClient instance associated with the credentials in the storage', async () => {
       const client = createPublicClient();
