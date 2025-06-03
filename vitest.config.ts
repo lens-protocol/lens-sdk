@@ -10,5 +10,6 @@ export default defineConfig({
     env: loadEnv('', process.cwd(), ''),
     environment: 'node',
     testTimeout: 10_000,
+    hookTimeout: 15_000,
   },
 });
