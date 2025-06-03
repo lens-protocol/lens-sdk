@@ -26,7 +26,7 @@ describe('Given a Lens Account with some WGHO (or any other ERC20)', { timeout: 
     }).andThen((balances) => findErc20Amount(TEST_ERC20, balances));
     assertOk(balance);
 
-    if (balance.value.value < '1') {
+    if (balance.value.value < '2') {
       const wrapped = await wrapTokens(sessionClient, {
         amount: bigDecimal(1),
       })
