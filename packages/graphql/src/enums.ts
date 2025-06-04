@@ -1282,3 +1282,11 @@ export enum PrimitiveMetadataSchema {
   Username = 'USERNAME',
   Action = 'ACTION',
 }
+
+/**
+ * Enum for PaymentSource.
+ */
+export enum PaymentSource {
+  Account = 'ACCOUNT',
+  Signer = 'SIGNER',
+}

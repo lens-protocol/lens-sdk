@@ -1,4 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
+import { SponsoredTransactionRequestFragment } from './fragments/transactions';
+import { TransactionWillFailFragment } from './fragments/transactions';
+import { SelfFundedTransactionRequestFragment } from './fragments/transactions';
 import { type RequestOf, graphql } from './graphql';
 
 const SubOperationStatusFragment = graphql(
@@ -90,3 +93,39 @@ export const TransactionStatusQuery = graphql(
 );
 
 export type TransactionStatusRequest = RequestOf<typeof TransactionStatusQuery>;
+
+export const PrepareSignerErc20ApprovalResultFragment = graphql(
+  `fragment PrepareSignerErc20ApprovalResult on PrepareSignerErc20ApprovalResult {
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+
+export type PrepareSignerErc20ApprovalResult = FragmentOf<
+  typeof PrepareSignerErc20ApprovalResultFragment
+>;
+
+export const PrepareSignerErc20ApprovalMutation = graphql(
+  `mutation PrepareSignerErc20Approval($request: PrepareSignerErc20ApprovalRequest!) {
+    value: prepareSignerErc20Approval(request: $request) {
+      ...PrepareSignerErc20ApprovalResult
+    }
+  }`,
+  [PrepareSignerErc20ApprovalResultFragment],
+);
+
+export type PrepareSignerErc20ApprovalRequest = RequestOf<
+  typeof PrepareSignerErc20ApprovalMutation
+>;

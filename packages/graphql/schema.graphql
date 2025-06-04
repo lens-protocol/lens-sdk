@@ -309,11 +309,11 @@ type AccountManagerPermissions {
   """Whether the account can execute transactions."""
   canExecuteTransactions: Boolean!
 
-  """Whether the account can transfer tokens."""
+  """Whether the account can transfer tokens (ERC20/native)."""
   canTransferTokens: Boolean!
 
   """Whether the account can transfer native tokens."""
-  canTransferNative: Boolean!
+  canTransferNative: Boolean! @deprecated(reason: "Use `canTransferTokens` instead.")
 
   """Whether the account can set the metadata URI."""
   canSetMetadataUri: Boolean!
@@ -1107,6 +1107,8 @@ type AuthenticationChallenge {
 
 union AuthenticationResult = AuthenticationTokens | WrongSignerError | ExpiredChallengeError | ForbiddenError
 
+scalar AuthenticationSignature
+
 type AuthenticationTokens {
   """
   The Access Token to use as a Bearer token in authenticated Lens API requests.
@@ -1739,6 +1741,8 @@ input DismissRecommendedAccountsRequest {
   accounts: [EvmAddress!]!
 }
 
+scalar EcdsaSignature
+
 input EditPostRequest {
   post: PostId!
   contentUri: URI!
@@ -2094,7 +2098,7 @@ type ExecuteAccountActionResponse {
   hash: TxHash!
 }
 
-union ExecuteAccountActionResult = ExecuteAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail | InsufficientFunds
+union ExecuteAccountActionResult = ExecuteAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail | SignerErc20ApprovalRequired | InsufficientFunds
 
 input ExecutePostActionRequest {
   """The target post to execute the action on."""
@@ -2108,7 +2112,7 @@ type ExecutePostActionResponse {
   hash: TxHash!
 }
 
-union ExecutePostActionResult = ExecutePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail | InsufficientFunds
+union ExecutePostActionResult = ExecutePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail | SignerErc20ApprovalRequired | InsufficientFunds
 
 input ExecutedUnknownActionRequest {
   address: EvmAddress!
@@ -2514,7 +2518,7 @@ type FrameLensManagerSignatureResult {
   signedTypedData: CreateFrameEIP712TypedData!
 
   """The signature"""
-  signature: Signature!
+  signature: EcdsaSignature!
 }
 
 input FrameVerifySignature {
@@ -2522,7 +2526,7 @@ input FrameVerifySignature {
   signedTypedData: CreateFrameEIP712TypedDataInput!
 
   """The signature"""
-  signature: Signature!
+  signature: EcdsaSignature!
 
   """The identity token"""
   identityToken: IdToken!
@@ -4028,6 +4032,13 @@ type Mutation {
   """
   unwrapTokens(request: UnwrapTokensRequest!): UnwrapTokensResult!
 
+  """
+  Creates an unlimited ERC20 approval of account spending signer tokens
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation
+  """
+  prepareSignerErc20Approval(request: PrepareSignerErc20ApprovalRequest!): PrepareSignerErc20ApprovalResult!
+
   """Authenticate the user with the signed authentication challenge."""
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
 
@@ -5009,6 +5020,14 @@ type PaymasterParams {
   paymasterInput: BlockchainData!
 }
 
+enum PaymentSource {
+  """The payment will be charged from the Account balance"""
+  ACCOUNT
+
+  """The payment will be charged from Owner's or Manager's balance"""
+  SIGNER
+}
+
 """
 The existence of the transaction is known, but its status is not yet known.
 
@@ -5536,7 +5555,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1748628076
+  since: Int! = 1748782698
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5550,7 +5569,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1748628076, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1748782698, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -5611,6 +5630,12 @@ input PostsRequest {
   pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
+
+input PrepareSignerErc20ApprovalRequest {
+  approval: SignerErc20Approval!
+}
+
+union PrepareSignerErc20ApprovalResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 union PrimitiveData = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue
 
@@ -6284,11 +6309,21 @@ input SetSponsorshipMetadataRequest {
 
 union SetSponsorshipMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-scalar Signature
-
 input SignedAuthChallenge {
   id: UUID!
-  signature: Signature!
+  signature: AuthenticationSignature!
+}
+
+input SignerErc20Approval @oneOf {
+  infinite: EvmAddress
+  exact: Erc20AmountInput
+}
+
+type SignerErc20ApprovalRequired {
+  reason: String!
+
+  """The token address."""
+  amount: Erc20Amount!
 }
 
 type SimpleCollectAction {
@@ -6322,6 +6357,7 @@ input SimpleCollectExecuteInput {
   treasury fee is deducted.
   """
   referrals: [ReferralCut!]
+  paymentSource: PaymentSource! = ACCOUNT
 }
 
 type SimpleCollectPostActionExecuted {
@@ -6339,7 +6375,6 @@ enum SimpleCollectValidationFailedReason {
   NOT_ENABLED
   END_DATE_REACHED
   LIMIT_REACHED
-  NOT_ENOUGH_BALANCE
   NOT_A_FOLLOWER
   POST_DELETED
 }
@@ -7416,6 +7451,9 @@ input TippingAmountInput {
   The tip referral share is capped at 20%.
   """
   referrals: [ReferralCut!]
+
+  """Address from which funds will be deducted to pay for the tip."""
+  paymentSource: PaymentSource! = ACCOUNT
 }
 
 type TippingPostActionContract {
