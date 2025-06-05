@@ -766,6 +766,8 @@ scalar AlwaysTrue
 
 union AnyAccountBalance = NativeAmount | Erc20Amount | NativeBalanceError | Erc20BalanceError
 
+union AnyBalance = NativeAmount | Erc20Amount | NativeBalanceError | Erc20BalanceError
+
 union AnyKeyValue = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue | DictionaryKeyValue | ArrayKeyValue
 
 input AnyKeyValueInput @oneOf {
@@ -1120,6 +1122,17 @@ type AuthenticationTokens {
   """
   refreshToken: RefreshToken!
   idToken: IdToken!
+}
+
+input BalancesBulkRequest {
+  """The address to get balances for."""
+  address: EvmAddress!
+
+  """The ERC-20 token addresses to get balances for."""
+  tokens: [EvmAddress!]! = []
+
+  """Whether to include the native token balance."""
+  includeNative: Boolean! = false
 }
 
 input BanGroupAccountsRequest {
@@ -5080,7 +5093,7 @@ type Post {
   commentOn: Post
   actions(request: PostActionsParams! = {includeDisabled: false}): [PostAction!]!
   operations: LoggedInPostOperations
-  stats: PostStats!
+  stats(request: PostStatsParams! = {includeModeratorFlagged: false}): PostStats!
   mentions: [PostMention!]!
   rules: PostRules!
   collectibleMetadata: NftMetadata!
@@ -5494,6 +5507,15 @@ type PostStats {
   reactions(request: StatsReactionRequest! = {type: UPVOTE}): Int!
 }
 
+input PostStatsParams {
+  """
+  Set whether to include stats from accounts that have been flagged by moderators.
+  
+  Defaults to false.
+  """
+  includeModeratorFlagged: Boolean!
+}
+
 type PostTag {
   value: String!
   total: Int!
@@ -5555,7 +5577,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1748782698
+  since: Int! = 1748872460
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5569,7 +5591,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1748782698, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1748872460, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -5679,7 +5701,7 @@ type Query {
   
   You MUST be authenticated as Account Owner or Account Manager to use this query.
   """
-  accountBalances(request: AccountBalancesRequest!): [AnyAccountBalance!]!
+  accountBalances(request: AccountBalancesRequest!): [AnyAccountBalance!]! @deprecated(reason: "Use `balancesBulk` query")
 
   """
   Account information for the authenticated account.
@@ -5818,6 +5840,13 @@ type Query {
 
   """Get access control information"""
   accessControl(request: AccessControlRequest!): AccessControlResult
+
+  """
+  Get native and/or ERC20 token balances in bulk for the specified address
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this query.
+  """
+  balancesBulk(request: BalancesBulkRequest!): [AnyBalance!]!
 
   """
   Get account timeline.
