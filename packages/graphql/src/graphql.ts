@@ -78,6 +78,7 @@ import type {
   NotificationOrderBy,
   NotificationType,
   PageSize,
+  PaymentSource,
   PostActionCategoryType,
   PostActionType,
   PostReactionOrderBy,
@@ -187,6 +188,7 @@ export const graphql = initGraphQLTada<{
     NotificationOrderBy: NotificationOrderBy;
     NotificationType: NotificationType;
     PageSize: PageSize;
+    PaymentSource: PaymentSource;
     PrimitiveMetadataSchema: PrimitiveMetadataSchema;
     PostActionCategoryType: PostActionCategoryType;
     PostActionType: PostActionType;

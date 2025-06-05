@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { graphql } from '../graphql';
+import { type FragmentDocumentFor, graphql } from '../graphql';
 import { ActionMetadataFragment, AnyKeyValueFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
 import { type GraphRule, GraphRuleFragment } from './primitives';
@@ -247,16 +247,27 @@ export const AccountFragment = graphql(
 );
 export interface Account extends FragmentOf<typeof AccountFragment> {}
 
-const AccountManagerPermissionsFragment = graphql(
-  `fragment AccountManagerPermissions on AccountManagerPermissions {
+export interface AccountManagerPermissions {
+  __typename: 'AccountManagerPermissions';
+  canExecuteTransactions: boolean;
+  canSetMetadataUri: boolean;
+  /**
+   * @deprecated Use `canTransferTokens` field instead which supports both ERC20 and native amounts.
+   */
+  canTransferNative: boolean;
+  canTransferTokens: boolean;
+}
+
+export const AccountManagerPermissionsFragment: FragmentDocumentFor<AccountManagerPermissions> =
+  graphql(
+    `fragment AccountManagerPermissions on AccountManagerPermissions {
     __typename
     canExecuteTransactions
     canSetMetadataUri
     canTransferNative
     canTransferTokens
   }`,
-);
-export type AccountManagerPermissions = FragmentOf<typeof AccountManagerPermissionsFragment>;
+  );
 
 export const AccountManagerFragment = graphql(
   `fragment AccountManager on AccountManager {

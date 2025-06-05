@@ -69,6 +69,14 @@ export const InsufficientFundsFragment = graphql(`
 `);
 export type InsufficientFunds = FragmentOf<typeof InsufficientFundsFragment>;
 
+export const SignerErc20ApprovalRequiredFragment = graphql(`
+  fragment SignerErc20ApprovalRequired on SignerErc20ApprovalRequired {
+    __typename
+    reason
+  }
+`);
+export type SignerErc20ApprovalRequired = FragmentOf<typeof SignerErc20ApprovalRequiredFragment>;
+
 const WithdrawResultFragment = graphql(
   `fragment WithdrawResult on WithdrawResult{
     ...on SponsoredTransactionRequest {
