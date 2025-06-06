@@ -14,13 +14,17 @@ import { fetchAccount, follow } from '@lens-protocol/client/actions';
 import { expectTypename } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
+export type UseFollowArgs = {
+  handler: OperationHandler;
+};
+
 /**
  * Follows a user on the Lens.
  *
  * @alpha This is an alpha API and may be subject to breaking changes.
  */
 export function useFollow(
-  handler: OperationHandler,
+  args: UseFollowArgs,
 ): UseAsyncTask<
   CreateFollowRequest,
   Account,
@@ -28,7 +32,7 @@ export function useFollow(
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     follow(sessionClient, request)
-      .andThen(handler)
+      .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen(() => fetchAccount(sessionClient, { address: request.account }))
       .map(nonNullable)

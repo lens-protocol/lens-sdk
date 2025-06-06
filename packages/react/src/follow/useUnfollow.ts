@@ -14,13 +14,17 @@ import { fetchAccount, unfollow } from '@lens-protocol/client/actions';
 import { expectTypename } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
+export type UseUnfollowArgs = {
+  handler: OperationHandler;
+};
+
 /**
  * Unfollows a user on the Lens.
  *
  * @alpha This is an alpha API and may be subject to breaking changes.
  */
 export function useUnfollow(
-  handler: OperationHandler,
+  args: UseUnfollowArgs,
 ): UseAsyncTask<
   CreateUnfollowRequest,
   Account,
@@ -28,7 +32,7 @@ export function useUnfollow(
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     unfollow(sessionClient, request)
-      .andThen(handler)
+      .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen(() => fetchAccount(sessionClient, { address: request.account }))
       .map(nonNullable)
