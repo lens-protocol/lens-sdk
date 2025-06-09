@@ -27,7 +27,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
  * @deprecated Use `fetchBalancesBulk` instead.
- * 
+ *
  * Fetch balances for the authenticated Account.
  *
  * ```ts
@@ -61,7 +61,7 @@ export function fetchAccountBalances(
  *   tokens: [
  *     evmAddress("0x45678…"),
  *     evmAddress("0x90123…"),
- *   ], 
+ *   ],
  * });
  * ```
  *

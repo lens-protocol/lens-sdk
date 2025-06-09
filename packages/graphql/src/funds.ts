@@ -4,7 +4,7 @@ import {
   NativeAmountFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
-  TransactionWillFailFragment
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
