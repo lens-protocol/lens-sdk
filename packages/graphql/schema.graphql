@@ -1121,6 +1121,8 @@ type AuthenticationTokens {
   The Refresh Token to use to obtain a new tokens triplet without re-authenticating.
   """
   refreshToken: RefreshToken!
+
+  """ID Token to used in client apps to know the user's identity."""
   idToken: IdToken!
 }
 
@@ -1640,6 +1642,9 @@ input CreateUsernameNamespaceRequest {
   """
   namespace: String!
 
+  """The namespace NFT collection ERC721 name"""
+  name: String
+
   """The namespace NFT collection ERC721 symbol"""
   symbol: String!
   rules: NamespaceRulesConfigInput
@@ -1648,11 +1653,23 @@ input CreateUsernameNamespaceRequest {
 union CreateUsernameNamespaceResult = CreateNamespaceResponse | SelfFundedTransactionRequest | TransactionWillFail
 
 input CreateUsernameRequest {
+  """The username to create."""
   username: UsernameInput!
 
   """
-  Whether to auto-assign the username to the Lens Account.
-  When logged-in as Account Owner or Manager, it defaults to true.
+  The Account that will own the Username.
+  In case `autoAssign` is set to true, the Username will also be assigned to this Account.
+  
+  Whether logged-in as Account Owner or Manager, the auth signer address MUST be the Account
+  Owner or Manager of the specified Account.
+  """
+  account: EvmAddress
+
+  """
+  Whether to auto-assign the username to the Account.
+  
+  When logged-in as Account Owner/Manager or an `account` is provided, this will
+  default to `true`.
   """
   autoAssign: Boolean
 
@@ -3111,8 +3128,10 @@ input IsFollowingMeRequest {
 
 input IssueUnverifiedCredentialsRequest {
   """
-  The EOA address. This address will be the one that MUST sign transaction generated with
-  this authentication role.
+  An EOA address.
+  
+  This address will be the one that MUST send transaction generated with
+  the authentication role associated with the issued tokens.
   """
   signer: EvmAddress!
 }
@@ -4072,14 +4091,6 @@ type Mutation {
   """
   challenge(request: ChallengeRequest!): AuthenticationChallenge!
 
-  """
-  Issues authentication tokens for an EOA address without requiring a proof of ownership.
-  This will require a signature for every transaction request.
-  
-  This is an experimental mutation and can change at any time.
-  """
-  issueUnverifiedCredentials(request: IssueUnverifiedCredentialsRequest!): UnverifiedCredentialsResult!
-
   """Refreshes the authentication tokens."""
   refresh(request: RefreshRequest!): RefreshResult!
 
@@ -4104,6 +4115,14 @@ type Mutation {
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   switchAccount(request: SwitchAccountRequest!): SwitchAccountResult!
+
+  """
+  Issues authentication tokens for an EOA address without requiring a proof of ownership.
+  This will require a signature for every transaction request.
+  
+  This is an experimental mutation and can change at any time.
+  """
+  issueUnverifiedCredentials(request: IssueUnverifiedCredentialsRequest!): UnverifiedCredentialsResult!
 
   """Refreshes the metadata for the provided entity."""
   refreshMetadata(request: RefreshMetadataRequest!): RefreshMetadataResult!
@@ -5577,7 +5596,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1748872460
+  since: Int! = 1749211778
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5591,7 +5610,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1748872460, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1749211778, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
