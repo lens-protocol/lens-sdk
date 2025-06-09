@@ -1,15 +1,15 @@
-import {
-  type CreateUnfollowRequest,
-  type OperationHandler,
-  type SigningError,
-  type TransactionIndexingError,
-  type UnauthenticatedError,
-  type UnexpectedError,
-  type ValidationError
+import type {
+  CreateUnfollowRequest,
+  OperationHandler,
+  SigningError,
+  TransactionIndexingError,
+  UnauthenticatedError,
+  UnexpectedError,
+  ValidationError,
 } from '@lens-protocol/client';
 import { unfollow } from '@lens-protocol/client/actions';
 
-import { TxHash } from '@lens-protocol/types';
+import type { TxHash } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
 export type UseUnfollowArgs = {
@@ -31,6 +31,6 @@ export function useUnfollow(
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     unfollow(sessionClient, request)
       .andThen(args.handler)
-      .andThen(sessionClient.waitForTransaction)
+      .andThen(sessionClient.waitForTransaction),
   );
 }
