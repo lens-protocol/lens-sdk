@@ -1,27 +1,33 @@
-import {
-  AccountBalancesQuery,
-  type AccountBalancesRequest,
-  type AnyAccountBalance,
-  DepositMutation,
-  type DepositRequest,
-  type DepositResult,
-  UnwrapTokensMutation,
-  WithdrawMutation,
-  type WithdrawRequest,
-  type WithdrawResult,
-  WrapTokensMutation,
-} from '@lens-protocol/graphql';
 import type {
+  AccountBalancesRequest,
+  AnyAccountBalance,
+  AnyBalance,
+  BalancesBulkRequest,
+  DepositRequest,
+  DepositResult,
   UnwrapTokensRequest,
   UnwrapTokensResult,
+  WithdrawRequest,
+  WithdrawResult,
   WrapTokensRequest,
+  WrapTokensResult,
 } from '@lens-protocol/graphql';
-import type { WrapTokensResult } from '@lens-protocol/graphql';
+import {
+  AccountBalancesQuery,
+  BalancesBulkQuery,
+  DepositMutation,
+  UnwrapTokensMutation,
+  WithdrawMutation,
+  WrapTokensMutation,
+} from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
+
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
+ * @deprecated Use `fetchBalancesBulk` instead.
+ *
  * Fetch balances for the authenticated Account.
  *
  * ```ts
@@ -43,6 +49,31 @@ export function fetchAccountBalances(
   request: AccountBalancesRequest,
 ): ResultAsync<AnyAccountBalance[], UnauthenticatedError | UnexpectedError> {
   return client.query(AccountBalancesQuery, { request });
+}
+
+/**
+ * Fetch balances for the provided addresses. Needs to be authenticated to execute.
+ *
+ * ```ts
+ * const result = await fetchBalancesBulk(anyClient, {
+ *   address: evmAddress("0x12345…"),
+ *   includeNative: true,
+ *   tokens: [
+ *     evmAddress("0x45678…"),
+ *     evmAddress("0x90123…"),
+ *   ],
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The query request.
+ * @returns The list of balance results for the provided addresses.
+ */
+export function fetchBalancesBulk(
+  client: SessionClient,
+  request: BalancesBulkRequest,
+): ResultAsync<AnyBalance[], UnauthenticatedError | UnexpectedError> {
+  return client.query(BalancesBulkQuery, { request });
 }
 
 /**
