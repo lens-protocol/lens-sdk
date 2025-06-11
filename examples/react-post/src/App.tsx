@@ -5,7 +5,7 @@ import { useWalletClient } from 'wagmi';
 
 export function App() {
   const { data: wallet } = useWalletClient();
-  const { execute, loading, data: post } = useCreatePost(handleOperationWith(wallet));
+  const { execute, loading, data: post } = useCreatePost({handler: handleOperationWith(wallet)});
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
