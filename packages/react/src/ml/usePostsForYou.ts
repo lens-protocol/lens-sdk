@@ -7,7 +7,7 @@ import { useSuspendableQuery } from '../helpers';
 export type UsePostsForYouArgs = PostsForYouRequest;
 
 /**
- * Fetch posts for you from ML.
+ * Fetch a list of recommended posts for a given account address or the current user's Account.
  *
  * This signature supports React Suspense:
  *
@@ -20,7 +20,7 @@ export function usePostsForYou(
 ): SuspenseResult<Paginated<PostForYou> | null>;
 
 /**
- * Fetch posts for you from ML.
+ * Fetch a list of recommended posts for a given account address or the current user's Account.
  *
  * ```tsx
  * const { data, loading } = usePostsForYou({ account: evmAddress('0x…') });

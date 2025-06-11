@@ -7,7 +7,7 @@ import { useSuspendableQuery } from '../helpers';
 export type UseAccountRecommendationsArgs = AccountRecommendationsRequest;
 
 /**
- * Retrieve a list of recommended accounts for a given account address.
+ * Fetch a list of recommended accounts for a given account address.
  *
  * This signature supports React Suspense:
  *
@@ -20,7 +20,7 @@ export function useAccountRecommendations(
 ): SuspenseResult<Paginated<Account> | null>;
 
 /**
- * Retrieve a list of recommended accounts for a given account address.
+ * Fetch a list of recommended accounts for a given account address.
  *
  * ```tsx
  * const { data, loading } = useAccountRecommendations({ account: evmAddress('0x…') });

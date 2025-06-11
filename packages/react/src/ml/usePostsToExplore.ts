@@ -7,7 +7,8 @@ import { useSuspendableQuery } from '../helpers';
 export type UsePostsToExploreArgs = PostsExploreRequest;
 
 /**
- * Fetch posts to explore.
+ * Fetch a list of post recommendations for the current user's Account.
+ * If current user is not authenticated, the results will not be personalized.
  *
  * This signature supports React Suspense:
  *
@@ -20,7 +21,8 @@ export function usePostsToExplore(
 ): SuspenseResult<Paginated<Post> | null>;
 
 /**
- * Fetch posts to explore.
+ * Fetch a list of post recommendations for the current user's Account.
+ * If current user is not authenticated, the results will not be personalized.
  *
  * ```tsx
  * const { data, loading } = usePostsToExplore({});
