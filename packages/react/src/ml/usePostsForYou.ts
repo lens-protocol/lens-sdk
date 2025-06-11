@@ -4,7 +4,7 @@ import { MlPostsForYouQuery, type PostForYou } from '@lens-protocol/graphql';
 import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type PostsForYouArgs = PostsForYouRequest;
+export type UsePostsForYouArgs = PostsForYouRequest;
 
 /**
  * Fetch posts for you from ML.
@@ -16,7 +16,7 @@ export type PostsForYouArgs = PostsForYouRequest;
  * ```
  */
 export function usePostsForYou(
-  args: PostsForYouArgs & Suspendable,
+  args: UsePostsForYouArgs & Suspendable,
 ): SuspenseResult<Paginated<PostForYou> | null>;
 
 /**
@@ -26,12 +26,12 @@ export function usePostsForYou(
  * const { data, loading } = usePostsForYou({ account: evmAddress('0x…') });
  * ```
  */
-export function usePostsForYou(args: PostsForYouArgs): ReadResult<Paginated<PostForYou> | null>;
+export function usePostsForYou(args: UsePostsForYouArgs): ReadResult<Paginated<PostForYou> | null>;
 
 export function usePostsForYou({
   suspense = false,
   ...request
-}: PostsForYouArgs & { suspense?: boolean }): SuspendableResult<Paginated<PostForYou> | null> {
+}: UsePostsForYouArgs & { suspense?: boolean }): SuspendableResult<Paginated<PostForYou> | null> {
   return useSuspendableQuery({
     document: MlPostsForYouQuery,
     variables: { request },

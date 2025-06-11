@@ -4,10 +4,10 @@ import { MlAccountRecommendationsQuery } from '@lens-protocol/graphql';
 import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AccountRecommendationsArgs = AccountRecommendationsRequest;
+export type UseAccountRecommendationsArgs = AccountRecommendationsRequest;
 
 /**
- * Fetch account recommendations from ML.
+ * Retrieve a list of recommended accounts for a given account address.
  *
  * This signature supports React Suspense:
  *
@@ -16,24 +16,24 @@ export type AccountRecommendationsArgs = AccountRecommendationsRequest;
  * ```
  */
 export function useAccountRecommendations(
-  args: AccountRecommendationsArgs & Suspendable,
+  args: UseAccountRecommendationsArgs & Suspendable,
 ): SuspenseResult<Paginated<Account> | null>;
 
 /**
- * Fetch account recommendations from ML.
+ * Retrieve a list of recommended accounts for a given account address.
  *
  * ```tsx
  * const { data, loading } = useAccountRecommendations({ account: evmAddress('0x…') });
  * ```
  */
 export function useAccountRecommendations(
-  args: AccountRecommendationsArgs,
+  args: UseAccountRecommendationsArgs,
 ): ReadResult<Paginated<Account> | null>;
 
 export function useAccountRecommendations({
   suspense = false,
   ...request
-}: AccountRecommendationsArgs & {
+}: UseAccountRecommendationsArgs & {
   suspense?: boolean;
 }): SuspendableResult<Paginated<Account> | null> {
   return useSuspendableQuery({

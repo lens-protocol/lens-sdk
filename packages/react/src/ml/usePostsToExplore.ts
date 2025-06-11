@@ -4,7 +4,7 @@ import { MlPostsExploreQuery, type Post } from '@lens-protocol/graphql';
 import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type PostsToExploreArgs = PostsExploreRequest;
+export type UsePostsToExploreArgs = PostsExploreRequest;
 
 /**
  * Fetch posts to explore.
@@ -16,7 +16,7 @@ export type PostsToExploreArgs = PostsExploreRequest;
  * ```
  */
 export function usePostsToExplore(
-  args: PostsToExploreArgs & Suspendable,
+  args: UsePostsToExploreArgs & Suspendable,
 ): SuspenseResult<Paginated<Post> | null>;
 
 /**
@@ -26,12 +26,12 @@ export function usePostsToExplore(
  * const { data, loading } = usePostsToExplore({});
  * ```
  */
-export function usePostsToExplore(args: PostsToExploreArgs): ReadResult<Paginated<Post> | null>;
+export function usePostsToExplore(args: UsePostsToExploreArgs): ReadResult<Paginated<Post> | null>;
 
 export function usePostsToExplore({
   suspense = false,
   ...request
-}: PostsToExploreArgs & { suspense?: boolean }): SuspendableResult<Paginated<Post> | null> {
+}: UsePostsToExploreArgs & { suspense?: boolean }): SuspendableResult<Paginated<Post> | null> {
   return useSuspendableQuery({
     document: MlPostsExploreQuery,
     variables: { request },
