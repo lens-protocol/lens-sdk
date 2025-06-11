@@ -15,7 +15,9 @@ export type AccountRecommendationsArgs = AccountRecommendationsRequest;
  * const { data } = useAccountRecommendations({ account: evmAddress('0x…'), suspense: true });
  * ```
  */
-export function useAccountRecommendations(args: AccountRecommendationsArgs & Suspendable): SuspenseResult<Paginated<Account> | null>;
+export function useAccountRecommendations(
+  args: AccountRecommendationsArgs & Suspendable,
+): SuspenseResult<Paginated<Account> | null>;
 
 /**
  * Fetch account recommendations from ML.
@@ -24,12 +26,16 @@ export function useAccountRecommendations(args: AccountRecommendationsArgs & Sus
  * const { data, loading } = useAccountRecommendations({ account: evmAddress('0x…') });
  * ```
  */
-export function useAccountRecommendations(args: AccountRecommendationsArgs): ReadResult<Paginated<Account> | null>;
+export function useAccountRecommendations(
+  args: AccountRecommendationsArgs,
+): ReadResult<Paginated<Account> | null>;
 
 export function useAccountRecommendations({
   suspense = false,
   ...request
-}: AccountRecommendationsArgs & { suspense?: boolean }): SuspendableResult<Paginated<Account> | null> {
+}: AccountRecommendationsArgs & {
+  suspense?: boolean;
+}): SuspendableResult<Paginated<Account> | null> {
   return useSuspendableQuery({
     document: MlAccountRecommendationsQuery,
     variables: { request },

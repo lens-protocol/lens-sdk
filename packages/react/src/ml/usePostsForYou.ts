@@ -1,5 +1,5 @@
 import type { Paginated, PostsForYouRequest } from '@lens-protocol/graphql';
-import { MlPostsForYouQuery, PostForYou } from '@lens-protocol/graphql';
+import { MlPostsForYouQuery, type PostForYou } from '@lens-protocol/graphql';
 
 import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
@@ -15,7 +15,9 @@ export type PostsForYouArgs = PostsForYouRequest;
  * const { data } = useAccountRecommendations({ account: evmAddress('0x…'), suspense: true });
  * ```
  */
-export function usePostsForYou(args: PostsForYouArgs & Suspendable): SuspenseResult<Paginated<PostForYou> | null>;
+export function usePostsForYou(
+  args: PostsForYouArgs & Suspendable,
+): SuspenseResult<Paginated<PostForYou> | null>;
 
 /**
  * Fetch posts for you from ML.

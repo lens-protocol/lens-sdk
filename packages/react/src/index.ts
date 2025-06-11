@@ -12,7 +12,7 @@ export type {
   AsyncTaskLoading,
   AsyncTaskState,
   AsyncTaskSuccess,
-  UseAsyncTask
+  UseAsyncTask,
 } from './helpers';
 export * from './LensProvider';
 export * from './ml';
