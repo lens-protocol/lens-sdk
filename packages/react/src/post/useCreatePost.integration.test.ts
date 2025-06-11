@@ -17,18 +17,17 @@ describe(`Given the ${useCreatePost.name} hook`, () => {
     });
 
     it('Then it should return the newly created Post', { timeout: 10000 }, async () => {
-      const { result } = renderHookWithContext(() => useCreatePost(handleOperationWith(wallet)), {
-        client,
-      });
+      const { result } = renderHookWithContext(
+        () => useCreatePost({ handler: handleOperationWith(wallet) }),
+        { client },
+      );
 
       const record = await result.current.execute({
         contentUri: `data:application/json,${JSON.stringify(textOnly({ content: 'Hello world!' }))}`,
       });
 
       assertOk(record);
-      expect(record.value.metadata).toMatchObject({
-        content: 'Hello world!',
-      });
+      expect(record.value.metadata).toMatchObject({ content: 'Hello world!' });
     });
   });
 });
