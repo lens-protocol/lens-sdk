@@ -14,13 +14,17 @@ import { fetchPost, post } from '@lens-protocol/client/actions';
 
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
+export type UseCreatePostArgs = {
+  handler: OperationHandler;
+};
+
 /**
  * Creates a new post on the Lens.
  *
  * @alpha This is an alpha API and may be subject to breaking changes.
  */
 export function useCreatePost(
-  handler: OperationHandler,
+  args: UseCreatePostArgs,
 ): UseAsyncTask<
   CreatePostRequest,
   Post,
@@ -28,7 +32,7 @@ export function useCreatePost(
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     post(sessionClient, request)
-      .andThen(handler)
+      .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen((txHash) => fetchPost(sessionClient, { txHash }))
       .map(nonNullable)
