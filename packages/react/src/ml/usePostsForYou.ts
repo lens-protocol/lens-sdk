@@ -12,7 +12,7 @@ export type PostsForYouArgs = PostsForYouRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useAccountRecommendations({ account: evmAddress('0x…'), suspense: true });
+ * const { data } = usePostsForYou({ account: evmAddress('0x…'), suspense: true });
  * ```
  */
 export function usePostsForYou(
@@ -23,7 +23,7 @@ export function usePostsForYou(
  * Fetch posts for you from ML.
  *
  * ```tsx
- * const { data, loading } = useAccountRecommendations({ account: evmAddress('0x…') });
+ * const { data, loading } = usePostsForYou({ account: evmAddress('0x…') });
  * ```
  */
 export function usePostsForYou(args: PostsForYouArgs): ReadResult<Paginated<PostForYou> | null>;
