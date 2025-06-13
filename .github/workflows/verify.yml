@@ -19,9 +19,42 @@ jobs:
       - name: Run Biome
         run: biome ci .
 
+  check-changes:
+    name: Check Changes
+    runs-on: ubuntu-latest
+    outputs:
+      has_non_examples: ${{ steps.check.outputs.has_non_examples }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for non-examples changes
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "has_non_examples=true" >> $GITHUB_OUTPUT
+          else
+            # Get list of changed files
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+            
+            # Check if any file is outside examples directory
+            HAS_NON_EXAMPLES=false
+            while IFS= read -r file; do
+              if [[ ! "$file" =~ ^examples/ ]]; then
+                HAS_NON_EXAMPLES=true
+                break
+              fi
+            done <<< "$CHANGED_FILES"
+            
+            echo "has_non_examples=$HAS_NON_EXAMPLES" >> $GITHUB_OUTPUT
+          fi
+
   test:
     name: Test
+    needs: check-changes
     runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.has_non_examples == 'true' }}
 
     steps:
       - uses: actions/checkout@v4
