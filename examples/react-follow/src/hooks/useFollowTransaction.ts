@@ -1,4 +1,4 @@
-import { Result, useFollow, useUnfollow } from '@lens-protocol/react';
+import { type Result, useFollow, useUnfollow } from '@lens-protocol/react';
 import { handleOperationWith } from '@lens-protocol/react/viem';
 import { useEffect, useState } from 'react';
 import { useWalletClient } from 'wagmi';
