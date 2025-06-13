@@ -1,7 +1,7 @@
 import { useAuthenticatedUser } from '@lens-protocol/react';
-import { LoginForm } from './components/LoginForm';
 import { MyAccount } from './MyAccount';
 import { AccountsToFollow } from './ToFollow';
+import { LoginForm } from './components/LoginForm';
 
 export function App() {
   const { data } = useAuthenticatedUser({ suspense: true });

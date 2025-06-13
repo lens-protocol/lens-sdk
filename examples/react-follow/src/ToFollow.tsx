@@ -1,21 +1,21 @@
 import { PageSize, useAccounts } from '@lens-protocol/react';
-import { TransactionResult } from './components/TransactionResult';
 import { AccountListItem } from './components/AccountListItem';
+import { TransactionResult } from './components/TransactionResult';
 import { useFollowTransaction } from './hooks/useFollowTransaction';
 
 export function AccountsToFollow() {
   const { data } = useAccounts({
-    filter: { searchBy: { localNameQuery: 'test' } }, 
+    filter: { searchBy: { localNameQuery: 'test' } },
     pageSize: PageSize.Ten,
-    suspense: true 
+    suspense: true,
   });
-  
+
   const { transactionResult, handleFollow, handleUnfollow } = useFollowTransaction();
 
   return (
     <div>
       <h2>Accounts to Follow</h2>
-      
+
       <TransactionResult
         loading={transactionResult.loading}
         txHash={transactionResult.txHash}

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useFollow, useUnfollow } from '@lens-protocol/react';
+import { Result, useFollow, useUnfollow } from '@lens-protocol/react';
 import { handleOperationWith } from '@lens-protocol/react/viem';
+import { useEffect, useState } from 'react';
 import { useWalletClient } from 'wagmi';
 
 interface TransactionState {
@@ -16,31 +16,31 @@ export function useFollowTransaction() {
   const { execute: unfollow } = useUnfollow({ handler: handleOperationWith(wallet) });
 
   const [transactionResult, setTransactionResult] = useState<TransactionState>({});
-  const [pendingResult, setPendingResult] = useState<Promise<any> | null>(null);
+  const [pendingResult, setPendingResult] = useState<Promise<Result<string, Error>> | null>(null);
   const [pendingAction, setPendingAction] = useState<'follow' | 'unfollow' | null>(null);
 
   // Effect to handle transaction result resolution
   useEffect(() => {
     if (pendingResult) {
       pendingResult
-        .then(result => {
+        .then((result) => {
           if (result.isOk()) {
             setTransactionResult({
               txHash: result.value,
               message: `Successfully ${pendingAction}ed account!`,
-              loading: false
+              loading: false,
             });
           } else {
             setTransactionResult({
               error: result.error.message,
-              loading: false
+              loading: false,
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           setTransactionResult({
             error: `Transaction failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-            loading: false
+            loading: false,
           });
         })
         .finally(() => {
@@ -53,13 +53,13 @@ export function useFollowTransaction() {
   const handleFollow = async (accountAddress: string) => {
     try {
       setPendingAction('follow');
-      setTransactionResult({ loading: true, });
+      setTransactionResult({ loading: true });
       const result = await follow({ account: accountAddress });
       setPendingResult(Promise.resolve(result));
     } catch (error) {
       setTransactionResult({
         error: `Failed to follow: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        loading: false
+        loading: false,
       });
     }
   };
@@ -67,13 +67,13 @@ export function useFollowTransaction() {
   const handleUnfollow = async (accountAddress: string) => {
     try {
       setPendingAction('unfollow');
-      setTransactionResult({ loading: true, });
+      setTransactionResult({ loading: true });
       const result = await unfollow({ account: accountAddress });
       setPendingResult(Promise.resolve(result));
     } catch (error) {
       setTransactionResult({
         error: `Failed to unfollow: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        loading: false
+        loading: false,
       });
     }
   };
@@ -81,6 +81,6 @@ export function useFollowTransaction() {
   return {
     transactionResult,
     handleFollow,
-    handleUnfollow
+    handleUnfollow,
   };
-} 
+}
