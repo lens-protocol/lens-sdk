@@ -1305,28 +1305,46 @@ enum ContentWarning {
   SPOILER
 }
 
+input CreateAccountRequest {
+  """The Account metadata URI"""
+  metadataUri: URI!
+
+  """Defaults to the signer address used to log in with."""
+  owner: EvmAddress
+
+  """Any account managers you wish to add to the account"""
+  managers: [EvmAddress!]! = []
+
+  """
+  Enable signless experience by adding the Lens API signer as Account Manager for the Account.
+  """
+  enableSignless: Boolean! = true
+}
+
 type CreateAccountResponse {
   hash: TxHash!
 }
 
+union CreateAccountResult = CreateAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 input CreateAccountWithUsernameRequest {
-  """The account metadata uri"""
+  """The Account metadata URI"""
   metadataUri: URI!
 
   """The username you wish to mint with the account"""
   username: UsernameInput!
 
-  """
-  If you do not supply this it will use the onboarding or builder address, you can use this
-  if your server is onboarding users
-  """
+  """Defaults to the signer address used to log in with."""
   owner: EvmAddress
 
+  """Use `managers` instead."""
+  accountManager: [EvmAddress!] = null
+
   """Any account managers you wish to add to the account"""
-  accountManager: [EvmAddress!]
+  managers: [EvmAddress!] = null
 
   """
-  Enable signless on creation adding the lens API key to the account manager
+  Enable signless experience by adding the Lens API signer as Account Manager for the Account.
   """
   enableSignless: Boolean! = true
 
@@ -1653,25 +1671,14 @@ input CreateUsernameNamespaceRequest {
 union CreateUsernameNamespaceResult = CreateNamespaceResponse | SelfFundedTransactionRequest | TransactionWillFail
 
 input CreateUsernameRequest {
-  """The username to create."""
+  """The Username to create."""
   username: UsernameInput!
 
-  """
-  The Account that will own the Username.
-  In case `autoAssign` is set to true, the Username will also be assigned to this Account.
-  
-  Whether logged-in as Account Owner or Manager, the auth signer address MUST be the Account
-  Owner or Manager of the specified Account.
-  """
-  account: EvmAddress
+  """Whether to auto-assign the Username to the logged-in Account."""
+  autoAssign: Boolean! = true
 
-  """
-  Whether to auto-assign the username to the Account.
-  
-  When logged-in as Account Owner/Manager or an `account` is provided, this will
-  default to `true`.
-  """
-  autoAssign: Boolean
+  """The subject to test Namespace rules against."""
+  rulesSubject: RulesSubject! = ACCOUNT
 
   """The processing params for the namespace create rules."""
   createUsernameRulesProcessingParams: [CreateUsernameRulesProcessingParams!]
@@ -3126,16 +3133,6 @@ input IsFollowingMeRequest {
   graph: EvmAddress!
 }
 
-input IssueUnverifiedCredentialsRequest {
-  """
-  An EOA address.
-  
-  This address will be the one that MUST send transaction generated with
-  the authentication role associated with the issued tokens.
-  """
-  signer: EvmAddress!
-}
-
 """A scalar that can represent any JSON value."""
 scalar JSON
 
@@ -3954,7 +3951,15 @@ type Mutation {
   unmute(request: MuteRequest!): Void!
 
   """
-  Create an account with a given username.
+  Create a new Lens Account (without a Username).
+  
+  Use only if you understand the implications or were instructed by the Lens team.
+  You MUST be authenticated to use this mutation.
+  """
+  createAccount(request: CreateAccountRequest!): CreateAccountResult!
+
+  """
+  Create a new Lens Account with the specified Username.
   
   You MUST be authenticated to use this mutation.
   """
@@ -4113,14 +4118,6 @@ type Mutation {
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   switchAccount(request: SwitchAccountRequest!): SwitchAccountResult!
-
-  """
-  Issues authentication tokens for an EOA address without requiring a proof of ownership.
-  This will require a signature for every transaction request.
-  
-  This is an experimental mutation and can change at any time.
-  """
-  issueUnverifiedCredentials(request: IssueUnverifiedCredentialsRequest!): UnverifiedCredentialsResult!
 
   """Refreshes the metadata for the provided entity."""
   refreshMetadata(request: RefreshMetadataRequest!): RefreshMetadataResult!
@@ -4287,7 +4284,7 @@ type Mutation {
   """
   Create a username.
   
-  You MUST be authenticated as Account Owner, Account Manager to use this
+  You MUST be authenticated as Account Owner, Account Manager, or Onboarding User to use this
   mutation.
   """
   createUsername(request: CreateUsernameRequest!): CreateUsernameResult!
@@ -5029,6 +5026,7 @@ type PayToCollectConfig {
 }
 
 input PayToCollectInput {
+  """Use `erc20` or `native` instead."""
   amount: Erc20AmountInput
 
   """The ERC 20 token amount. Mutually exclusive with `native`"""
@@ -5051,10 +5049,10 @@ type PaymasterParams {
 }
 
 enum PaymentSource {
-  """The payment will be charged from the Account balance"""
+  """Charge the payment from the authenticated Lens Account's balance."""
   ACCOUNT
 
-  """The payment will be charged from Owner's or Manager's balance"""
+  """Charge the payment from the authenticated signer's balance."""
   SIGNER
 }
 
@@ -5597,7 +5595,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1749901133
+  since: Int! = 1750010210
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5611,7 +5609,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1749901133, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1750010210, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -6200,6 +6198,11 @@ input RolloverRefreshRequest {
 }
 
 scalar RuleId
+
+enum RulesSubject {
+  ACCOUNT
+  SIGNER
+}
 
 enum SelfFundedFallbackReason {
   NOT_SPONSORED
@@ -7966,8 +7969,6 @@ input UnknownRuleProcessingParams {
   params: [AnyKeyValueInput!]
 }
 
-union UnverifiedCredentialsResult = AuthenticationTokens | ForbiddenError
-
 input UnwrapTokensRequest {
   amount: BigDecimal!
 }
@@ -8250,8 +8251,14 @@ type UsernameNamespaceStats {
 }
 
 input UsernamePricePerLengthNamespaceRuleConfig {
-  """The default price for the username."""
-  cost: Erc20AmountInput!
+  """Use `erc20` or `native` instead."""
+  cost: Erc20AmountInput
+
+  """The ERC 20 token amount. Mutually exclusive with `native`"""
+  erc20: Erc20AmountInput
+
+  """The native token amount. Mutually exclusive with `erc20`"""
+  native: BigDecimal
 
   """
   The price for each length. Specify only if different from the default price.
