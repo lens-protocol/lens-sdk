@@ -1,7 +1,6 @@
 import type {
   AuthenticationChallenge,
   ChallengeRequest,
-  IssueUnverifiedCredentialsRequest,
   SignedAuthChallenge,
   StandardData,
   SwitchAccountRequest,
@@ -35,13 +34,6 @@ import {
   type Client as UrqlClient,
 } from '@urql/core';
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
-
-<<<<<<< HEAD
-=======
-
-import { CredentialsStorage } from '@lens-protocol/storage';
-
->>>>>>> 592c8f318 (chore: removes old approach based on unverified credentials)
 
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import {

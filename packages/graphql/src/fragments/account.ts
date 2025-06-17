@@ -18,7 +18,6 @@ export const AccountFollowRuleFragment = graphql(
   `fragment AccountFollowRule on AccountFollowRule {
     __typename
     id
-    type
     address
     config {
       ...AnyKeyValue

@@ -20,6 +20,7 @@
     "new:package": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "prepublish": "pnpm run build",
     "test:client": "vitest --project client",
+    "test:e2e": "vitest --project e2e",
     "test:react": "vitest --project react",
     "test:storage": "vitest --project storage",
     "test": "vitest"

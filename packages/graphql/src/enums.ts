@@ -1286,3 +1286,11 @@ export enum PaymentSource {
   Account = 'ACCOUNT',
   Signer = 'SIGNER',
 }
+
+/**
+ * Describes the subject of rules.
+ */
+export enum RulesSubject {
+  Account = 'ACCOUNT',
+  Signer = 'SIGNER',
+}

@@ -97,6 +97,7 @@ import type {
   PostVisibilityFilter,
   PrimitiveMetadataSchema,
   ReferenceRelevancyFilter,
+  RulesSubject,
   SelfFundedFallbackReason,
   SimpleCollectValidationFailedReason,
   SponsoredFallbackReason,
@@ -210,6 +211,7 @@ export const graphql = initGraphQLTada<{
     ReferenceRelevancyFilter: ReferenceRelevancyFilter;
     RefreshToken: RefreshToken;
     RuleId: RuleId;
+    RulesSubject: RulesSubject;
     SelfFundedFallbackReason: SelfFundedFallbackReason;
     ServerAPIKey: ServerAPIKey;
     Signature: Signature;

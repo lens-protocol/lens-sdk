@@ -1188,6 +1188,17 @@ input BuilderChallengeRequest {
   address: EvmAddress!
 }
 
+input CanCreateUsernameRequest {
+  """The local name, should not include the namespace"""
+  localName: String!
+
+  """The namespace. Defaults to lens namespace"""
+  namespace: EvmAddress! = "0xFBEdC5C278cc01A843D161d5469202Fe4EDC99E4"
+
+  """The subject to test Namespace rules against."""
+  rulesSubject: RulesSubject! = ACCOUNT
+}
+
 union CanCreateUsernameResult = UsernameTaken | NamespaceOperationValidationPassed | NamespaceOperationValidationUnknown | NamespaceOperationValidationFailed
 
 input CanFollowRequest {
@@ -5595,7 +5606,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1750010210
+  since: Int! = 1750072461
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5609,7 +5620,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1750010210, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1750072461, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -5903,7 +5914,7 @@ type Query {
   
   You MUST be authenticated to use this mutation.
   """
-  canCreateUsername(request: UsernameInput!): CanCreateUsernameResult!
+  canCreateUsername(request: CanCreateUsernameRequest!): CanCreateUsernameResult!
   namespace(request: NamespaceRequest!): UsernameNamespace
   username(request: UsernameRequest!): Username
 
