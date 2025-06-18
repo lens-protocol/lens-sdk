@@ -4081,11 +4081,9 @@ type Mutation {
   
   The issued challenge can be for authentication credentials for different roles:
   - AccountOwner: The `address` is a Lens Account, and the `signed_by` is the Account Owner.
-  - AccountManager: The `address` is a Lens Account, and the `signed_by` is an Account Manager
-  for it.
+  - AccountManager: The `address` is a Lens Account, and the `signed_by` is an Account Manager for it.
   - OnboardingUser: The `address` is an EOA that needs to create their Lens Account.
-  - Builder: The `address` is the EOA of a Builder that needs to use configuration and
-  management features.
+  - Builder: The `address` is the EOA of a Builder that needs to use configuration and management features.
   
   The HTTP Origin header MUST be present and match the app's domain.
   """
@@ -5399,9 +5397,12 @@ input PostReferencesRequest {
   """
   The relevancy filter to apply.
   
-  This filter is only applicable for `CommentOn` reference type.
+  This filter is only applicable for `CommentOn` and `QuoteOf` reference types.
   """
   relevancyFilter: ReferenceRelevancyFilter! = ALL
+
+  """The authors of the posts."""
+  authors: [EvmAddress!]
 
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -5596,7 +5597,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1749211778
+  since: Int! = 1749901133
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5610,7 +5611,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1749211778, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1749901133, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
