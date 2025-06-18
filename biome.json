@@ -47,6 +47,14 @@
 		}
 	},
 	"overrides": [
+    {
+      "includes": ["**/*.tsx"],
+      "linter": {
+        "domains": {
+          "react": "all"
+        }
+      }
+    },
 		{
 			"includes": ["templates/**/*"],
 			"formatter": {
