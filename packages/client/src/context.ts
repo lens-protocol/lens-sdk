@@ -1,5 +1,8 @@
 import type { EnvironmentConfig } from '@lens-protocol/env';
-import { type IStorageProvider, InMemoryStorageProvider } from '@lens-protocol/storage';
+import {
+  InMemoryStorageProvider,
+  type IStorageProvider,
+} from '@lens-protocol/storage';
 
 import type { ClientConfig } from './config';
 import { FragmentResolver } from './fragments';

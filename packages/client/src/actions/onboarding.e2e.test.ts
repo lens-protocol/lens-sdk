@@ -1,10 +1,8 @@
-import { account } from '@lens-protocol/metadata';
-import { assertOk, never } from '@lens-protocol/types';
-import { describe, expect, it } from 'vitest';
-
 import type { Account } from '@lens-protocol/graphql';
-import { uri } from '@lens-protocol/types';
-import { TEST_SIGNER, loginAsOnboardingUser, wallet } from '../test-utils';
+import { account } from '@lens-protocol/metadata';
+import { assertOk, never, uri } from '@lens-protocol/types';
+import { describe, expect, it } from 'vitest';
+import { loginAsOnboardingUser, TEST_SIGNER, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
 import { createAccountWithUsername, fetchAccount } from './account';
 import { fetchMeDetails } from './authentication';

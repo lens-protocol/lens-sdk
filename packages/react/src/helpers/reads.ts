@@ -1,8 +1,7 @@
 import type { AnyVariables, StandardData } from '@lens-protocol/graphql';
-import { type TypedDocumentNode, useQuery } from 'urql';
-
 import { invariant } from '@lens-protocol/types';
 import { useMemo } from 'react';
+import { type TypedDocumentNode, useQuery } from 'urql';
 import { ReadResult, type SuspendableResult } from './results';
 
 /**

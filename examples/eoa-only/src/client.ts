@@ -1,4 +1,4 @@
-import { PublicClient, mainnet } from '@lens-protocol/react';
+import { mainnet, PublicClient } from '@lens-protocol/react';
 
 export const client = PublicClient.create({
   environment: mainnet,

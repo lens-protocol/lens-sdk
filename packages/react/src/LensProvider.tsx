@@ -1,5 +1,4 @@
 import type { PublicClient } from '@lens-protocol/client';
-import React from 'react';
 import type { ReactNode } from 'react';
 
 import { LensContextProvider } from './context';

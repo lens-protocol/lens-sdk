@@ -1,5 +1,7 @@
 import {
   type CreatePostRequest,
+  expectTypename,
+  nonNullable,
   type OperationHandler,
   type Post,
   type SigningError,
@@ -7,8 +9,6 @@ import {
   type UnauthenticatedError,
   type UnexpectedError,
   type ValidationError,
-  expectTypename,
-  nonNullable,
 } from '@lens-protocol/client';
 import { fetchPost, post } from '@lens-protocol/client/actions';
 
@@ -28,7 +28,11 @@ export function useCreatePost(
 ): UseAsyncTask<
   CreatePostRequest,
   Post,
-  SigningError | ValidationError | TransactionIndexingError | UnauthenticatedError | UnexpectedError
+  | SigningError
+  | ValidationError
+  | TransactionIndexingError
+  | UnauthenticatedError
+  | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     post(sessionClient, request)

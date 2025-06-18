@@ -38,7 +38,10 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 export function fetchAccountManagers(
   client: SessionClient,
   request: AccountManagersRequest = {},
-): ResultAsync<Paginated<AccountManager>, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  Paginated<AccountManager>,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.query(AccountManagersQuery, { request });
 }
 
@@ -58,7 +61,10 @@ export function fetchAccountManagers(
 export function addAccountManager(
   client: SessionClient,
   request: AddAccountManagerRequest,
-): ResultAsync<AddAccountManagerResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  AddAccountManagerResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(AddAccountManagerMutation, { request });
 }
 
@@ -78,7 +84,10 @@ export function addAccountManager(
 export function removeAccountManager(
   client: SessionClient,
   request: RemoveAccountManagerRequest,
-): ResultAsync<RemoveAccountManagerResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  RemoveAccountManagerResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(RemoveAccountManagerMutation, { request });
 }
 
@@ -104,7 +113,10 @@ export function removeAccountManager(
 export function updateAccountManager(
   client: SessionClient,
   request: UpdateAccountManagerRequest,
-): ResultAsync<UpdateAccountManagerResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  UpdateAccountManagerResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(UpdateAccountManagerMutation, { request });
 }
 

@@ -1,7 +1,16 @@
-import type { AccountManager, AccountManagersRequest, Paginated } from '@lens-protocol/graphql';
+import type {
+  AccountManager,
+  AccountManagersRequest,
+  Paginated,
+} from '@lens-protocol/graphql';
 import { AccountManagersQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type AccountManagersArgs = AccountManagersRequest;

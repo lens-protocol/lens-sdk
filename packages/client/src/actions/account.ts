@@ -235,7 +235,10 @@ export function fetchAccountsBlocked(
 export function setAccountMetadata(
   client: SessionClient,
   request: SetAccountMetadataRequest,
-): ResultAsync<SetAccountMetadataResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetAccountMetadataResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetAccountMetadataMutation, { request });
 }
 
@@ -258,7 +261,10 @@ export function setAccountMetadata(
 export function createAccountWithUsername(
   client: SessionClient,
   request: CreateAccountWithUsernameRequest,
-): ResultAsync<CreateAccountWithUsernameResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  CreateAccountWithUsernameResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(CreateAccountWithUsernameMutation, { request });
 }
 
@@ -451,6 +457,9 @@ export function undoRecommendAccount(
 export function updateAccountFollowRules(
   client: SessionClient,
   request: UpdateAccountFollowRulesRequest,
-): ResultAsync<UpdateAccountFollowRulesResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  UpdateAccountFollowRulesResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(UpdateAccountFollowRulesMutation, { request });
 }

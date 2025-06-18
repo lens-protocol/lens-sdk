@@ -1,21 +1,32 @@
 import type { Erc20Amount, NativeAmount } from '@lens-protocol/graphql';
-import { Result, assertOk, bigDecimal, evmAddress } from '@lens-protocol/types';
+import { assertOk, bigDecimal, evmAddress, Result } from '@lens-protocol/types';
 import { Big } from 'big.js';
 import { zeroAddress } from 'viem';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { SessionClient } from '../clients';
-import { CHAIN, TEST_ERC20, loginAsAccountOwner, wallet } from '../test-utils';
+import { CHAIN, loginAsAccountOwner, TEST_ERC20, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
-import { deposit, fetchAccountBalances, unwrapTokens, withdraw, wrapTokens } from './funds';
+import {
+  deposit,
+  fetchAccountBalances,
+  unwrapTokens,
+  withdraw,
+  wrapTokens,
+} from './funds';
 import { findErc20Amount, findNativeAmount } from './helpers';
 
-async function fetchBalances(sessionClient: SessionClient): Promise<[NativeAmount, Erc20Amount]> {
+async function fetchBalances(
+  sessionClient: SessionClient,
+): Promise<[NativeAmount, Erc20Amount]> {
   const result = await fetchAccountBalances(sessionClient, {
     includeNative: true,
     tokens: [TEST_ERC20],
   }).andThen((balances) =>
-    Result.combine([findNativeAmount(balances), findErc20Amount(TEST_ERC20, balances)]),
+    Result.combine([
+      findNativeAmount(balances),
+      findErc20Amount(TEST_ERC20, balances),
+    ]),
   );
   assertOk(result);
   return result.value;

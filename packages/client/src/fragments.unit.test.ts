@@ -1,4 +1,8 @@
-import { AccountQuery, UsernameFragment, graphql } from '@lens-protocol/graphql';
+import {
+  AccountQuery,
+  graphql,
+  UsernameFragment,
+} from '@lens-protocol/graphql';
 import { NoUnusedFragmentsRule } from 'graphql';
 import { describe, expect, it } from 'vitest';
 
@@ -23,7 +27,9 @@ describe(`Given an instance of the '${FragmentResolver.name}' helper`, () => {
         [BaseAccountFragment, UsernameFragment],
       );
 
-      const actual = FragmentResolver.from([AccountFragment]).replaceFrom(AccountQuery);
+      const actual = FragmentResolver.from([AccountFragment]).replaceFrom(
+        AccountQuery,
+      );
 
       assertTypedDocumentSatisfies(actual, [NoUnusedFragmentsRule]);
     });

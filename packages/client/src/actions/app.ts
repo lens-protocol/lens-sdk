@@ -14,9 +14,9 @@ import type {
   AppServerApiKeyRequest,
   AppSigner,
   AppSignersRequest,
+  AppsRequest,
   AppUser,
   AppUsersRequest,
-  AppsRequest,
   CreateAppRequest,
   CreateAppResult,
   GenerateNewAppServerApiKeyRequest,
@@ -55,8 +55,8 @@ import {
   AppQuery,
   AppServerApiKeyQuery,
   AppSignersQuery,
-  AppUsersQuery,
   AppsQuery,
+  AppUsersQuery,
   CreateAppMutation,
   GenerateNewAppServerApiKeyMutation,
   RemoveAppAuthorizationEndpointMutation,
@@ -394,7 +394,10 @@ export function setAppGraph(
 export function setDefaultAppFeed(
   client: SessionClient,
   request: SetDefaultAppFeedRequest,
-): ResultAsync<SetDefaultAppFeedResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetDefaultAppFeedResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetDefaultAppFeedMutation, { request });
 }
 
@@ -436,7 +439,10 @@ export function setAppMetadata(
 export function setAppVerification(
   client: SessionClient,
   request: SetAppVerificationRequest,
-): ResultAsync<SetAppVerificationResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetAppVerificationResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetAppVerificationMutation, { request });
 }
 
@@ -457,7 +463,10 @@ export function setAppVerification(
 export function setAppSponsorship(
   client: SessionClient,
   request: SetAppSponsorshipRequest,
-): ResultAsync<SetAppSponsorshipResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetAppSponsorshipResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetAppSponsorshipMutation, { request });
 }
 
@@ -501,7 +510,10 @@ export function setAppTreasury(
 export function setAppUsernameNamespace(
   client: SessionClient,
   request: SetAppUsernameNamespaceRequest,
-): ResultAsync<SetAppUsernameNamespaceResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetAppUsernameNamespaceResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetAppUsernameNamespaceMutation, { request });
 }
 
@@ -524,8 +536,10 @@ export function addAppAuthorizationEndpoint(
   client: SessionClient,
   request: AddAppAuthorizationEndpointRequest,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
-  // biome-ignore lint/suspicious/noExplicitAny: work around and issue with endpoint: URL using browser URL instead of specified scalar
-  return client.mutation(AddAppAuthorizationEndpointMutation, { request: request as any });
+  return client.mutation(AddAppAuthorizationEndpointMutation, {
+    // biome-ignore lint/suspicious/noExplicitAny: work around and issue with endpoint: URL using browser URL instead of specified scalar
+    request: request as any,
+  });
 }
 
 /**

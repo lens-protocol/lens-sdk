@@ -1,7 +1,7 @@
 import type { chains } from '@lens-chain/sdk/viem';
 
 import { type EvmAddress, evmAddress } from '@lens-protocol/types';
-import { type TypedDataDefinition, checksumAddress } from 'viem';
+import { checksumAddress, type TypedDataDefinition } from 'viem';
 import type { OperationApprovalRequest } from '../authorization';
 
 export type TypedDataSigner = {
@@ -24,10 +24,14 @@ export class OperationApprovalSigner {
   constructor(private readonly context: LocalOperationApprovalSignerContext) {}
 
   async signOperationApproval(data: OperationApprovalRequest): Promise<string> {
-    return this.context.signer.signTypedData(this.createTypedDataDefinition(data));
+    return this.context.signer.signTypedData(
+      this.createTypedDataDefinition(data),
+    );
   }
 
-  private createTypedDataDefinition(data: OperationApprovalRequest): TypedDataDefinition {
+  private createTypedDataDefinition(
+    data: OperationApprovalRequest,
+  ): TypedDataDefinition {
     return {
       domain: {
         name: DOMAIN_NAME,

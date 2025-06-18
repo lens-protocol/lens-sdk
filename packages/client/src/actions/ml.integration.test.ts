@@ -1,8 +1,12 @@
 import { assertOk } from '@lens-protocol/types';
 import { describe, it } from 'vitest';
 
-import { TEST_ACCOUNT, createPublicClient } from '../test-utils';
-import { fetchAccountRecommendations, fetchPostsForYou, fetchPostsToExplore } from './ml';
+import { createPublicClient, TEST_ACCOUNT } from '../test-utils';
+import {
+  fetchAccountRecommendations,
+  fetchPostsForYou,
+  fetchPostsToExplore,
+} from './ml';
 
 describe('Given the ML query actions', () => {
   const client = createPublicClient();

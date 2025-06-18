@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const SnsSubscriptionFragment = graphql(
   `fragment SnsSubscription on SnsSubscription {
@@ -23,7 +23,9 @@ export const GetSnsSubscriptionsQuery = graphql(
   }`,
   [SnsSubscriptionFragment],
 );
-export type GetSnsSubscriptionsRequest = RequestOf<typeof GetSnsSubscriptionsQuery>;
+export type GetSnsSubscriptionsRequest = RequestOf<
+  typeof GetSnsSubscriptionsQuery
+>;
 
 export const CreateSnsSubscriptionsMutation = graphql(
   `mutation CreateSnsSubscriptions($request: CreateSnsSubscriptionRequest!) {
@@ -33,11 +35,15 @@ export const CreateSnsSubscriptionsMutation = graphql(
   }`,
   [SnsSubscriptionFragment],
 );
-export type CreateSnsSubscriptionRequest = RequestOf<typeof CreateSnsSubscriptionsMutation>;
+export type CreateSnsSubscriptionRequest = RequestOf<
+  typeof CreateSnsSubscriptionsMutation
+>;
 
 export const DeleteSnsSubscriptionMutation = graphql(
   `mutation DeleteSnsSubscription($request: DeleteSnsSubscriptionRequest!) {
     value: deleteSnsSubscription(request: $request)
   }`,
 );
-export type DeleteSnsSubscriptionRequest = RequestOf<typeof DeleteSnsSubscriptionMutation>;
+export type DeleteSnsSubscriptionRequest = RequestOf<
+  typeof DeleteSnsSubscriptionMutation
+>;

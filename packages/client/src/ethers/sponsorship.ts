@@ -1,6 +1,6 @@
 import type { Wallet } from '@lens-chain/sdk/ethers';
 import { type EvmAddress, never } from '@lens-protocol/types';
-import { type TransactionRequest, ethers } from 'ethers';
+import { ethers, type TransactionRequest } from 'ethers';
 import { type types, utils } from 'zksync-ethers';
 
 /**
@@ -47,16 +47,20 @@ export class SponsorshipApprovalSigner {
     };
   }
 
-  async approveSponsorship(request: TransactionRequest): Promise<types.TransactionLike> {
-    const [deadline, nonce, { maxFeePerGas, maxPriorityFeePerGas }, chainId] = await Promise.all([
-      this.computeDeadline(),
-      this.context.signer.provider.getTransactionCount(
-        request.from ?? never("The 'from' field in the transaction request is required."),
-        'pending',
-      ),
-      this.context.signer.provider.estimateFee(request),
-      this.context.signer.provider.getNetwork().then((n) => n.chainId),
-    ]);
+  async approveSponsorship(
+    request: TransactionRequest,
+  ): Promise<types.TransactionLike> {
+    const [deadline, nonce, { maxFeePerGas, maxPriorityFeePerGas }, chainId] =
+      await Promise.all([
+        this.computeDeadline(),
+        this.context.signer.provider.getTransactionCount(
+          request.from ??
+            never("The 'from' field in the transaction request is required."),
+          'pending',
+        ),
+        this.context.signer.provider.estimateFee(request),
+        this.context.signer.provider.getNetwork().then((n) => n.chainId),
+      ]);
 
     const preGasEstimation = {
       type: utils.EIP712_TX_TYPE,
@@ -77,11 +81,14 @@ export class SponsorshipApprovalSigner {
 
     const populatedTransactionRequest = {
       ...preGasEstimation,
-      gasLimit: await this.context.signer.provider.estimateGas(preGasEstimation),
+      gasLimit:
+        await this.context.signer.provider.estimateGas(preGasEstimation),
     };
 
     // sponsorship approval
-    const approval = await this.context.signer.eip712.sign(populatedTransactionRequest);
+    const approval = await this.context.signer.eip712.sign(
+      populatedTransactionRequest,
+    );
 
     return {
       ...populatedTransactionRequest,

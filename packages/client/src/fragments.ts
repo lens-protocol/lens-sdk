@@ -19,7 +19,9 @@ class FragmentDeduplicator<TResult, TVariables extends AnyVariables> {
     Array<FragmentDefinitionNode>
   >;
 
-  constructor(private readonly document: TypedDocumentNode<TResult, TVariables>) {
+  constructor(
+    private readonly document: TypedDocumentNode<TResult, TVariables>,
+  ) {
     this._fragmentSpreads = new Map();
     this._recursivelyReferencedFragments = new Map();
   }
@@ -43,7 +45,9 @@ class FragmentDeduplicator<TResult, TVariables extends AnyVariables> {
         leave: () => {
           const fragmentNameUsed = Object.create(null);
           for (const operation of operationDefs) {
-            for (const fragment of this.getRecursivelyReferencedFragments(operation)) {
+            for (const fragment of this.getRecursivelyReferencedFragments(
+              operation,
+            )) {
               fragmentNameUsed[fragment.name.value] = true;
             }
           }
@@ -96,13 +100,15 @@ class FragmentDeduplicator<TResult, TVariables extends AnyVariables> {
     return fragments;
   }
 
-  private getFragmentSpreads(node: SelectionSetNode): ReadonlyArray<FragmentSpreadNode> {
+  private getFragmentSpreads(
+    node: SelectionSetNode,
+  ): ReadonlyArray<FragmentSpreadNode> {
     let spreads = this._fragmentSpreads.get(node);
     if (!spreads) {
       spreads = [];
       const setsToVisit: Array<SelectionSetNode> = [node];
       let set: SelectionSetNode | undefined;
-      // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
+      // biome-ignore lint/suspicious/noAssignInExpressions: safe
       while ((set = setsToVisit.pop())) {
         for (const selection of set.selections) {
           if (selection.kind === Kind.FRAGMENT_SPREAD) {
@@ -138,7 +144,9 @@ class FragmentDeduplicator<TResult, TVariables extends AnyVariables> {
  * @internal
  */
 export class FragmentResolver {
-  private constructor(private readonly fragments: Map<string, FragmentDefinitionNode>) {}
+  private constructor(
+    private readonly fragments: Map<string, FragmentDefinitionNode>,
+  ) {}
 
   static from(nodes: TypedDocumentNode[]): FragmentResolver {
     const fragments = new Map<string, FragmentDefinitionNode>();

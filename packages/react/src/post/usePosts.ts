@@ -1,7 +1,12 @@
 import type { AnyPost, Paginated, PostsRequest } from '@lens-protocol/graphql';
 import { PostsQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type PostsArgs = PostsRequest;
@@ -20,7 +25,9 @@ export type PostsArgs = PostsRequest;
  * });
  * ```
  */
-export function usePosts(args: PostsArgs & Suspendable): SuspenseResult<Paginated<AnyPost>>;
+export function usePosts(
+  args: PostsArgs & Suspendable,
+): SuspenseResult<Paginated<AnyPost>>;
 
 /**
  * Fetch posts available filtered by the given arguments.

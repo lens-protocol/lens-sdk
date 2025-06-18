@@ -1,15 +1,21 @@
-import { type TypeOf, z } from 'zod';
-
-import { assertErr, assertOk, never } from '@lens-protocol/types';
-import { InvariantError } from '@lens-protocol/types';
-import { Deferred } from '@lens-protocol/types';
+import {
+  assertErr,
+  assertOk,
+  Deferred,
+  InvariantError,
+  never,
+} from '@lens-protocol/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-
-import { BaseStorageSchema, type IStorageItem, SchemaMismatchError } from './BaseStorageSchema';
-import type { IStorageProvider } from './IStorage';
-import { InMemoryStorageProvider } from './InMemoryStorageProvider';
-import { Storage } from './Storage';
+import { type TypeOf, z } from 'zod';
 import { mockStorageProvider } from './__helpers__/mocks';
+import {
+  BaseStorageSchema,
+  type IStorageItem,
+  SchemaMismatchError,
+} from './BaseStorageSchema';
+import { InMemoryStorageProvider } from './InMemoryStorageProvider';
+import type { IStorageProvider } from './IStorage';
+import { Storage } from './Storage';
 
 const schema = z.object({
   name: z.string(),
@@ -40,7 +46,9 @@ describe(`Given a ${Storage.name} instance`, () => {
 
   describe(`When the '${Storage.prototype.get.name}' method gets invoked`, () => {
     it('Then it should return the stored data', async () => {
-      const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
+      const mockedStorageProvider = mockStorageProvider(
+        JSON.stringify(storageItem),
+      );
 
       const result = await createStorage(mockedStorageProvider)
         .resume()
@@ -94,7 +102,9 @@ describe(`Given a ${Storage.name} instance`, () => {
         }
       }
 
-      const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
+      const mockedStorageProvider = mockStorageProvider(
+        JSON.stringify(storageItem),
+      );
 
       const result = await Storage.create(
         new TestStorageSchema(key, newSchema),
@@ -109,7 +119,9 @@ describe(`Given a ${Storage.name} instance`, () => {
     });
 
     it(`Then it should fail with a 'InvariantError' if a migration to newest version was not provided`, async () => {
-      const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
+      const mockedStorageProvider = mockStorageProvider(
+        JSON.stringify(storageItem),
+      );
 
       class TestStorageSchema extends BaseStorageSchema<typeof schema> {
         version = 2;
@@ -271,7 +283,9 @@ describe(`Given a ${Storage.name} instance`, () => {
         const now = new Date('2020-01-01T00:00:00').valueOf();
         vi.spyOn(global.Date, 'now').mockImplementation(() => now);
 
-        const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
+        const mockedStorageProvider = mockStorageProvider(
+          JSON.stringify(storageItem),
+        );
 
         const newData = {
           name: 'Josh',
@@ -334,11 +348,15 @@ describe(`Given a ${Storage.name} instance`, () => {
       await createStorage(mockedStorageProvider)
         .resume()
         .andTee((storage) => {
-          storage.subscribe((newData, oldData) => deferred.resolve({ newData, oldData }));
+          storage.subscribe((newData, oldData) =>
+            deferred.resolve({ newData, oldData }),
+          );
         });
 
       const newValue = JSON.stringify(newStorageItem);
-      const subscriber = vi.mocked(mockedStorageProvider.subscribe).mock.calls[0]?.[1] ?? never();
+      const subscriber =
+        vi.mocked(mockedStorageProvider.subscribe).mock.calls[0]?.[1] ??
+        never();
       subscriber(newValue, oldValue);
 
       const result = await deferred.promise;

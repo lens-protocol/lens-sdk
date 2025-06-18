@@ -24,7 +24,9 @@ export type UseSessionArgs = {
  * const { data } = useSessionClient({ suspense: true });
  * ```
  */
-export function useSessionClient(args: UseSessionArgs): SuspenseResult<SessionClient | null>;
+export function useSessionClient(
+  args: UseSessionArgs,
+): SuspenseResult<SessionClient | null>;
 
 /**
  * Retrieve the current {@link SessionClient} if available.

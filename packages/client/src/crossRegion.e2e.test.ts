@@ -1,13 +1,21 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-
 import * as storage from '@lens-chain/storage-client';
 import type { Account } from '@lens-protocol/graphql';
 import * as metadata from '@lens-protocol/metadata';
 import { assertErr, assertOk, never } from '@lens-protocol/types';
+import { beforeEach, describe, expect, it } from 'vitest';
 
-import { createAccountWithUsername, fetchAccount, setAccountMetadata } from './actions/account';
+import {
+  createAccountWithUsername,
+  fetchAccount,
+  setAccountMetadata,
+} from './actions/account';
 import type { SessionClient } from './clients';
-import { CHAIN, TEST_ACCOUNT, loginAsOnboardingUser, wallet } from './test-utils';
+import {
+  CHAIN,
+  loginAsOnboardingUser,
+  TEST_ACCOUNT,
+  wallet,
+} from './test-utils';
 import { handleOperationWith } from './viem';
 
 const storageClient = storage.StorageClient.create(storage.staging);
@@ -29,7 +37,9 @@ describe.skip(
       const initialMetadata = metadata.account({
         name: 'John Doe',
       });
-      initialFileResponse = await storageClient.uploadAsJson(initialMetadata, { acl });
+      initialFileResponse = await storageClient.uploadAsJson(initialMetadata, {
+        acl,
+      });
       await initialFileResponse.waitForPropagation();
       const result = await loginAsOnboardingUser().andThen((sessionClient) =>
         createAccountWithUsername(sessionClient, {
@@ -62,7 +72,9 @@ describe.skip(
         })
           .andThen(handleOperationWith(wallet))
           .andThen(sessionClient.waitForTransaction)
-          .andThen((_) => fetchAccount(sessionClient, { address: newAccount.address }));
+          .andThen((_) =>
+            fetchAccount(sessionClient, { address: newAccount.address }),
+          );
 
         assertOk(result);
 
@@ -93,7 +105,9 @@ describe.skip(
           })
             .andThen(handleOperationWith(wallet))
             .andThen(sessionClient.waitForTransaction)
-            .andThen((_) => fetchAccount(sessionClient, { address: newAccount.address }));
+            .andThen((_) =>
+              fetchAccount(sessionClient, { address: newAccount.address }),
+            );
 
           assertOk(result);
           expect(result.value).toMatchObject({
@@ -110,7 +124,10 @@ describe.skip(
         'Then it should no longer be accessible from the Lens API in another region',
         { timeout: 20000 },
         async () => {
-          const response = await storageClient.delete(initialFileResponse.uri, wallet);
+          const response = await storageClient.delete(
+            initialFileResponse.uri,
+            wallet,
+          );
           expect(response).toHaveProperty('success', true);
 
           const result = await setAccountMetadata(sessionClient, {

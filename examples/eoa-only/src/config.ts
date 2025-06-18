@@ -1,6 +1,6 @@
 import { chains } from '@lens-chain/sdk/viem';
 import { getDefaultConfig } from 'connectkit';
-import { http, createConfig } from 'wagmi';
+import { createConfig, http } from 'wagmi';
 
 export const config = createConfig(
   getDefaultConfig({

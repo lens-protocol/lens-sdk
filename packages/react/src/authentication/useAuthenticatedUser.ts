@@ -41,7 +41,9 @@ export function useAuthenticatedUser(): ReadResult<AuthenticatedUser | null>;
 
 export function useAuthenticatedUser(
   args: { suspense: boolean } = { suspense: false },
-): ReadResult<AuthenticatedUser | null> | SuspenseResult<AuthenticatedUser | null> {
+):
+  | ReadResult<AuthenticatedUser | null>
+  | SuspenseResult<AuthenticatedUser | null> {
   const result = useSessionState(args);
 
   if (result.data) {

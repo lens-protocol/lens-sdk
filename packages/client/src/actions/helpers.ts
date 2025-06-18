@@ -1,6 +1,10 @@
 import { InvariantError } from '@lens-chain/storage-client';
-import type { AnyAccountBalance, Erc20Amount, NativeAmount } from '@lens-protocol/graphql';
-import { type EvmAddress, type Result, err, ok } from '@lens-protocol/types';
+import type {
+  AnyAccountBalance,
+  Erc20Amount,
+  NativeAmount,
+} from '@lens-protocol/graphql';
+import { type EvmAddress, err, ok, type Result } from '@lens-protocol/types';
 import { UnexpectedError } from '../errors';
 
 /**

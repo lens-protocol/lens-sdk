@@ -26,7 +26,11 @@ export function useUnfollow(
 ): UseAsyncTask<
   CreateUnfollowRequest,
   TxHash,
-  SigningError | ValidationError | TransactionIndexingError | UnauthenticatedError | UnexpectedError
+  | SigningError
+  | ValidationError
+  | TransactionIndexingError
+  | UnauthenticatedError
+  | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     unfollow(sessionClient, request)

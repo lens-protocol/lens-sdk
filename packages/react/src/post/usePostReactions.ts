@@ -1,7 +1,16 @@
-import type { AccountPostReaction, Paginated, PostReactionsRequest } from '@lens-protocol/graphql';
+import type {
+  AccountPostReaction,
+  Paginated,
+  PostReactionsRequest,
+} from '@lens-protocol/graphql';
 import { PostReactionsQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type PostReactionsArgs = PostReactionsRequest;
@@ -38,7 +47,9 @@ export function usePostReactions(
 export function usePostReactions({
   suspense = false,
   ...request
-}: PostReactionsArgs & { suspense?: boolean }): SuspendableResult<Paginated<AccountPostReaction>> {
+}: PostReactionsArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<AccountPostReaction>
+> {
   return useSuspendableQuery({
     document: PostReactionsQuery,
     variables: { request },

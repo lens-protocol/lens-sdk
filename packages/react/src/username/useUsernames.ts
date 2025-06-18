@@ -1,7 +1,16 @@
-import type { Paginated, Username, UsernamesRequest } from '@lens-protocol/graphql';
+import type {
+  Paginated,
+  Username,
+  UsernamesRequest,
+} from '@lens-protocol/graphql';
 import { UsernamesQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type UsernamesArgs = UsernamesRequest;
@@ -37,12 +46,16 @@ export function useUsernames(
  * });
  * ```
  */
-export function useUsernames(args: UsernamesArgs): ReadResult<Paginated<Username>>;
+export function useUsernames(
+  args: UsernamesArgs,
+): ReadResult<Paginated<Username>>;
 
 export function useUsernames({
   suspense = false,
   ...request
-}: UsernamesArgs & { suspense?: boolean }): SuspendableResult<Paginated<Username>> {
+}: UsernamesArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<Username>
+> {
   return useSuspendableQuery({
     document: UsernamesQuery,
     variables: { request },

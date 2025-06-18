@@ -1,6 +1,5 @@
-import { createRoot } from 'react-dom/client';
-
 import { Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { Web3Providers } from './Web3Providers';
 

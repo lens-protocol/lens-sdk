@@ -1,12 +1,19 @@
 import { chains } from '@lens-chain/sdk/viem';
 import { evmAddress } from '@lens-protocol/client';
 import { SponsorshipApprovalSigner } from '@lens-protocol/client/viem';
-import { http, type Address, type Hash, type Hex, createWalletClient } from 'viem';
+import {
+  type Address,
+  createWalletClient,
+  type Hash,
+  type Hex,
+  http,
+} from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { sendTransaction } from 'viem/zksync';
 
-const chain = process.env.ENVIRONMENT === 'mainnet' ? chains.mainnet : chains.testnet;
+const chain =
+  process.env.ENVIRONMENT === 'mainnet' ? chains.mainnet : chains.testnet;
 console.log(`Network: ${chain.name}`);
 
 const wallet = createWalletClient({
@@ -17,7 +24,9 @@ const wallet = createWalletClient({
 console.log(`Wallet: ${wallet.account.address}`);
 
 const signer = createWalletClient({
-  account: privateKeyToAccount(process.env.SPONSORSHIP_SIGNER_PRIVATE_KEY as Hex),
+  account: privateKeyToAccount(
+    process.env.SPONSORSHIP_SIGNER_PRIVATE_KEY as Hex,
+  ),
   chain: chain,
   transport: http(),
 });
@@ -34,7 +43,11 @@ export interface SponsorRequest {
   data?: Hex;
 }
 
-async function sendSponsoredTransaction({ to, value, data }: SponsorRequest): Promise<Hash> {
+async function sendSponsoredTransaction({
+  to,
+  value,
+  data,
+}: SponsorRequest): Promise<Hash> {
   const tx = await approver.approveSponsorship({
     account: wallet.account,
     to,

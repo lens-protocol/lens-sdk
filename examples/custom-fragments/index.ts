@@ -2,15 +2,15 @@ import {
   type Account,
   ArticleMetadataFragment,
   AudioMetadataFragment,
+  evmAddress,
   type FragmentOf,
+  graphql,
   ImageMetadataFragment,
   PublicClient,
   TextOnlyMetadataFragment,
+  testnet,
   UsernameFragment,
   VideoMetadataFragment,
-  evmAddress,
-  graphql,
-  testnet,
 } from '@lens-protocol/client';
 import { fetchAccount } from '@lens-protocol/client/actions';
 

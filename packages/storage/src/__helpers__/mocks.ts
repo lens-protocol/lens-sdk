@@ -7,7 +7,9 @@ import type {
   StorageSubscription,
 } from '../IStorage';
 
-export function mockStorageProvider(initial: string | null = null): IObservableStorageProvider {
+export function mockStorageProvider(
+  initial: string | null = null,
+): IObservableStorageProvider {
   let internalStorage: string | null = initial;
 
   return {
@@ -22,7 +24,10 @@ export function mockStorageProvider(initial: string | null = null): IObservableS
     }),
 
     subscribe: vi.fn(
-      (_key: string, _subscriber: StorageProviderSubscriber): StorageSubscription => {
+      (
+        _key: string,
+        _subscriber: StorageProviderSubscriber,
+      ): StorageSubscription => {
         return {
           unsubscribe() {},
         };
@@ -57,11 +62,13 @@ export function mockStorage<T>(initial: T | null = null): IMockedStorage<T> {
       internalStorage = null;
     }),
 
-    subscribe: vi.fn((_subscriber: StorageSubscriber<T>): StorageSubscription => {
-      return {
-        unsubscribe() {},
-      };
-    }),
+    subscribe: vi.fn(
+      (_subscriber: StorageSubscriber<T>): StorageSubscription => {
+        return {
+          unsubscribe() {},
+        };
+      },
+    ),
 
     simulateUpdate(newData: T | null, oldData: T | null): void {
       for (const [subscriber] of vi.mocked(this.subscribe).mock.calls) {

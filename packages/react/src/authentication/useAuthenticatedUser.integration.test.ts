@@ -1,10 +1,9 @@
-import type { SessionClient } from '@lens-protocol/client';
-import type { AuthenticatedUser } from '@lens-protocol/client';
+import type { AuthenticatedUser, SessionClient } from '@lens-protocol/client';
 import {
+  createPublicClient,
   TEST_ACCOUNT,
   TEST_APP,
   TEST_SIGNER,
-  createPublicClient,
   wallet,
 } from '@lens-protocol/client/test-utils';
 import { signMessageWith } from '@lens-protocol/client/viem';
@@ -24,15 +23,22 @@ describe(`Given the '${useAuthenticatedUser.name}' hook`, () => {
         });
 
         await vi.waitUntil(() => result.current.loading === false);
-        expect(result.current).toMatchObject({ loading: false, data: null, error: undefined });
+        expect(result.current).toMatchObject({
+          loading: false,
+          data: null,
+          error: undefined,
+        });
       });
     });
 
     describe('When rendered in suspense mode', () => {
       it('Then it should suspend and render once the SessionClient is determined', async () => {
-        const { result } = renderHookWithContext(() => useAuthenticatedUser({ suspense: true }), {
-          client,
-        });
+        const { result } = renderHookWithContext(
+          () => useAuthenticatedUser({ suspense: true }),
+          {
+            client,
+          },
+        );
 
         await vi.waitUntil(() => result.current !== null);
         expect(result.current).toHaveProperty('data', null);
@@ -77,9 +83,12 @@ describe(`Given the '${useAuthenticatedUser.name}' hook`, () => {
       it('Then it should suspend and render once the SessionClient is determined', async () => {
         expect.hasAssertions();
 
-        const { result } = renderHookWithContext(() => useAuthenticatedUser({ suspense: true }), {
-          client,
-        });
+        const { result } = renderHookWithContext(
+          () => useAuthenticatedUser({ suspense: true }),
+          {
+            client,
+          },
+        );
 
         await vi.waitUntil(() => result.current !== null);
         expect(result.current.data).toEqual(user);

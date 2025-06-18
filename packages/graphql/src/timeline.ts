@@ -1,5 +1,4 @@
-import type { UUID } from '@lens-protocol/types';
-import type { Prettify } from '@lens-protocol/types';
+import type { Prettify, UUID } from '@lens-protocol/types';
 import {
   PaginatedResultInfoFragment,
   type Post,
@@ -7,7 +6,7 @@ import {
   type Repost,
   RepostFragment,
 } from './fragments';
-import { type FragmentDocumentFor, type RequestOf, graphql } from './graphql';
+import { type FragmentDocumentFor, graphql, type RequestOf } from './graphql';
 
 export type TimelineItem = Prettify<{
   __typename: 'TimelineItem';
@@ -64,4 +63,6 @@ export const TimelineHighlightsQuery = graphql(
   }`,
   [PostFragment, PaginatedResultInfoFragment],
 );
-export type TimelineHighlightsRequest = RequestOf<typeof TimelineHighlightsQuery>;
+export type TimelineHighlightsRequest = RequestOf<
+  typeof TimelineHighlightsQuery
+>;

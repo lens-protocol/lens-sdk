@@ -40,7 +40,9 @@ export const AccountFollowOperationValidationRuleFragment = graphql(
   }`,
   [AccountFollowRuleFragment, GraphRuleFragment],
 );
-export type AccountFollowOperationValidationRule = AccountFollowRule | GraphRule;
+export type AccountFollowOperationValidationRule =
+  | AccountFollowRule
+  | GraphRule;
 
 export const AccountFollowOperationValidationUnknownFragment = graphql(
   `fragment AccountFollowOperationValidationUnknown on AccountFollowOperationValidationUnknown {
@@ -67,7 +69,9 @@ export const AccountFollowUnsatisfiedRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export type AccountFollowUnsatisfiedRule = FragmentOf<typeof AccountFollowUnsatisfiedRuleFragment>;
+export type AccountFollowUnsatisfiedRule = FragmentOf<
+  typeof AccountFollowUnsatisfiedRuleFragment
+>;
 
 export const AccountFollowUnsatisfiedRulesFragment = graphql(
   `fragment AccountFollowUnsatisfiedRules on AccountFollowUnsatisfiedRules {
@@ -161,7 +165,8 @@ export const AccountMetadataFragment = graphql(
   }`,
   [MetadataAttributeFragment],
 );
-export interface AccountMetadata extends FragmentOf<typeof AccountMetadataFragment> {}
+export interface AccountMetadata
+  extends FragmentOf<typeof AccountMetadataFragment> {}
 
 export const AccountFollowRulesFragment = graphql(
   `fragment AccountFollowRules on AccountFollowRules {
@@ -183,7 +188,9 @@ export const TippingAccountActionFragment = graphql(
     address
   }`,
 );
-export type TippingAccountAction = FragmentOf<typeof TippingAccountActionFragment>;
+export type TippingAccountAction = FragmentOf<
+  typeof TippingAccountActionFragment
+>;
 
 export const UnknownAccountActionFragment = graphql(
   `fragment UnknownAccountAction on UnknownAccountAction {
@@ -198,7 +205,9 @@ export const UnknownAccountActionFragment = graphql(
   }`,
   [AnyKeyValueFragment, ActionMetadataFragment],
 );
-export type UnknownAccountAction = FragmentOf<typeof UnknownAccountActionFragment>;
+export type UnknownAccountAction = FragmentOf<
+  typeof UnknownAccountActionFragment
+>;
 
 export const AccountActionFragment = graphql(
   `fragment AccountAction on AccountAction {

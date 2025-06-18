@@ -1,7 +1,12 @@
 import type { Feed, FeedRequest } from '@lens-protocol/graphql';
 import { FeedQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type FeedArgs = FeedRequest;
@@ -15,7 +20,9 @@ export type FeedArgs = FeedRequest;
  * const { data } = useFeed({ feed: evmAddress('0x…'), suspense: true });
  * ```
  */
-export function useFeed(args: FeedArgs & Suspendable): SuspenseResult<Feed | null>;
+export function useFeed(
+  args: FeedArgs & Suspendable,
+): SuspenseResult<Feed | null>;
 
 /**
  * Fetch a single Feed.

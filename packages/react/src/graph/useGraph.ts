@@ -1,7 +1,12 @@
 import type { Graph, GraphRequest } from '@lens-protocol/graphql';
 import { GraphQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type GraphArgs = GraphRequest;
@@ -15,7 +20,9 @@ export type GraphArgs = GraphRequest;
  * const { data } = useGraph({ graph: evmAddress('0x…'), suspense: true });
  * ```
  */
-export function useGraph(args: GraphArgs & Suspendable): SuspenseResult<Graph | null>;
+export function useGraph(
+  args: GraphArgs & Suspendable,
+): SuspenseResult<Graph | null>;
 
 /**
  * Fetch a single Graph.

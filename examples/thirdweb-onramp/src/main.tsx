@@ -2,7 +2,7 @@ import { chains } from '@lens-chain/sdk/viem';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { ThirdwebProvider } from 'thirdweb/react';
-import { http, WagmiProvider, createConfig, injected } from 'wagmi';
+import { createConfig, http, injected, WagmiProvider } from 'wagmi';
 
 import { App } from './App';
 

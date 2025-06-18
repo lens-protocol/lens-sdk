@@ -9,7 +9,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 export const AppQuery = graphql(
   `query App($request: AppRequest!) {
@@ -152,7 +152,11 @@ const CreateAppResultFragment = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateAppResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+  [
+    CreateAppResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type CreateAppResult = FragmentOf<typeof CreateAppResultFragment>;
 
@@ -244,7 +248,9 @@ const AddAppSignersResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type AddAppSignersResult = FragmentOf<typeof AddAppSignersResultFragment>;
+export type AddAppSignersResult = FragmentOf<
+  typeof AddAppSignersResultFragment
+>;
 
 export const AddAppSignersMutation = graphql(
   `mutation AddAppSigners($request: AddAppSignersRequest!) {
@@ -274,7 +280,9 @@ const RemoveAppFeedsResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type RemoveAppFeedsResult = FragmentOf<typeof RemoveAppFeedsResultFragment>;
+export type RemoveAppFeedsResult = FragmentOf<
+  typeof RemoveAppFeedsResultFragment
+>;
 
 export const RemoveAppFeedsMutation = graphql(
   `mutation RemoveAppFeeds($request: RemoveAppFeedsRequest!) {
@@ -304,7 +312,9 @@ const RemoveAppGroupsResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type RemoveAppGroupsResult = FragmentOf<typeof RemoveAppGroupsResultFragment>;
+export type RemoveAppGroupsResult = FragmentOf<
+  typeof RemoveAppGroupsResultFragment
+>;
 
 export const RemoveAppGroupsMutation = graphql(
   `mutation RemoveAppGroups($request: RemoveAppGroupsRequest!) {
@@ -334,7 +344,9 @@ const RemoveAppSignersResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type RemoveAppSignersResult = FragmentOf<typeof RemoveAppSignersResultFragment>;
+export type RemoveAppSignersResult = FragmentOf<
+  typeof RemoveAppSignersResultFragment
+>;
 
 export const RemoveAppSignersMutation = graphql(
   `mutation RemoveAppSigners($request: RemoveAppSignersRequest!) {
@@ -344,7 +356,9 @@ export const RemoveAppSignersMutation = graphql(
   }`,
   [RemoveAppSignersResultFragment],
 );
-export type RemoveAppSignersRequest = RequestOf<typeof RemoveAppSignersMutation>;
+export type RemoveAppSignersRequest = RequestOf<
+  typeof RemoveAppSignersMutation
+>;
 
 const SetAppGraphResultFragment = graphql(
   `fragment SetAppGraphResult on SetAppGraphResult {
@@ -394,7 +408,9 @@ const SetDefaultAppFeedResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetDefaultAppFeedResult = FragmentOf<typeof SetDefaultAppFeedResultFragment>;
+export type SetDefaultAppFeedResult = FragmentOf<
+  typeof SetDefaultAppFeedResultFragment
+>;
 
 export const SetDefaultAppFeedMutation = graphql(
   `mutation SetDefaultAppFeed($request: SetDefaultAppFeedRequest!) {
@@ -404,7 +420,9 @@ export const SetDefaultAppFeedMutation = graphql(
   }`,
   [SetDefaultAppFeedResultFragment],
 );
-export type SetDefaultAppFeedRequest = RequestOf<typeof SetDefaultAppFeedMutation>;
+export type SetDefaultAppFeedRequest = RequestOf<
+  typeof SetDefaultAppFeedMutation
+>;
 
 const SetAppMetadataResultFragment = graphql(
   `fragment SetAppMetadataResult on SetAppMetadataResult {
@@ -424,7 +442,9 @@ const SetAppMetadataResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetAppMetadataResult = FragmentOf<typeof SetAppMetadataResultFragment>;
+export type SetAppMetadataResult = FragmentOf<
+  typeof SetAppMetadataResultFragment
+>;
 
 export const SetAppMetadataMutation = graphql(
   `mutation SetAppMetadata($request: SetAppMetadataRequest!) {
@@ -454,7 +474,9 @@ const SetAppVerificationResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetAppVerificationResult = FragmentOf<typeof SetAppVerificationResultFragment>;
+export type SetAppVerificationResult = FragmentOf<
+  typeof SetAppVerificationResultFragment
+>;
 
 export const SetAppVerificationMutation = graphql(
   `mutation SetAppVerification($request: SetAppVerificationRequest!) {
@@ -464,7 +486,9 @@ export const SetAppVerificationMutation = graphql(
   }`,
   [SetAppVerificationResultFragment],
 );
-export type SetAppVerificationRequest = RequestOf<typeof SetAppVerificationMutation>;
+export type SetAppVerificationRequest = RequestOf<
+  typeof SetAppVerificationMutation
+>;
 
 const SetAppSponsorshipResultFragment = graphql(
   `fragment SetAppSponsorshipResult on SetAppSponsorshipResult {
@@ -484,7 +508,9 @@ const SetAppSponsorshipResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetAppSponsorshipResult = FragmentOf<typeof SetAppSponsorshipResultFragment>;
+export type SetAppSponsorshipResult = FragmentOf<
+  typeof SetAppSponsorshipResultFragment
+>;
 
 export const SetAppSponsorshipMutation = graphql(
   `mutation SetAppSponsorship($request: SetAppSponsorshipRequest!) {
@@ -494,7 +520,9 @@ export const SetAppSponsorshipMutation = graphql(
   }`,
   [SetAppSponsorshipResultFragment],
 );
-export type SetAppSponsorshipRequest = RequestOf<typeof SetAppSponsorshipMutation>;
+export type SetAppSponsorshipRequest = RequestOf<
+  typeof SetAppSponsorshipMutation
+>;
 
 const SetAppTreasuryResultFragment = graphql(
   `fragment SetAppTreasuryResult on SetAppTreasuryResult {
@@ -514,7 +542,9 @@ const SetAppTreasuryResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetAppTreasuryResult = FragmentOf<typeof SetAppTreasuryResultFragment>;
+export type SetAppTreasuryResult = FragmentOf<
+  typeof SetAppTreasuryResultFragment
+>;
 
 export const SetAppTreasuryMutation = graphql(
   `mutation SetAppTreasury($request: SetAppTreasuryRequest!) {
@@ -556,7 +586,9 @@ export const SetAppUsernameNamespaceMutation = graphql(
   }`,
   [SetAppUsernameNamespaceResultFragment],
 );
-export type SetAppUsernameNamespaceRequest = RequestOf<typeof SetAppUsernameNamespaceMutation>;
+export type SetAppUsernameNamespaceRequest = RequestOf<
+  typeof SetAppUsernameNamespaceMutation
+>;
 
 export const AddAppAuthorizationEndpointMutation = graphql(
   `mutation AddAppAuthorizationEndpoint($request: AddAppAuthorizationEndpointRequest!) {

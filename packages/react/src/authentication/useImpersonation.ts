@@ -24,7 +24,9 @@ export function useImpersonation(): UseAsyncTask<
   const publicClient = usePublicClient();
 
   return useAsyncTask(
-    (params: ImpersonationRequest): ResultAsync<AuthenticatedUser, ImpersonationError> =>
+    (
+      params: ImpersonationRequest,
+    ): ResultAsync<AuthenticatedUser, ImpersonationError> =>
       publicClient
         .impersonate(params)
         .andTee(afterLogin)

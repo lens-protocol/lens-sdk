@@ -1,4 +1,4 @@
-import { type Result, type ResultAsync, err, errAsync } from 'neverthrow';
+import { err, errAsync, type Result, type ResultAsync } from 'neverthrow';
 
 export class ResultAwareError extends Error {
   /**
@@ -18,9 +18,18 @@ export class ResultAwareError extends Error {
   /**
    * @internal
    */
-  static from<T extends typeof ResultAwareError>(this: T, message: string): InstanceType<T>;
-  static from<T extends typeof ResultAwareError>(this: T, cause: unknown): InstanceType<T>;
-  static from<T extends typeof ResultAwareError>(this: T, args: unknown): InstanceType<T> {
+  static from<T extends typeof ResultAwareError>(
+    this: T,
+    message: string,
+  ): InstanceType<T>;
+  static from<T extends typeof ResultAwareError>(
+    this: T,
+    cause: unknown,
+  ): InstanceType<T>;
+  static from<T extends typeof ResultAwareError>(
+    this: T,
+    args: unknown,
+  ): InstanceType<T> {
     if (args instanceof Error) {
       // biome-ignore lint/complexity/noThisInStatic: intentional
       const message = this.formatMessage(args);
@@ -31,7 +40,10 @@ export class ResultAwareError extends Error {
     return new this(String(args)) as InstanceType<T>;
   }
 
-  static is<T extends typeof ResultAwareError>(this: T, error: unknown): error is InstanceType<T> {
+  static is<T extends typeof ResultAwareError>(
+    this: T,
+    error: unknown,
+  ): error is InstanceType<T> {
     // biome-ignore lint/complexity/noThisInStatic: intentional
     return error instanceof this;
   }

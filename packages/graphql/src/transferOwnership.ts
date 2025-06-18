@@ -4,7 +4,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const TransferPrimitiveOwnershipResultFragment = graphql(
   `fragment TransferPrimitiveOwnershipResult on TransferPrimitiveOwnershipResult {

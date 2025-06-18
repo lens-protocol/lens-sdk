@@ -5,9 +5,9 @@ import type {
 import type { ResultAsync, TxHash } from '@lens-protocol/types';
 import type { SigningError, ValidationError } from './errors';
 
-export function isTransactionRequest(request: { __typename: string }): request is
-  | SponsoredTransactionRequest
-  | SelfFundedTransactionRequest {
+export function isTransactionRequest(request: {
+  __typename: string;
+}): request is SponsoredTransactionRequest | SelfFundedTransactionRequest {
   return (
     request.__typename === 'SponsoredTransactionRequest' ||
     request.__typename === 'SelfFundedTransactionRequest'
@@ -50,4 +50,6 @@ export type DelegableOperationHandler<T extends string, E extends string> = (
 export type OperationHandler<
   T extends string = string,
   E extends string = string,
-> = T extends string ? DelegableOperationHandler<T, E> : RestrictedOperationHandler<E>;
+> = T extends string
+  ? DelegableOperationHandler<T, E>
+  : RestrictedOperationHandler<E>;
