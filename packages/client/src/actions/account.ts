@@ -277,7 +277,9 @@ export function createAccountWithUsername(
  * @alpha This is an alpha API and may be subject to breaking changes.
  *
  * ```ts
- * const result = await createAccount(sessionClient);
+ * const result = await createAccount(sessionClient, {
+ *   metadataUri: uri('lens://bafybxiky5jf…'),
+ * });
  * ```
  *
  * @param client - The session client for the authenticated Account.
@@ -286,7 +288,7 @@ export function createAccountWithUsername(
  */
 export function createAccount(
   client: SessionClient,
-  request: CreateAccountRequest = {},
+  request: CreateAccountRequest,
 ): ResultAsync<CreateAccountResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(CreateAccountMutation, { request });
 }
