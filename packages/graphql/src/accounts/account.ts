@@ -194,7 +194,9 @@ const CreateAccountResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type CreateAccountResult = FragmentOf<typeof CreateAccountResultFragment>;
+export type CreateAccountResult = FragmentOf<
+  typeof CreateAccountResultFragment
+>;
 
 export const CreateAccountMutation = graphql(
   `mutation CreateAccount($request: CreateAccountRequest!) {

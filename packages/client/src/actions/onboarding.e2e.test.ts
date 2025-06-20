@@ -70,7 +70,7 @@ describe('Given a new user', { timeout: 10000 }, () => {
       namespace = result.value.address;
     }, 15000);
 
-    it.only('Then it should work as expected', async () => {
+    it('Then it should work as expected', async () => {
       const localName = `t${Date.now()}`;
       const publicClient = createPublicClient();
 
