@@ -1,7 +1,16 @@
-import type { Account, AccountRecommendationsRequest, Paginated } from '@lens-protocol/graphql';
+import type {
+  Account,
+  AccountRecommendationsRequest,
+  Paginated,
+} from '@lens-protocol/graphql';
 import { MlAccountRecommendationsQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type UseAccountRecommendationsArgs = AccountRecommendationsRequest;
