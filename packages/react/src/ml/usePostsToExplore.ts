@@ -12,8 +12,7 @@ import { useSuspendableQuery } from '../helpers';
 export type UsePostsToExploreArgs = PostsExploreRequest;
 
 /**
- * Fetch a list of post recommendations for the current user's Account.
- * If current user is not authenticated, the results will not be personalized.
+ * Fetch a list of recommended posts using Lens's ML algorithms.
  *
  * This signature supports React Suspense:
  *
@@ -26,8 +25,7 @@ export function usePostsToExplore(
 ): SuspenseResult<Paginated<Post>>;
 
 /**
- * Fetch a list of post recommendations for the current user's Account.
- * If current user is not authenticated, the results will not be personalized.
+ * Fetch a list of recommended posts using Lens's ML algorithms.
  *
  * ```tsx
  * const { data, loading } = usePostsToExplore();
