@@ -1,6 +1,10 @@
 import type { FragmentOf } from 'gql.tada';
-import { AccountFragment, PaginatedResultInfoFragment, PostFragment } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import {
+  AccountFragment,
+  PaginatedResultInfoFragment,
+  PostFragment,
+} from './fragments';
+import { graphql, type RequestOf } from './graphql';
 
 export const MlAccountRecommendationsQuery = graphql(
   `query MlAccountRecommendations($request: AccountRecommendationsRequest!) {
@@ -16,7 +20,9 @@ export const MlAccountRecommendationsQuery = graphql(
   }`,
   [AccountFragment, PaginatedResultInfoFragment],
 );
-export type AccountRecommendationsRequest = RequestOf<typeof MlAccountRecommendationsQuery>;
+export type AccountRecommendationsRequest = RequestOf<
+  typeof MlAccountRecommendationsQuery
+>;
 
 export const PostForYouFragment = graphql(
   `fragment PostForYou on PostForYou {
@@ -81,4 +87,6 @@ export const UndoPostNotInterestedMutation = graphql(
     value: undoPostNotInterested(request: $request)
   }`,
 );
-export type PostNotInterestedRequest = RequestOf<typeof AddPostNotInterestedMutation>;
+export type PostNotInterestedRequest = RequestOf<
+  typeof AddPostNotInterestedMutation
+>;

@@ -1,17 +1,19 @@
 import 'viem/window';
 
 import { chains } from '@lens-chain/sdk/viem';
-import { StorageClient, immutable } from '@lens-chain/storage-client';
+import { immutable, StorageClient } from '@lens-chain/storage-client';
 import { PublicClient, testnet, uri } from '@lens-protocol/client';
 import { createApp, fetchApp } from '@lens-protocol/client/actions';
 import { handleOperationWith } from '@lens-protocol/client/viem';
-import { Platform, app } from '@lens-protocol/metadata';
+import { app, Platform } from '@lens-protocol/metadata';
 import { type Address, createWalletClient, custom } from 'viem';
 
 const chain = chains.testnet;
 
 // hoist account
-const [address] = (await window.ethereum!.request({ method: 'eth_requestAccounts' })) as [Address];
+const [address] = (await window.ethereum!.request({
+  method: 'eth_requestAccounts',
+})) as [Address];
 
 const walletClient = createWalletClient({
   account: address,
@@ -47,7 +49,9 @@ const metadata = app({
   developer: 'me@example.com',
 });
 
-const resource = await storageClient.uploadAsJson(metadata, { acl: immutable(chain.id) });
+const resource = await storageClient.uploadAsJson(metadata, {
+  acl: immutable(chain.id),
+});
 
 const created = await createApp(sessionClient, {
   metadataUri: uri(resource.uri),
@@ -71,4 +75,7 @@ const created = await createApp(sessionClient, {
     },
   );
 
-export default [`<h2>${created?.metadata?.name}</h2>`, `<p>Address: ${await created?.address}</p>`];
+export default [
+  `<h2>${created?.metadata?.name}</h2>`,
+  `<p>Address: ${await created?.address}</p>`,
+];

@@ -1,7 +1,16 @@
-import type { GroupMember, GroupMembersRequest, Paginated } from '@lens-protocol/graphql';
+import type {
+  GroupMember,
+  GroupMembersRequest,
+  Paginated,
+} from '@lens-protocol/graphql';
 import { GroupMembersQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type GroupMembersArgs = GroupMembersRequest;
@@ -26,12 +35,16 @@ export function useGroupMembers(
  * const { data, loading } = useGroups({ group: evmAddress('0x…') });
  * ```
  */
-export function useGroupMembers(args: GroupMembersArgs): ReadResult<Paginated<GroupMember>>;
+export function useGroupMembers(
+  args: GroupMembersArgs,
+): ReadResult<Paginated<GroupMember>>;
 
 export function useGroupMembers({
   suspense = false,
   ...request
-}: GroupMembersArgs & { suspense?: boolean }): SuspendableResult<Paginated<GroupMember>> {
+}: GroupMembersArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<GroupMember>
+> {
   return useSuspendableQuery({
     document: GroupMembersQuery,
     variables: { request },

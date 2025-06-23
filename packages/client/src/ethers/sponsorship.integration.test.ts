@@ -1,7 +1,11 @@
-import { Network, Wallet, getDefaultProvider } from '@lens-chain/sdk/ethers';
+import { getDefaultProvider, Network, Wallet } from '@lens-chain/sdk/ethers';
 import { describe, it } from 'vitest';
 
-import { GLOBAL_SPONSORSHIP, PRIVATE_KEY, SPONSORSHIP_APPROVER_PRIVATE_KEY } from '../test-utils';
+import {
+  GLOBAL_SPONSORSHIP,
+  PRIVATE_KEY,
+  SPONSORSHIP_APPROVER_PRIVATE_KEY,
+} from '../test-utils';
 import { SponsorshipApprovalSigner } from './sponsorship';
 
 const provider = getDefaultProvider(Network.Testnet);

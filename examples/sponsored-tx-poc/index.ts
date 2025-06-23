@@ -4,13 +4,15 @@ import { chains } from '@lens-chain/sdk/viem';
 import { evmAddress } from '@lens-protocol/client';
 import { SponsorshipApprovalSigner } from '@lens-protocol/client/viem';
 
-import { http, createWalletClient, custom } from 'viem';
+import { createWalletClient, custom, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { sendTransaction } from 'viem/zksync';
 
 const chain = chains.testnet;
 
-const [address] = (await window.ethereum!.request({ method: 'eth_requestAccounts' })) as [Address];
+const [address] = (await window.ethereum!.request({
+  method: 'eth_requestAccounts',
+})) as [Address];
 
 const wallet = createWalletClient({
   account: address,

@@ -1,7 +1,16 @@
-import type { AnyPost, Paginated, PostReferencesRequest } from '@lens-protocol/graphql';
+import type {
+  AnyPost,
+  Paginated,
+  PostReferencesRequest,
+} from '@lens-protocol/graphql';
 import { PostReferencesQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type PostReferencesArgs = PostReferencesRequest;
@@ -33,12 +42,16 @@ export function usePostReferences(
  * );
  * ```
  */
-export function usePostReferences(args: PostReferencesArgs): ReadResult<Paginated<AnyPost>>;
+export function usePostReferences(
+  args: PostReferencesArgs,
+): ReadResult<Paginated<AnyPost>>;
 
 export function usePostReferences({
   suspense = false,
   ...request
-}: PostReferencesArgs & { suspense?: boolean }): SuspendableResult<Paginated<AnyPost>> {
+}: PostReferencesArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<AnyPost>
+> {
   return useSuspendableQuery({
     document: PostReferencesQuery,
     variables: { request },

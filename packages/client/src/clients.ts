@@ -8,50 +8,52 @@ import type {
 import {
   AuthenticateMutation,
   ChallengeMutation,
-  IssueUnverifiedCredentialsMutation,
   RefreshMutation,
 } from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
+import { CredentialsStorage } from '@lens-protocol/storage';
 import {
-  type Result,
-  ResultAsync,
-  type TxHash,
   errAsync,
   invariant,
   never,
   ok,
   okAsync,
+  type Result,
+  ResultAsync,
   signatureFrom,
+  type TxHash,
 } from '@lens-protocol/types';
 import {
   type AnyVariables,
+  createClient,
   type Exchange,
+  fetchExchange,
   type OperationResult,
   type OperationResultSource,
   type TypedDocumentNode,
   type Client as UrqlClient,
-  createClient,
-  fetchExchange,
 } from '@urql/core';
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 
-import type { IssueUnverifiedCredentialsRequest } from '@lens-protocol/graphql';
-import { CredentialsStorage } from '@lens-protocol/storage';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
-import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
+import {
+  revokeAuthentication,
+  switchAccount,
+  transactionStatus,
+} from './actions';
 import { BatchQueryBuilder } from './batch';
 import type { ClientConfig } from './config';
 import { type Context, configureContext } from './context';
 import {
   AuthenticationError,
   GraphQLErrorCode,
+  hasExtensionCode,
   SigningError,
   TransactionIndexingError,
   UnauthenticatedError,
   UnexpectedError,
-  hasExtensionCode,
 } from './errors';
-import { LogLevel, Logger } from './logger';
+import { Logger, LogLevel } from './logger';
 import { decodeAccessToken, decodeIdToken } from './tokens';
 import { delay } from './utils';
 
@@ -80,11 +82,6 @@ export type LoginParams = ChallengeRequest & {
    */
   signMessage: SignMessage;
 };
-
-/**
- * @internal
- */
-export type ImpersonationRequest = IssueUnverifiedCredentialsRequest;
 
 abstract class AbstractClient<TContext extends Context, TError> {
   /**
@@ -138,7 +135,9 @@ abstract class AbstractClient<TContext extends Context, TError> {
     variables: TVariables,
   ): ResultAsync<TValue, TError | UnexpectedError> {
     const mutation = this.context.fragments.replaceFrom(document);
-    return this.resultFrom(this.urql.mutation(mutation, variables)).map(takeValue);
+    return this.resultFrom(this.urql.mutation(mutation, variables)).map(
+      takeValue,
+    );
   }
 
   /**
@@ -174,12 +173,28 @@ abstract class AbstractClient<TContext extends Context, TError> {
     cb: (client: this) => [ResultAsync<T1, E1>, ResultAsync<T2, E2>],
   ): ResultAsync<[T1, T2], E1 | E2>;
   batch<T1, T2, T3, E1 extends Error, E2 extends Error, E3 extends Error>(
-    cb: (client: this) => [ResultAsync<T1, E1>, ResultAsync<T2, E2>, ResultAsync<T3, E3>],
-  ): ResultAsync<[T1, T2, T3], E1 | E2 | E3>;
-  batch<T1, T2, T3, T4, E1 extends Error, E2 extends Error, E3 extends Error, E4 extends Error>(
     cb: (
       client: this,
-    ) => [ResultAsync<T1, E1>, ResultAsync<T2, E2>, ResultAsync<T3, E3>, ResultAsync<T4, E4>],
+    ) => [ResultAsync<T1, E1>, ResultAsync<T2, E2>, ResultAsync<T3, E3>],
+  ): ResultAsync<[T1, T2, T3], E1 | E2 | E3>;
+  batch<
+    T1,
+    T2,
+    T3,
+    T4,
+    E1 extends Error,
+    E2 extends Error,
+    E3 extends Error,
+    E4 extends Error,
+  >(
+    cb: (
+      client: this,
+    ) => [
+      ResultAsync<T1, E1>,
+      ResultAsync<T2, E2>,
+      ResultAsync<T3, E3>,
+      ResultAsync<T4, E4>,
+    ],
   ): ResultAsync<[T1, T2, T3, T4], E1 | E2 | E3 | E4>;
   batch<
     T1,
@@ -255,7 +270,10 @@ abstract class AbstractClient<TContext extends Context, TError> {
       ResultAsync<T6, E6>,
       ResultAsync<T7, E7>,
     ],
-  ): ResultAsync<[T1, T2, T3, T4, T5, T6, T7], E1 | E2 | E3 | E4 | E5 | E6 | E7>;
+  ): ResultAsync<
+    [T1, T2, T3, T4, T5, T6, T7],
+    E1 | E2 | E3 | E4 | E5 | E6 | E7
+  >;
   batch<
     T1,
     T2,
@@ -286,7 +304,10 @@ abstract class AbstractClient<TContext extends Context, TError> {
       ResultAsync<T7, E7>,
       ResultAsync<T8, E8>,
     ],
-  ): ResultAsync<[T1, T2, T3, T4, T5, T6, T7, T8], E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8>;
+  ): ResultAsync<
+    [T1, T2, T3, T4, T5, T6, T7, T8],
+    E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8
+  >;
   batch<
     T1,
     T2,
@@ -320,7 +341,10 @@ abstract class AbstractClient<TContext extends Context, TError> {
       ResultAsync<T8, E8>,
       ResultAsync<T9, E9>,
     ],
-  ): ResultAsync<[T1, T2, T3, T4, T5, T6, T7, T8, T9], E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | E9>;
+  ): ResultAsync<
+    [T1, T2, T3, T4, T5, T6, T7, T8, T9],
+    E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | E9
+  >;
   batch<
     T1,
     T2,
@@ -361,8 +385,12 @@ abstract class AbstractClient<TContext extends Context, TError> {
     [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10],
     E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | E9 | E10
   >;
-  batch<T, E extends Error>(cb: (client: this) => ResultAsync<T, E>[]): ResultAsync<T[], E>;
-  batch(cb: (client: this) => ResultAsync<unknown[], unknown>[]): ResultAsync<unknown[], unknown> {
+  batch<T, E extends Error>(
+    cb: (client: this) => ResultAsync<T, E>[],
+  ): ResultAsync<T[], E>;
+  batch(
+    cb: (client: this) => ResultAsync<unknown[], unknown>[],
+  ): ResultAsync<unknown[], unknown> {
     const builder = new BatchQueryBuilder();
 
     const client: this = Object.create(this, {
@@ -407,16 +435,16 @@ abstract class AbstractClient<TContext extends Context, TError> {
 /**
  * A client to interact with the public access queries and mutations of the Lens GraphQL API.
  */
-export class PublicClient<TContext extends Context = Context> extends AbstractClient<
-  TContext,
-  UnexpectedError
-> {
+export class PublicClient<
+  TContext extends Context = Context,
+> extends AbstractClient<TContext, UnexpectedError> {
   /**
    *  The current session client.
    *
    * This could be the {@link PublicClient} itself if the user is not authenticated, or a {@link SessionClient} if the user is authenticated.
    */
-  public currentSession: PublicClient<TContext> | SessionClient<TContext> = this;
+  public currentSession: PublicClient<TContext> | SessionClient<TContext> =
+    this;
 
   /**
    * Create a new instance of the {@link PublicClient}.
@@ -438,7 +466,9 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
   /**
    * Generate a new authentication challenge for the given account and app.
    */
-  challenge(request: ChallengeRequest): ResultAsync<AuthenticationChallenge, UnexpectedError> {
+  challenge(
+    request: ChallengeRequest,
+  ): ResultAsync<AuthenticationChallenge, UnexpectedError> {
     return this.mutation(ChallengeMutation, { request });
   }
 
@@ -447,7 +477,10 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
    */
   authenticate(
     request: SignedAuthChallenge,
-  ): ResultAsync<SessionClient<TContext>, AuthenticationError | UnexpectedError> {
+  ): ResultAsync<
+    SessionClient<TContext>,
+    AuthenticationError | UnexpectedError
+  > {
     return this.mutation(AuthenticateMutation, { request })
       .andThen((result) => {
         if (result.__typename === 'AuthenticationTokens') {
@@ -479,8 +512,9 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
     return this.challenge(request)
       .map(async (challenge) => ({
         challenge,
-        signature: await ResultAsync.fromPromise(signMessage(challenge.text), (err) =>
-          SigningError.from(err),
+        signature: await ResultAsync.fromPromise(
+          signMessage(challenge.text),
+          (err) => SigningError.from(err),
         ),
       }))
       .andThen(({ challenge, signature }) => {
@@ -496,32 +530,14 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
   }
 
   /**
-   * @internal
-   */
-  impersonate(
-    request: IssueUnverifiedCredentialsRequest,
-  ): ResultAsync<SessionClient<TContext>, AuthenticationError | UnexpectedError> {
-    return this.mutation(IssueUnverifiedCredentialsMutation, { request })
-      .andThen((result) => {
-        if (result.__typename === 'AuthenticationTokens') {
-          return okAsync(result);
-        }
-        return AuthenticationError.from(result.reason).asResultAsync();
-      })
-      .andThen((tokens) =>
-        this.createCredentialsStorage()
-          .set(tokens)
-          .mapErr((err) => UnexpectedError.from(err)),
-      )
-      .map((storage) => new SessionClient(storage, this));
-  }
-
-  /**
    * Resume an instance of the SessionClient from the credentials in storage.
    *
    * @returns The session client if available.
    */
-  resumeSession(): ResultAsync<SessionClient<TContext>, UnauthenticatedError | UnexpectedError> {
+  resumeSession(): ResultAsync<
+    SessionClient<TContext>,
+    UnauthenticatedError | UnexpectedError
+  > {
     return this.createCredentialsStorage()
       .resume()
       .mapErr((err) => UnexpectedError.from(err))
@@ -573,11 +589,16 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
   ): ResultAsync<TValue, UnexpectedError> {
-    return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
+    return this.resultFrom(this.urql.mutation(document, variables)).map(
+      takeValue,
+    );
   }
 
   private createCredentialsStorage(): IStorage<Credentials> {
-    return CredentialsStorage.from(this.context.storage, this.context.environment.name);
+    return CredentialsStorage.from(
+      this.context.storage,
+      this.context.environment.name,
+    );
   }
 }
 
@@ -639,9 +660,13 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
    */
   logout(): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
     return this.getAuthenticatedUser()
-      .asyncAndThen(({ authenticationId }) => revokeAuthentication(this, { authenticationId }))
+      .asyncAndThen(({ authenticationId }) =>
+        revokeAuthentication(this, { authenticationId }),
+      )
       .andTee(() =>
-        ResultAsync.fromPromise(this.storage.reset(), (err) => UnexpectedError.from(err)),
+        ResultAsync.fromPromise(this.storage.reset(), (err) =>
+          UnexpectedError.from(err),
+        ),
       );
   }
 
@@ -737,12 +762,18 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
   readonly waitForTransaction = (
     txHash: TxHash,
   ): ResultAsync<TxHash, TransactionIndexingError | UnexpectedError> => {
-    return ResultAsync.fromPromise(this.pollTransactionStatus(txHash), (err) => {
-      if (err instanceof TransactionIndexingError || err instanceof UnexpectedError) {
-        return err;
-      }
-      return UnexpectedError.from(err);
-    });
+    return ResultAsync.fromPromise(
+      this.pollTransactionStatus(txHash),
+      (err) => {
+        if (
+          err instanceof TransactionIndexingError ||
+          err instanceof UnexpectedError
+        ) {
+          return err;
+        }
+        return UnexpectedError.from(err);
+      },
+    );
   };
 
   protected async pollTransactionStatus(txHash: TxHash): Promise<TxHash> {
@@ -768,7 +799,9 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
           break;
       }
     }
-    throw TransactionIndexingError.from(`Timeout waiting for transaction ${txHash}`);
+    throw TransactionIndexingError.from(
+      `Timeout waiting for transaction ${txHash}`,
+    );
   }
 
   protected override exchanges(): Exchange[] {
@@ -792,7 +825,9 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
 
             if (!credentials) return false;
 
-            const { exp } = decodeAccessToken(credentials.accessToken).unwrapOr({ exp: 0 });
+            const { exp } = decodeAccessToken(credentials.accessToken).unwrapOr(
+              { exp: 0 },
+            );
 
             // Check if the token is about to expire in the next 30 seconds
             const tokenExpiryTime = exp * 1000;
@@ -802,11 +837,13 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
             return tokenExpiryTime <= currentTime + bufferTime;
           },
 
-          didAuthError: (error) => hasExtensionCode(error, GraphQLErrorCode.UNAUTHENTICATED),
+          didAuthError: (error) =>
+            hasExtensionCode(error, GraphQLErrorCode.UNAUTHENTICATED),
 
           refreshAuth: async () => {
             const credentials =
-              this.getCredentials().unwrapOr(null) ?? never('Missing refresh token');
+              this.getCredentials().unwrapOr(null) ??
+              never('Missing refresh token');
             const result = await utils.mutate(RefreshMutation, {
               request: {
                 refreshToken: credentials.refreshToken,
@@ -839,10 +876,14 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
     Data,
     Variables extends AnyVariables,
     Result extends OperationResult<Data, Variables>,
-  >(result: Result): ResultAsync<Result, UnauthenticatedError | UnexpectedError> {
+  >(
+    result: Result,
+  ): ResultAsync<Result, UnauthenticatedError | UnexpectedError> {
     if (result.error) {
       if (hasExtensionCode(result.error, GraphQLErrorCode.UNAUTHENTICATED)) {
-        return UnauthenticatedError.fromCombinedError(result.error).asResultAsync();
+        return UnauthenticatedError.fromCombinedError(
+          result.error,
+        ).asResultAsync();
       }
       return UnexpectedError.from(result.error).asResultAsync();
     }

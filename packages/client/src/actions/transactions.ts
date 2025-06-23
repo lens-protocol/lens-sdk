@@ -4,7 +4,10 @@ import type {
   TransactionStatusRequest,
   TransactionStatusResult,
 } from '@lens-protocol/graphql';
-import { PrepareSignerErc20ApprovalMutation, TransactionStatusQuery } from '@lens-protocol/graphql';
+import {
+  PrepareSignerErc20ApprovalMutation,
+  TransactionStatusQuery,
+} from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
@@ -48,6 +51,9 @@ export function transactionStatus(
 export function prepareSignerErc20Approval(
   client: SessionClient,
   request: PrepareSignerErc20ApprovalRequest,
-): ResultAsync<PrepareSignerErc20ApprovalResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  PrepareSignerErc20ApprovalResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(PrepareSignerErc20ApprovalMutation, { request });
 }

@@ -7,7 +7,7 @@ import type {
   UnexpectedError,
 } from '@lens-protocol/client';
 import type { SwitchAccountRequest } from '@lens-protocol/graphql';
-import { type ResultAsync, invariant } from '@lens-protocol/types';
+import { invariant, type ResultAsync } from '@lens-protocol/types';
 
 import { useLensContext } from '../context';
 import { type UseAsyncTask, useAsyncTask } from '../helpers';
@@ -15,7 +15,10 @@ import { useSessionClient } from './useSessionClient';
 
 export type { LoginParams, SignMessage };
 
-export type SwitchAccountError = AuthenticationError | UnauthenticatedError | UnexpectedError;
+export type SwitchAccountError =
+  | AuthenticationError
+  | UnauthenticatedError
+  | UnexpectedError;
 
 /**
  * Switch to a different account.
@@ -43,7 +46,9 @@ export function useSwitchAccount(): UseAsyncTask<
   const { data: sessionClient } = useSessionClient();
 
   return useAsyncTask(
-    (request: SwitchAccountRequest): ResultAsync<AuthenticatedUser, SwitchAccountError> => {
+    (
+      request: SwitchAccountRequest,
+    ): ResultAsync<AuthenticatedUser, SwitchAccountError> => {
       invariant(
         sessionClient,
         'It appears that you are not logged in. Please log in before attempting to switch account.',

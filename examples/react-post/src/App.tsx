@@ -5,7 +5,11 @@ import { useWalletClient } from 'wagmi';
 
 export function App() {
   const { data: wallet } = useWalletClient();
-  const { execute, loading, data: post } = useCreatePost({ handler: handleOperationWith(wallet) });
+  const {
+    execute,
+    loading,
+    data: post,
+  } = useCreatePost({ handler: handleOperationWith(wallet) });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,7 +38,11 @@ export function App() {
           <h2>Post Created</h2>
           <p>Slug: {post.slug}</p>
           <p>Created At: {post.timestamp.toString()}</p>
-          <p>Content: {post.metadata.__typename === 'TextOnlyMetadata' && post.metadata.content}</p>
+          <p>
+            Content:{' '}
+            {post.metadata.__typename === 'TextOnlyMetadata' &&
+              post.metadata.content}
+          </p>
         </div>
       )}
       <form onSubmit={onSubmit}>

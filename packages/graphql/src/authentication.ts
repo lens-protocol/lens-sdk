@@ -4,7 +4,7 @@ import {
   AccountFragment,
   PaginatedResultInfoFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const AuthenticationChallengeFragment = graphql(
   `fragment AuthenticationChallenge on AuthenticationChallenge {
@@ -14,7 +14,9 @@ const AuthenticationChallengeFragment = graphql(
   }`,
   [],
 );
-export type AuthenticationChallenge = FragmentOf<typeof AuthenticationChallengeFragment>;
+export type AuthenticationChallenge = FragmentOf<
+  typeof AuthenticationChallengeFragment
+>;
 
 export const ChallengeMutation = graphql(
   `mutation Challenge($request: ChallengeRequest!) {
@@ -35,7 +37,9 @@ const AuthenticationTokensFragment = graphql(
     idToken
   }`,
 );
-export type AuthenticationTokens = FragmentOf<typeof AuthenticationTokensFragment>;
+export type AuthenticationTokens = FragmentOf<
+  typeof AuthenticationTokensFragment
+>;
 
 const WrongSignerErrorFragment = graphql(
   `fragment WrongSignerError on WrongSignerError {
@@ -51,7 +55,9 @@ const ExpiredChallengeErrorFragment = graphql(
     reason
   }`,
 );
-export type ExpiredChallengeError = FragmentOf<typeof ExpiredChallengeErrorFragment>;
+export type ExpiredChallengeError = FragmentOf<
+  typeof ExpiredChallengeErrorFragment
+>;
 
 const ForbiddenErrorFragment = graphql(
   `fragment ForbiddenError on ForbiddenError {
@@ -86,7 +92,9 @@ const AuthenticationResultFragment = graphql(
     ForbiddenErrorFragment,
   ],
 );
-export type AuthenticationResult = FragmentOf<typeof AuthenticationResultFragment>;
+export type AuthenticationResult = FragmentOf<
+  typeof AuthenticationResultFragment
+>;
 
 export const AuthenticateMutation = graphql(
   `mutation Authenticate($request: SignedAuthChallenge!) {
@@ -97,43 +105,6 @@ export const AuthenticateMutation = graphql(
   [AuthenticationResultFragment],
 );
 export type SignedAuthChallenge = RequestOf<typeof AuthenticateMutation>;
-
-/**
- * @internal
- */
-export const UnverifiedCredentialsResult = graphql(
-  `fragment UnverifiedCredentialsResult on UnverifiedCredentialsResult {
-    ...on AuthenticationTokens {
-      ...AuthenticationTokens
-    }
-    ...on ForbiddenError {
-      ...ForbiddenError
-    }
-  }`,
-  [AuthenticationTokensFragment, ForbiddenErrorFragment],
-);
-/**
- * @internal
- */
-export type UnverifiedCredentialsResult = FragmentOf<typeof UnverifiedCredentialsResult>;
-
-/**
- * @internal
- */
-export const IssueUnverifiedCredentialsMutation = graphql(
-  `mutation IssueUnverifiedCredentials($request: IssueUnverifiedCredentialsRequest!) {
-    value: issueUnverifiedCredentials(request: $request) {
-      ...UnverifiedCredentialsResult
-    }
-  }`,
-  [UnverifiedCredentialsResult],
-);
-/**
- * @internal
- */
-export type IssueUnverifiedCredentialsRequest = RequestOf<
-  typeof IssueUnverifiedCredentialsMutation
->;
 
 const AuthenticatedSessionFragment = graphql(
   `fragment AuthenticatedSession on AuthenticatedSession {
@@ -148,7 +119,9 @@ const AuthenticatedSessionFragment = graphql(
     updatedAt
   }`,
 );
-export type AuthenticatedSession = FragmentOf<typeof AuthenticatedSessionFragment>;
+export type AuthenticatedSession = FragmentOf<
+  typeof AuthenticatedSessionFragment
+>;
 
 export const CurrentSessionQuery = graphql(
   `query CurrentSession {
@@ -172,14 +145,18 @@ export const AuthenticatedSessionsQuery = graphql(
   }`,
   [AuthenticatedSessionFragment, PaginatedResultInfoFragment],
 );
-export type AuthenticatedSessionsRequest = RequestOf<typeof AuthenticatedSessionsQuery>;
+export type AuthenticatedSessionsRequest = RequestOf<
+  typeof AuthenticatedSessionsQuery
+>;
 
 export const RevokeAuthenticationMutation = graphql(
   `mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
     value: revokeAuthentication(request: $request)
   }`,
 );
-export type RevokeAuthenticationRequest = RequestOf<typeof RevokeAuthenticationMutation>;
+export type RevokeAuthenticationRequest = RequestOf<
+  typeof RevokeAuthenticationMutation
+>;
 
 const RefreshResultFragment = graphql(
   `fragment RefreshResult on RefreshResult {
@@ -213,7 +190,9 @@ export const LegacyRolloverRefreshMutation = graphql(
   }`,
   [RefreshResultFragment],
 );
-export type RolloverRefreshRequest = RequestOf<typeof LegacyRolloverRefreshMutation>;
+export type RolloverRefreshRequest = RequestOf<
+  typeof LegacyRolloverRefreshMutation
+>;
 
 const SwitchAccountResultFragment = graphql(
   `fragment SwitchAccountResult on SwitchAccountResult {
@@ -227,7 +206,9 @@ const SwitchAccountResultFragment = graphql(
   }`,
   [AuthenticationTokensFragment, ForbiddenErrorFragment],
 );
-export type SwitchAccountResult = FragmentOf<typeof SwitchAccountResultFragment>;
+export type SwitchAccountResult = FragmentOf<
+  typeof SwitchAccountResultFragment
+>;
 
 export const SwitchAccountMutation = graphql(
   `mutation SwitchAccount($request: SwitchAccountRequest!) {
@@ -275,4 +256,6 @@ export const LastLoggedInAccountQuery = graphql(
   }`,
   [AccountFragment],
 );
-export type LastLoggedInAccountRequest = RequestOf<typeof LastLoggedInAccountQuery>;
+export type LastLoggedInAccountRequest = RequestOf<
+  typeof LastLoggedInAccountQuery
+>;

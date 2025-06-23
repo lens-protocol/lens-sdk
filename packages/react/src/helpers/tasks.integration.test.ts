@@ -1,6 +1,5 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
-
 import { errAsync, okAsync } from '@lens-protocol/types';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import {
   type AsyncTaskError,
@@ -13,7 +12,9 @@ import {
 describe(`Given the '${useAsyncTask.name}' hook`, () => {
   describe('When rendered for the first time', () => {
     it('Then it should return state in line with type of `AsyncTaskIdle`', async () => {
-      const { result } = renderHook(() => useAsyncTask((input: string) => okAsync(input)));
+      const { result } = renderHook(() =>
+        useAsyncTask((input: string) => okAsync(input)),
+      );
 
       const expectation: AsyncTaskIdle = {
         called: false,
@@ -29,7 +30,9 @@ describe(`Given the '${useAsyncTask.name}' hook`, () => {
   describe('And the hook is executed for the first time', () => {
     describe('When the task is in progress', () => {
       it('Then it should return the state in line with type of `AsyncTaskLoading`', async () => {
-        const { result } = renderHook(() => useAsyncTask((input: string) => okAsync(input)));
+        const { result } = renderHook(() =>
+          useAsyncTask((input: string) => okAsync(input)),
+        );
 
         act(() => {
           void result.current.execute('test');
@@ -48,7 +51,9 @@ describe(`Given the '${useAsyncTask.name}' hook`, () => {
 
     describe('When the tasks succeeds', () => {
       it('Then it should return the state in line with type of `AsyncTaskSuccess`', async () => {
-        const { result } = renderHook(() => useAsyncTask((input: string) => okAsync(input)));
+        const { result } = renderHook(() =>
+          useAsyncTask((input: string) => okAsync(input)),
+        );
 
         await act(async () => {
           await result.current.execute('test');
@@ -65,7 +70,9 @@ describe(`Given the '${useAsyncTask.name}' hook`, () => {
       });
 
       it('Then it should support void as success data', async () => {
-        const { result } = renderHook(() => useAsyncTask((_: string) => okAsync(void 0)));
+        const { result } = renderHook(() =>
+          useAsyncTask((_: string) => okAsync(void 0)),
+        );
 
         await act(async () => {
           await result.current.execute('test');
@@ -107,7 +114,9 @@ describe(`Given the '${useAsyncTask.name}' hook`, () => {
   describe('And the hook is executed again', () => {
     describe('When the task is in progress', () => {
       it('Then it should return the state in line with type of `AsyncTaskLoading`', async () => {
-        const { result } = renderHook(() => useAsyncTask((input: string) => okAsync(input)));
+        const { result } = renderHook(() =>
+          useAsyncTask((input: string) => okAsync(input)),
+        );
 
         await act(async () => {
           await result.current.execute('one');
@@ -132,7 +141,9 @@ describe(`Given the '${useAsyncTask.name}' hook`, () => {
 
     describe('When the task succeeds', () => {
       it('Then it should return the state in line with type of `AsyncTaskSuccess` with updated data', async () => {
-        const { result } = renderHook(() => useAsyncTask((input: string) => okAsync(input)));
+        const { result } = renderHook(() =>
+          useAsyncTask((input: string) => okAsync(input)),
+        );
 
         await act(async () => {
           await result.current.execute('one');

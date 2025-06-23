@@ -9,6 +9,7 @@ import type {
   EditPostRequest,
   HideReplyRequest,
   PostResult,
+  ReportPostRequest,
   UndoBookmarkPostRequest,
   UndoReactionRequest,
   UndoReactionResult,
@@ -31,8 +32,6 @@ import {
   UpdatePostRulesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
-
-import type { ReportPostRequest } from '@lens-protocol/graphql';
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 

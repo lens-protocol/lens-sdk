@@ -1,14 +1,13 @@
-import { signMessageWith } from '@lens-protocol/client/viem';
-import { assertOk } from '@lens-protocol/types';
-import { describe, expect, it } from 'vitest';
-
 import {
+  createPublicClient,
   TEST_ACCOUNT,
   TEST_APP,
   TEST_SIGNER,
-  createPublicClient,
   wallet,
 } from '@lens-protocol/client/test-utils';
+import { signMessageWith } from '@lens-protocol/client/viem';
+import { assertOk } from '@lens-protocol/types';
+import { describe, expect, it } from 'vitest';
 import { renderHookWithContext } from '../test-utils';
 import { useLogin } from './useLogin';
 
@@ -31,7 +30,10 @@ describe(`Given the ${useLogin.name} hook`, () => {
       });
 
       assertOk(record);
-      expect(record.value).toHaveProperty('address', TEST_ACCOUNT.toLowerCase());
+      expect(record.value).toHaveProperty(
+        'address',
+        TEST_ACCOUNT.toLowerCase(),
+      );
     });
   });
 });

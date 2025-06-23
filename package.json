@@ -20,12 +20,13 @@
     "new:package": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "prepublish": "pnpm run build",
     "test:client": "vitest --project client",
+    "test:e2e": "vitest --project e2e",
     "test:react": "vitest --project react",
     "test:storage": "vitest --project storage",
     "test": "vitest"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.0",
     "@changesets/cli": "^2.29.1",
     "@types/node": "^22.15.29",
     "jest-extended": "^4.0.2",

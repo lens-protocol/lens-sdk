@@ -1,5 +1,12 @@
 import { Role } from '@lens-protocol/graphql';
-import { type EvmAddress, type Result, type UUID, err, never, ok } from '@lens-protocol/types';
+import {
+  type EvmAddress,
+  err,
+  never,
+  ok,
+  type Result,
+  type UUID,
+} from '@lens-protocol/types';
 import { UnexpectedError } from './errors';
 import { type IdTokenClaims, ROLE_CLAIM, SPONSORED_CLAIM } from './tokens';
 
@@ -21,7 +28,8 @@ export function authenticatedUser(
   switch (claims[ROLE_CLAIM]) {
     case Role.AccountManager:
       return ok({
-        address: claims.act?.sub ?? never('Account Manager must have an Actor Claim'),
+        address:
+          claims.act?.sub ?? never('Account Manager must have an Actor Claim'),
         app: claims.aud,
         authenticationId: claims.sid,
         role: Role.AccountManager,
@@ -31,7 +39,8 @@ export function authenticatedUser(
 
     case Role.AccountOwner:
       return ok({
-        address: claims.act?.sub ?? never('Account Owner must have an Actor Claim'),
+        address:
+          claims.act?.sub ?? never('Account Owner must have an Actor Claim'),
         app: claims.aud,
         authenticationId: claims.sid,
         role: Role.AccountOwner,
@@ -41,7 +50,6 @@ export function authenticatedUser(
 
     case Role.OnboardingUser:
     case Role.Builder:
-    case Role.UnverifiedEOA:
       return ok({
         address: claims.sub,
         app: claims.aud,
@@ -52,6 +60,8 @@ export function authenticatedUser(
       });
 
     default:
-      return err(UnexpectedError.from(`Unexpected role: ${claims[ROLE_CLAIM]}`));
+      return err(
+        UnexpectedError.from(`Unexpected role: ${claims[ROLE_CLAIM]}`),
+      );
   }
 }

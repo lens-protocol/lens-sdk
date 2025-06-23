@@ -1,4 +1,7 @@
-import { createPublicClient, loginAsAccountOwner } from '@lens-protocol/client/test-utils';
+import {
+  createPublicClient,
+  loginAsAccountOwner,
+} from '@lens-protocol/client/test-utils';
 import { fail, passthrough } from '@lens-protocol/types';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -16,15 +19,22 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
         });
 
         await vi.waitUntil(() => result.current.loading === false);
-        expect(result.current).toMatchObject({ loading: false, data: null, error: undefined });
+        expect(result.current).toMatchObject({
+          loading: false,
+          data: null,
+          error: undefined,
+        });
       });
     });
 
     describe('When rendered in suspense mode', () => {
       it('Then it should suspend and render once the SessionClient is determined', async () => {
-        const { result } = renderHookWithContext(() => useSessionClient({ suspense: true }), {
-          client,
-        });
+        const { result } = renderHookWithContext(
+          () => useSessionClient({ suspense: true }),
+          {
+            client,
+          },
+        );
 
         await vi.waitUntil(() => result.current !== null);
         expect(result.current).toHaveProperty('data', null);
@@ -34,7 +44,10 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
 
   describe('And the user is authenticated', async () => {
     const client = createPublicClient();
-    const sessionClient = await loginAsAccountOwner(client).match(passthrough, fail);
+    const sessionClient = await loginAsAccountOwner(client).match(
+      passthrough,
+      fail,
+    );
 
     describe('When rendered in traditional non-suspense mode', () => {
       it('Then it should return the SessionClient instance if available', async () => {
@@ -55,9 +68,12 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
 
         const credentials = await sessionClient.getCredentials();
 
-        const { result } = renderHookWithContext(() => useSessionClient({ suspense: true }), {
-          client,
-        });
+        const { result } = renderHookWithContext(
+          () => useSessionClient({ suspense: true }),
+          {
+            client,
+          },
+        );
 
         await vi.waitUntil(() => result.current !== null);
         expect(result.current.data?.getCredentials()).toEqual(credentials);

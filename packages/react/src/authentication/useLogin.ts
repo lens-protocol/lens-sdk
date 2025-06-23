@@ -2,13 +2,12 @@ import type {
   AuthenticatedUser,
   AuthenticationError,
   LoginParams,
-  SignMessage,
+  SessionClient,
   SigningError,
+  SignMessage,
   UnexpectedError,
 } from '@lens-protocol/client';
 import type { ResultAsync } from '@lens-protocol/types';
-
-import type { SessionClient } from '@lens-protocol/client';
 import { useLensContext } from '../context';
 import { type UseAsyncTask, useAsyncTask } from '../helpers';
 import { usePublicClient } from './usePublicClient';
@@ -49,7 +48,11 @@ export type LoginError = AuthenticationError | SigningError | UnexpectedError;
  * }
  * ```
  */
-export function useLoginAction(): UseAsyncTask<LoginParams, SessionClient, LoginError> {
+export function useLoginAction(): UseAsyncTask<
+  LoginParams,
+  SessionClient,
+  LoginError
+> {
   const { afterLogin } = useLensContext();
   const publicClient = usePublicClient();
 
@@ -85,11 +88,17 @@ export function useLoginAction(): UseAsyncTask<LoginParams, SessionClient, Login
  * }
  * ```
  */
-export function useLogin(): UseAsyncTask<LoginParams, AuthenticatedUser, LoginError> {
+export function useLogin(): UseAsyncTask<
+  LoginParams,
+  AuthenticatedUser,
+  LoginError
+> {
   const { execute } = useLoginAction();
 
   return useAsyncTask(
     (params: LoginParams): ResultAsync<AuthenticatedUser, LoginError> =>
-      execute(params).andThen((sessionClient) => sessionClient.getAuthenticatedUser()),
+      execute(params).andThen((sessionClient) =>
+        sessionClient.getAuthenticatedUser(),
+      ),
   );
 }

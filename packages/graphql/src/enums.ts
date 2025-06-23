@@ -6,10 +6,6 @@ export enum Role {
   AccountManager = 'ACCOUNT_MANAGER',
   OnboardingUser = 'ONBOARDING_USER',
   Builder = 'BUILDER',
-  /**
-   * @internal
-   */
-  UnverifiedEOA = 'UNVERIFIED_EOA',
 }
 
 /**
@@ -1287,6 +1283,14 @@ export enum PrimitiveMetadataSchema {
  * Enum for PaymentSource.
  */
 export enum PaymentSource {
+  Account = 'ACCOUNT',
+  Signer = 'SIGNER',
+}
+
+/**
+ * Describes the subject of rules.
+ */
+export enum RulesSubject {
   Account = 'ACCOUNT',
   Signer = 'SIGNER',
 }

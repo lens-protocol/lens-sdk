@@ -1,9 +1,17 @@
-import type { PublicClient, SessionClient } from '@lens-protocol/client';
+import type {
+  AnyClient,
+  PublicClient,
+  SessionClient,
+} from '@lens-protocol/client';
 import { invariant } from '@lens-protocol/types';
-import React, { type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { Provider as UrqlProvider } from 'urql';
-
-import type { AnyClient } from '@lens-protocol/client';
 import { ReadResult, type SuspenseResult } from './helpers';
 
 /**
@@ -24,7 +32,9 @@ export type LensContextValue = {
   afterLogout: () => Promise<void>;
 };
 
-function useCreateLensContextValue(publicClient: PublicClient): LensContextValue {
+function useCreateLensContextValue(
+  publicClient: PublicClient,
+): LensContextValue {
   const [state, setState] = useState<SessionState>(
     publicClient.currentSession.isSessionClient()
       ? {
@@ -73,7 +83,10 @@ type LensContextProviderProps = {
 /**
  * @internal
  */
-export function LensContextProvider({ children, client }: LensContextProviderProps) {
+export function LensContextProvider({
+  children,
+  client,
+}: LensContextProviderProps) {
   const value = useCreateLensContextValue(client);
 
   return (

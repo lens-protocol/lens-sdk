@@ -1,7 +1,12 @@
 import type { Account, AccountRequest } from '@lens-protocol/graphql';
 import { AccountQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type UseAccountArgs = AccountRequest;
@@ -15,7 +20,9 @@ export type UseAccountArgs = AccountRequest;
  * const { data } = useAccount({ address: evmAddress('0x…'), suspense: true });
  * ```
  */
-export function useAccount(args: UseAccountArgs & Suspendable): SuspenseResult<Account | null>;
+export function useAccount(
+  args: UseAccountArgs & Suspendable,
+): SuspenseResult<Account | null>;
 
 /**
  * Fetch a single Account.

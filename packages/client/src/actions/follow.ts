@@ -1,27 +1,26 @@
 import type {
   CreateFollowRequest,
   CreateUnfollowRequest,
+  Follower,
+  FollowersRequest,
+  FollowersYouKnowRequest,
+  Following,
+  FollowingRequest,
   FollowResult,
+  FollowStatusRequest,
+  FollowStatusResult,
   Paginated,
   UnfollowResult,
 } from '@lens-protocol/graphql';
 import {
-  FollowMutation,
-  FollowStatusQuery,
   FollowersQuery,
   FollowersYouKnowQuery,
   FollowingQuery,
+  FollowMutation,
+  FollowStatusQuery,
   UnfollowMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
-
-import type { FollowersRequest } from '@lens-protocol/graphql';
-import type { Follower } from '@lens-protocol/graphql';
-import type { FollowingRequest } from '@lens-protocol/graphql';
-import type { Following } from '@lens-protocol/graphql';
-import type { FollowersYouKnowRequest } from '@lens-protocol/graphql';
-import type { FollowStatusRequest } from '@lens-protocol/graphql';
-import type { FollowStatusResult } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 

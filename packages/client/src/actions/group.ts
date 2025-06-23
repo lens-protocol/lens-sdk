@@ -11,9 +11,9 @@ import type {
   GroupBannedAccount,
   GroupBannedAccountsRequest,
   GroupMember,
-  GroupMembersRequest,
   GroupMembershipRequest,
   GroupMembershipRequestsRequest,
+  GroupMembersRequest,
   GroupRequest,
   GroupStatsRequest,
   GroupStatsResponse,
@@ -42,8 +42,8 @@ import {
   CancelGroupMembershipRequestMutation,
   CreateGroupMutation,
   GroupBannedAccountsQuery,
-  GroupMembersQuery,
   GroupMembershipRequestsQuery,
+  GroupMembersQuery,
   GroupQuery,
   GroupStatsQuery,
   GroupsQuery,
@@ -305,7 +305,10 @@ export function updateGroupRules(
 export function approveGroupMembershipRequests(
   client: SessionClient,
   request: ApproveGroupMembershipRequest,
-): ResultAsync<ApproveGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  ApproveGroupMembershipResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(ApproveGroupMembershipRequestsMutation, { request });
 }
 
@@ -327,7 +330,10 @@ export function approveGroupMembershipRequests(
 export function removeGroupMembers(
   client: SessionClient,
   request: RemoveGroupMembersRequest,
-): ResultAsync<RemoveGroupMembersResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  RemoveGroupMembersResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(RemoveGroupMembersMutation, { request });
 }
 
@@ -347,7 +353,10 @@ export function removeGroupMembers(
 export function requestGroupMembership(
   client: SessionClient,
   request: RequestGroupMembershipRequest,
-): ResultAsync<RequestGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  RequestGroupMembershipResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(RequestGroupMembershipMutation, { request });
 }
 
@@ -367,7 +376,10 @@ export function requestGroupMembership(
 export function cancelGroupMembershipRequest(
   client: SessionClient,
   request: CancelGroupMembershipRequestRequest,
-): ResultAsync<CancelGroupMembershipRequestResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  CancelGroupMembershipRequestResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(CancelGroupMembershipRequestMutation, { request });
 }
 
@@ -390,7 +402,10 @@ export function cancelGroupMembershipRequest(
 export function rejectGroupMembershipRequests(
   client: SessionClient,
   request: RejectGroupMembershipRequest,
-): ResultAsync<RejectGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  RejectGroupMembershipResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(RejectGroupMembershipRequestsMutation, { request });
 }
 
@@ -436,6 +451,9 @@ export function banGroupAccounts(
 export function unbanGroupAccounts(
   client: SessionClient,
   request: UnbanGroupAccountsRequest,
-): ResultAsync<UnbanGroupAccountsResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  UnbanGroupAccountsResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(UnbanGroupAccountsMutation, { request });
 }

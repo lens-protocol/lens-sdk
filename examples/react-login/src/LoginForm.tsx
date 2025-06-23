@@ -9,7 +9,13 @@ import { signMessageWith } from '@lens-protocol/react/viem';
 import { useModal } from 'connectkit';
 import { useAccount, useWalletClient } from 'wagmi';
 
-function LoginWith({ signer, value }: { signer: EvmAddress; value: AccountAvailable }) {
+function LoginWith({
+  signer,
+  value,
+}: {
+  signer: EvmAddress;
+  value: AccountAvailable;
+}) {
   const { execute } = useLogin();
   const { data } = useWalletClient();
 
@@ -44,7 +50,10 @@ function LoginWith({ signer, value }: { signer: EvmAddress; value: AccountAvaila
 }
 
 function LoginOptions({ address }: { address: string }) {
-  const { data } = useAccountsAvailable({ managedBy: evmAddress(address), suspense: true });
+  const { data } = useAccountsAvailable({
+    managedBy: evmAddress(address),
+    suspense: true,
+  });
 
   return (
     <>

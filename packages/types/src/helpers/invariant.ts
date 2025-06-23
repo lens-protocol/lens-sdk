@@ -12,7 +12,10 @@ export class InvariantError extends Error {
  * @param condition - Either truthy or falsy value
  * @param message - An error message
  */
-export function invariant(condition: unknown, message: string): asserts condition {
+export function invariant(
+  condition: unknown,
+  message: string,
+): asserts condition {
   if (!condition) {
     throw new InvariantError(message);
   }

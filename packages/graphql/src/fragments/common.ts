@@ -26,7 +26,9 @@ const IntNullableKeyValueFragment = graphql(
     optionalInt
   }`,
 );
-export type IntNullableKeyValue = FragmentOf<typeof IntNullableKeyValueFragment>;
+export type IntNullableKeyValue = FragmentOf<
+  typeof IntNullableKeyValueFragment
+>;
 
 const AddressKeyValueFragment = graphql(
   `fragment AddressKeyValue on AddressKeyValue {
@@ -271,7 +273,8 @@ export const ActionMetadataFragment = graphql(
   }`,
   [KeyValuePairFragment],
 );
-export interface ActionMetadata extends FragmentOf<typeof ActionMetadataFragment> {}
+export interface ActionMetadata
+  extends FragmentOf<typeof ActionMetadataFragment> {}
 
 export const UnknownPostActionFragment = graphql(
   `fragment UnknownPostAction on UnknownPostAction {

@@ -57,7 +57,10 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 export function configurePostAction(
   client: SessionClient,
   request: ConfigurePostActionRequest,
-): ResultAsync<ConfigurePostActionResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  ConfigurePostActionResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(ConfigurePostActionMutation, { request });
 }
 
@@ -99,7 +102,10 @@ export function enablePostAction(
 export function disablePostAction(
   client: SessionClient,
   request: DisablePostActionRequest,
-): ResultAsync<DisablePostActionResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  DisablePostActionResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(DisablePostActionMutation, { request });
 }
 
@@ -124,7 +130,10 @@ export function disablePostAction(
 export function executePostAction(
   client: SessionClient,
   request: ExecutePostActionRequest,
-): ResultAsync<ExecutePostActionResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  ExecutePostActionResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(ExecutePostActionMutation, { request });
 }
 
@@ -154,7 +163,10 @@ export function executePostAction(
 export function configureAccountAction(
   client: SessionClient,
   request: ConfigureAccountActionRequest,
-): ResultAsync<ConfigureAccountActionResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  ConfigureAccountActionResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(ConfigureAccountActionMutation, { request });
 }
 
@@ -181,7 +193,10 @@ export function configureAccountAction(
 export function enableAccountAction(
   client: SessionClient,
   request: EnableAccountActionRequest,
-): ResultAsync<EnableAccountActionResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  EnableAccountActionResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(EnableAccountActionMutation, { request });
 }
 
@@ -204,7 +219,10 @@ export function enableAccountAction(
 export function disableAccountAction(
   client: SessionClient,
   request: DisableAccountActionRequest,
-): ResultAsync<DisableAccountActionResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  DisableAccountActionResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(DisableAccountActionMutation, { request });
 }
 
@@ -230,6 +248,9 @@ export function disableAccountAction(
 export function executeAccountAction(
   client: SessionClient,
   request: ExecuteAccountActionRequest,
-): ResultAsync<ExecuteAccountActionResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  ExecuteAccountActionResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(ExecuteAccountActionMutation, { request });
 }

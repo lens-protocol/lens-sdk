@@ -33,7 +33,9 @@ export const EventSchedulingAdjustmentsFragment = graphql(
     timezoneOffset
   }`,
 );
-export type EventSchedulingAdjustments = FragmentOf<typeof EventSchedulingAdjustmentsFragment>;
+export type EventSchedulingAdjustments = FragmentOf<
+  typeof EventSchedulingAdjustmentsFragment
+>;
 
 export const PhysicalAddressFragment = graphql(
   `fragment PhysicalAddress on PhysicalAddress {
@@ -79,7 +81,8 @@ export const ArticleMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment],
 );
-export interface ArticleMetadata extends FragmentOf<typeof ArticleMetadataFragment> {}
+export interface ArticleMetadata
+  extends FragmentOf<typeof ArticleMetadataFragment> {}
 
 export const AudioMetadataFragment = graphql(
   `fragment AudioMetadata on AudioMetadata {
@@ -103,7 +106,8 @@ export const AudioMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment, MediaAudioFragment],
 );
-export interface AudioMetadata extends FragmentOf<typeof AudioMetadataFragment> {}
+export interface AudioMetadata
+  extends FragmentOf<typeof AudioMetadataFragment> {}
 
 export const TextOnlyMetadataFragment = graphql(
   `fragment TextOnlyMetadata on TextOnlyMetadata {
@@ -120,7 +124,8 @@ export const TextOnlyMetadataFragment = graphql(
   }`,
   [MetadataAttributeFragment],
 );
-export interface TextOnlyMetadata extends FragmentOf<typeof TextOnlyMetadataFragment> {}
+export interface TextOnlyMetadata
+  extends FragmentOf<typeof TextOnlyMetadataFragment> {}
 
 export const CheckingInMetadataFragment = graphql(
   `fragment CheckingInMetadata on CheckingInMetadata {
@@ -145,7 +150,8 @@ export const CheckingInMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment, PhysicalAddressFragment],
 );
-export interface CheckingInMetadata extends FragmentOf<typeof CheckingInMetadataFragment> {}
+export interface CheckingInMetadata
+  extends FragmentOf<typeof CheckingInMetadataFragment> {}
 
 export const ImageMetadataFragment = graphql(
   `fragment ImageMetadata on ImageMetadata {
@@ -169,7 +175,8 @@ export const ImageMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MediaImageFragment, MetadataAttributeFragment],
 );
-export interface ImageMetadata extends FragmentOf<typeof ImageMetadataFragment> {}
+export interface ImageMetadata
+  extends FragmentOf<typeof ImageMetadataFragment> {}
 
 export const VideoMetadataFragment = graphql(
   `fragment VideoMetadata on VideoMetadata {
@@ -193,7 +200,8 @@ export const VideoMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MediaVideoFragment, MetadataAttributeFragment],
 );
-export interface VideoMetadata extends FragmentOf<typeof VideoMetadataFragment> {}
+export interface VideoMetadata
+  extends FragmentOf<typeof VideoMetadataFragment> {}
 
 export const EmbedMetadataFragment = graphql(
   `fragment EmbedMetadata on EmbedMetadata {
@@ -214,7 +222,8 @@ export const EmbedMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment],
 );
-export interface EmbedMetadata extends FragmentOf<typeof EmbedMetadataFragment> {}
+export interface EmbedMetadata
+  extends FragmentOf<typeof EmbedMetadataFragment> {}
 
 export const EventMetadataFragment = graphql(
   `fragment EventMetadata on EventMetadata {
@@ -254,7 +263,8 @@ export const EventMetadataFragment = graphql(
     EventSchedulingAdjustmentsFragment,
   ],
 );
-export interface EventMetadata extends FragmentOf<typeof EventMetadataFragment> {}
+export interface EventMetadata
+  extends FragmentOf<typeof EventMetadataFragment> {}
 
 export const LinkMetadataFragment = graphql(
   `fragment LinkMetadata on LinkMetadata {
@@ -301,7 +311,8 @@ export const LivestreamMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment],
 );
-export interface LivestreamMetadata extends FragmentOf<typeof LivestreamMetadataFragment> {}
+export interface LivestreamMetadata
+  extends FragmentOf<typeof LivestreamMetadataFragment> {}
 
 export const MintMetadataFragment = graphql(
   `fragment MintMetadata on MintMetadata {
@@ -345,7 +356,8 @@ export const SpaceMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment],
 );
-export interface SpaceMetadata extends FragmentOf<typeof SpaceMetadataFragment> {}
+export interface SpaceMetadata
+  extends FragmentOf<typeof SpaceMetadataFragment> {}
 
 export const StoryMetadataFragment = graphql(
   `fragment StoryMetadata on StoryMetadata {
@@ -365,7 +377,8 @@ export const StoryMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment],
 );
-export interface StoryMetadata extends FragmentOf<typeof StoryMetadataFragment> {}
+export interface StoryMetadata
+  extends FragmentOf<typeof StoryMetadataFragment> {}
 
 export const ThreeDMetadataFragment = graphql(
   `fragment ThreeDMetadata on ThreeDMetadata {
@@ -388,7 +401,8 @@ export const ThreeDMetadataFragment = graphql(
   }`,
   [AnyMediaFragment, MetadataAttributeFragment, ThreeDAssetFragment],
 );
-export interface ThreeDMetadata extends FragmentOf<typeof ThreeDMetadataFragment> {}
+export interface ThreeDMetadata
+  extends FragmentOf<typeof ThreeDMetadataFragment> {}
 
 export const TransactionMetadataFragment = graphql(
   `fragment TransactionMetadata on TransactionMetadata {
@@ -411,7 +425,8 @@ export const TransactionMetadataFragment = graphql(
   }`,
   [MetadataAttributeFragment, AnyMediaFragment],
 );
-export interface TransactionMetadata extends FragmentOf<typeof TransactionMetadataFragment> {}
+export interface TransactionMetadata
+  extends FragmentOf<typeof TransactionMetadataFragment> {}
 
 export const UnknownPostMetadataFragment = graphql(
   `fragment UnknownPostMetadata on UnknownPostMetadata {
@@ -419,4 +434,5 @@ export const UnknownPostMetadataFragment = graphql(
     raw
   }`,
 );
-export interface UnknownPostMetadata extends FragmentOf<typeof UnknownPostMetadataFragment> {}
+export interface UnknownPostMetadata
+  extends FragmentOf<typeof UnknownPostMetadataFragment> {}

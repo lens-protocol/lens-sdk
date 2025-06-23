@@ -9,7 +9,10 @@ export type ID = Tagged<string, 'ID'>;
 /**
  * A Universally Unique Identifier.
  */
-export type UUID = Tagged<`${string}-${string}-${string}-${string}-${string}`, 'UUID'>;
+export type UUID = Tagged<
+  `${string}-${string}-${string}-${string}-${string}`,
+  'UUID'
+>;
 export const uuid = tag<UUID>;
 
 /**
