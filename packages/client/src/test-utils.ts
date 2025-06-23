@@ -101,6 +101,17 @@ export function loginAsOnboardingUser() {
   });
 }
 
+export function loginAsBuilder() {
+  const client = createPublicClient();
+
+  return client.login({
+    builder: {
+      address: TEST_SIGNER,
+    },
+    signMessage: (message) => signer.signMessage({ message }),
+  });
+}
+
 const messages: Record<GraphQLErrorCode, string> = {
   [GraphQLErrorCode.UNAUTHENTICATED]:
     "Unauthenticated - Authentication is required to access '<operation>'",

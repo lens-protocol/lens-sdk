@@ -50,7 +50,6 @@ export function authenticatedUser(
 
     case Role.OnboardingUser:
     case Role.Builder:
-    case Role.UnverifiedEOA:
       return ok({
         address: claims.sub,
         app: claims.aud,

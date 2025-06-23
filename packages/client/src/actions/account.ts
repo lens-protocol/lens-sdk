@@ -15,6 +15,8 @@ import type {
   AccountsRequest,
   BlockRequest,
   BlockResult,
+  CreateAccountRequest,
+  CreateAccountResult,
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
@@ -42,6 +44,7 @@ import {
   AccountsBulkQuery,
   AccountsQuery,
   BlockMutation,
+  CreateAccountMutation,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
   MuteAccountMutation,
@@ -266,6 +269,28 @@ export function createAccountWithUsername(
   UnexpectedError | UnauthenticatedError
 > {
   return client.mutation(CreateAccountWithUsernameMutation, { request });
+}
+
+/**
+ * Create an account without username.
+ *
+ * @alpha This is an alpha API and may be subject to breaking changes.
+ *
+ * ```ts
+ * const result = await createAccount(sessionClient, {
+ *   metadataUri: uri('lens://bafybxiky5jf…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function createAccount(
+  client: SessionClient,
+  request: CreateAccountRequest,
+): ResultAsync<CreateAccountResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(CreateAccountMutation, { request });
 }
 
 /**

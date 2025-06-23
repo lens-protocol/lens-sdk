@@ -169,6 +169,46 @@ export type CreateAccountWithUsernameRequest = RequestOf<
   typeof CreateAccountWithUsernameMutation
 >;
 
+const CreateAccountResultFragment = graphql(
+  `fragment CreateAccountResult on CreateAccountResult {
+    ...on CreateAccountResponse {
+      ...CreateAccountResponse
+    }
+
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    CreateAccountResponseFragment,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type CreateAccountResult = FragmentOf<
+  typeof CreateAccountResultFragment
+>;
+
+export const CreateAccountMutation = graphql(
+  `mutation CreateAccount($request: CreateAccountRequest!) {
+    value: createAccount(request: $request) {
+      ...CreateAccountResult
+    }
+  }`,
+  [CreateAccountResultFragment],
+);
+
+export type CreateAccountRequest = RequestOf<typeof CreateAccountMutation>;
+
 const AccountFeedsStatsFragment = graphql(
   `fragment AccountFeedsStats on AccountFeedsStats {
     __typename

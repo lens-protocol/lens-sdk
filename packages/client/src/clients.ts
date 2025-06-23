@@ -1,7 +1,6 @@
 import type {
   AuthenticationChallenge,
   ChallengeRequest,
-  IssueUnverifiedCredentialsRequest,
   SignedAuthChallenge,
   StandardData,
   SwitchAccountRequest,
@@ -9,7 +8,6 @@ import type {
 import {
   AuthenticateMutation,
   ChallengeMutation,
-  IssueUnverifiedCredentialsMutation,
   RefreshMutation,
 } from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
@@ -36,6 +34,7 @@ import {
   type Client as UrqlClient,
 } from '@urql/core';
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
+
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import {
   revokeAuthentication,
@@ -83,11 +82,6 @@ export type LoginParams = ChallengeRequest & {
    */
   signMessage: SignMessage;
 };
-
-/**
- * @internal
- */
-export type ImpersonationRequest = IssueUnverifiedCredentialsRequest;
 
 abstract class AbstractClient<TContext extends Context, TError> {
   /**
@@ -533,30 +527,6 @@ export class PublicClient<
           signature: signatureFrom(signature.value),
         });
       });
-  }
-
-  /**
-   * @internal
-   */
-  impersonate(
-    request: IssueUnverifiedCredentialsRequest,
-  ): ResultAsync<
-    SessionClient<TContext>,
-    AuthenticationError | UnexpectedError
-  > {
-    return this.mutation(IssueUnverifiedCredentialsMutation, { request })
-      .andThen((result) => {
-        if (result.__typename === 'AuthenticationTokens') {
-          return okAsync(result);
-        }
-        return AuthenticationError.from(result.reason).asResultAsync();
-      })
-      .andThen((tokens) =>
-        this.createCredentialsStorage()
-          .set(tokens)
-          .mapErr((err) => UnexpectedError.from(err)),
-      )
-      .map((storage) => new SessionClient(storage, this));
   }
 
   /**
