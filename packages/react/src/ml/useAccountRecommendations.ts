@@ -26,7 +26,7 @@ export type UseAccountRecommendationsArgs = AccountRecommendationsRequest;
  */
 export function useAccountRecommendations(
   args: UseAccountRecommendationsArgs & Suspendable,
-): SuspenseResult<Paginated<Account> | null>;
+): SuspenseResult<Paginated<Account>>;
 
 /**
  * Fetch a list of recommended accounts for a given account address.
@@ -37,14 +37,14 @@ export function useAccountRecommendations(
  */
 export function useAccountRecommendations(
   args: UseAccountRecommendationsArgs,
-): ReadResult<Paginated<Account> | null>;
+): ReadResult<Paginated<Account>>;
 
 export function useAccountRecommendations({
   suspense = false,
   ...request
 }: UseAccountRecommendationsArgs & {
   suspense?: boolean;
-}): SuspendableResult<Paginated<Account> | null> {
+}): SuspendableResult<Paginated<Account>> {
   return useSuspendableQuery({
     document: MlAccountRecommendationsQuery,
     variables: { request },

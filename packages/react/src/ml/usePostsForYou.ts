@@ -22,7 +22,7 @@ export type UsePostsForYouArgs = PostsForYouRequest;
  */
 export function usePostsForYou(
   args: UsePostsForYouArgs & Suspendable,
-): SuspenseResult<Paginated<PostForYou> | null>;
+): SuspenseResult<Paginated<PostForYou>>;
 
 /**
  * Fetch a list of recommended posts for the current user's Account.
@@ -33,11 +33,11 @@ export function usePostsForYou(
  */
 export function usePostsForYou(
   args?: UsePostsForYouArgs,
-): ReadResult<Paginated<PostForYou> | null>;
+): ReadResult<Paginated<PostForYou>>;
 
 export function usePostsForYou(
   args?: UsePostsForYouArgs & { suspense?: boolean },
-): SuspendableResult<Paginated<PostForYou> | null> {
+): SuspendableResult<Paginated<PostForYou>> {
   const { suspense = false, ...request } = args ?? {};
   return useSuspendableQuery({
     document: MlPostsForYouQuery,

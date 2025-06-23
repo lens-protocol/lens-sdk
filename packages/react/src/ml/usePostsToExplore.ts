@@ -23,7 +23,7 @@ export type UsePostsToExploreArgs = PostsExploreRequest;
  */
 export function usePostsToExplore(
   args: UsePostsToExploreArgs & Suspendable,
-): SuspenseResult<Paginated<Post> | null>;
+): SuspenseResult<Paginated<Post>>;
 
 /**
  * Fetch a list of post recommendations for the current user's Account.
@@ -35,11 +35,11 @@ export function usePostsToExplore(
  */
 export function usePostsToExplore(
   args?: UsePostsToExploreArgs,
-): ReadResult<Paginated<Post> | null>;
+): ReadResult<Paginated<Post>>;
 
 export function usePostsToExplore(
   args?: UsePostsToExploreArgs & { suspense?: boolean },
-): SuspendableResult<Paginated<Post> | null> {
+): SuspendableResult<Paginated<Post>> {
   const { suspense = false, ...request } = args ?? {};
   return useSuspendableQuery({
     document: MlPostsExploreQuery,
