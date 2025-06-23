@@ -15,7 +15,10 @@ export enum GraphQLErrorCode {
 /**
  * @internal
  */
-export function hasExtensionCode(error: CombinedError, code: GraphQLErrorCode): boolean {
+export function hasExtensionCode(
+  error: CombinedError,
+  code: GraphQLErrorCode,
+): boolean {
   return error.graphQLErrors.some((gqlError) => {
     return gqlError.extensions?.code === code;
   });
@@ -78,14 +81,18 @@ export class MetadataIndexingError extends ResultAwareError {
  * Error indicating an operation was not executed due to a validation error.
  * See the `cause` property for more information.
  */
-export class ValidationError<T extends string = string> extends ResultAwareError {
+export class ValidationError<
+  T extends string = string,
+> extends ResultAwareError {
   name = 'ValidationError' as const;
 
   constructor(public readonly cause: ErrorResponse<T>) {
     super(cause.reason);
   }
 
-  static fromErrorResponse<T extends string>(error: ErrorResponse<T>): ValidationError<T> {
+  static fromErrorResponse<T extends string>(
+    error: ErrorResponse<T>,
+  ): ValidationError<T> {
     return new ValidationError(error);
   }
 }

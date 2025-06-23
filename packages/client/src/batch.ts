@@ -1,6 +1,5 @@
-import type { StandardData } from '@lens-protocol/graphql';
-import type { AnyVariables } from '@lens-protocol/graphql';
-import { Deferred, ResultAsync, invariant, never } from '@lens-protocol/types';
+import type { AnyVariables, StandardData } from '@lens-protocol/graphql';
+import { Deferred, invariant, never, ResultAsync } from '@lens-protocol/types';
 import type { TypedDocumentNode } from '@urql/core';
 import {
   type DocumentNode,
@@ -32,7 +31,10 @@ export class BatchQueryBuilder {
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
   ): ResultAsync<TValue, UnexpectedError> => {
-    invariant(this.queries.length < 10, 'Batch queries supports a maximum of 10 queries');
+    invariant(
+      this.queries.length < 10,
+      'Batch queries supports a maximum of 10 queries',
+    );
 
     const alias = `value_${this.queries.length}`;
     const deferred = new Deferred<TValue>();
@@ -73,7 +75,8 @@ export class BatchQueryBuilder {
           const newVarName = `${v.variable.name.value}_${varId++}`;
           varMapping.set(v.variable.name.value, newVarName);
 
-          mergedVariables[newVarName] = variables[v.variable.name.value] ?? never();
+          mergedVariables[newVarName] =
+            variables[v.variable.name.value] ?? never();
 
           return {
             ...v,
@@ -125,7 +128,7 @@ export class BatchQueryBuilder {
 
   resolve(data: BatchQueryData) {
     for (const { alias, deferred } of this.queries) {
-      if (Object.prototype.hasOwnProperty.call(data, alias) && data[alias] !== undefined) {
+      if (Object.hasOwn(data, alias) && data[alias] !== undefined) {
         deferred.resolve(data[alias]);
       } else {
         deferred.reject(
@@ -150,7 +153,10 @@ function extractQueryParts(
           definition.operation === OperationTypeNode.QUERY,
           'Only query operations are supported',
         );
-        invariant(operation === undefined, 'Only one operation definition is supported');
+        invariant(
+          operation === undefined,
+          'Only one operation definition is supported',
+        );
 
         operation = definition;
         break;

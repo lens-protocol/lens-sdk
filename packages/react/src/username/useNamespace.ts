@@ -4,7 +4,12 @@ import {
   type UsernameNamespace,
 } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type UseNamespaceArgs = NamespaceRequest;
@@ -29,12 +34,16 @@ export function useNamespace(
  * const { data, loading } = useNamespace({ namespace: evmAddress('0x1234…') });
  * ```
  */
-export function useNamespace(args: UseNamespaceArgs): ReadResult<UsernameNamespace | null>;
+export function useNamespace(
+  args: UseNamespaceArgs,
+): ReadResult<UsernameNamespace | null>;
 
 export function useNamespace({
   suspense = false,
   ...request
-}: UseNamespaceArgs & { suspense?: boolean }): SuspendableResult<UsernameNamespace | null> {
+}: UseNamespaceArgs & {
+  suspense?: boolean;
+}): SuspendableResult<UsernameNamespace | null> {
   return useSuspendableQuery({
     document: NamespaceQuery,
     variables: { request },

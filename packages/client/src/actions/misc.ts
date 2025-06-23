@@ -18,7 +18,9 @@ import type { UnexpectedError } from '../errors';
  * @param client - Any Lens client.
  * @returns True or false
  */
-export function health(client: AnyClient): ResultAsync<boolean, UnexpectedError> {
+export function health(
+  client: AnyClient,
+): ResultAsync<boolean, UnexpectedError> {
   return client.query(HealthQuery, {});
 }
 

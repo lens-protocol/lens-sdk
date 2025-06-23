@@ -12,7 +12,11 @@ import {
 import { ResultAsync, type UUID } from '@lens-protocol/types';
 
 import type { AnyClient } from '../clients';
-import { MetadataIndexingError, type UnauthenticatedError, UnexpectedError } from '../errors';
+import {
+  MetadataIndexingError,
+  type UnauthenticatedError,
+  UnexpectedError,
+} from '../errors';
 import { delay } from '../utils';
 
 /**
@@ -69,7 +73,10 @@ export function waitForMetadata(
   id: UUID,
 ): ResultAsync<UUID, MetadataIndexingError | UnexpectedError> {
   return ResultAsync.fromPromise(pollMetadataStatus(client, id), (err) => {
-    if (err instanceof MetadataIndexingError || err instanceof UnexpectedError) {
+    if (
+      err instanceof MetadataIndexingError ||
+      err instanceof UnexpectedError
+    ) {
       return err;
     }
     return UnexpectedError.from(err);

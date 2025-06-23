@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const Eip712TypedDataDomainFragment = graphql(
   `fragment Eip712TypedDataDomain on Eip712TypedDataDomain {
@@ -49,14 +49,18 @@ export const CreateFrameTypedDataQuery = graphql(
   }`,
   [CreateFrameEip712TypedDataFragment],
 );
-export type CreateFrameTypedDataRequest = RequestOf<typeof CreateFrameTypedDataQuery>;
+export type CreateFrameTypedDataRequest = RequestOf<
+  typeof CreateFrameTypedDataQuery
+>;
 
 export const VerifyFrameSignatureQuery = graphql(
   `query VerifyFrameSignature($request: FrameVerifySignature!) {
     value: verifyFrameSignature(request: $request)
   }`,
 );
-export type VerifyFrameSignatureRequest = RequestOf<typeof VerifyFrameSignatureQuery>;
+export type VerifyFrameSignatureRequest = RequestOf<
+  typeof VerifyFrameSignatureQuery
+>;
 
 export const FrameLensManagerSignatureResultFragment = graphql(
   `fragment FrameLensManagerSignatureResult on FrameLensManagerSignatureResult {

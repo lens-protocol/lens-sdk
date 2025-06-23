@@ -1,4 +1,8 @@
-import type { Notification, NotificationsRequest, Paginated } from '@lens-protocol/graphql';
+import type {
+  Notification,
+  NotificationsRequest,
+  Paginated,
+} from '@lens-protocol/graphql';
 import { NotificationsQuery } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 

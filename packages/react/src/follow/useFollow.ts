@@ -26,9 +26,15 @@ export function useFollow(
 ): UseAsyncTask<
   CreateFollowRequest,
   TxHash,
-  SigningError | ValidationError | TransactionIndexingError | UnauthenticatedError | UnexpectedError
+  | SigningError
+  | ValidationError
+  | TransactionIndexingError
+  | UnauthenticatedError
+  | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    follow(sessionClient, request).andThen(args.handler).andThen(sessionClient.waitForTransaction),
+    follow(sessionClient, request)
+      .andThen(args.handler)
+      .andThen(sessionClient.waitForTransaction),
   );
 }

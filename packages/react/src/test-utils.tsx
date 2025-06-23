@@ -1,7 +1,7 @@
-import { type RenderHookOptions, renderHook } from '@testing-library/react';
-import React, { type ReactNode, Suspense } from 'react';
-
 import type { PublicClient } from '@lens-protocol/client';
+import { type RenderHookOptions, renderHook } from '@testing-library/react';
+// biome-ignore lint/correctness/noUnusedImports: needed for types
+import React, { type ReactNode, Suspense } from 'react';
 import { LensContextProvider } from './context';
 
 function createWrapper(client: PublicClient) {
@@ -14,7 +14,10 @@ function createWrapper(client: PublicClient) {
   };
 }
 
-export type RenderHookWithContextOptions<TProps> = Omit<RenderHookOptions<TProps>, 'wrapper'> & {
+export type RenderHookWithContextOptions<TProps> = Omit<
+  RenderHookOptions<TProps>,
+  'wrapper'
+> & {
   client: PublicClient;
 };
 

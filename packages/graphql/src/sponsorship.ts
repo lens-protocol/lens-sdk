@@ -6,7 +6,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const SponsorshipMetadataFragment = graphql(
   `fragment SponsorshipMetadata on SponsorshipMetadata {
@@ -16,7 +16,9 @@ const SponsorshipMetadataFragment = graphql(
     description
   }`,
 );
-export type SponsorshipMetadata = FragmentOf<typeof SponsorshipMetadataFragment>;
+export type SponsorshipMetadata = FragmentOf<
+  typeof SponsorshipMetadataFragment
+>;
 
 const SponsorshipRateLimitFragment = graphql(
   `fragment SponsorshipRateLimit on SponsorshipRateLimit {
@@ -25,7 +27,9 @@ const SponsorshipRateLimitFragment = graphql(
     window
   }`,
 );
-export type SponsorshipRateLimit = FragmentOf<typeof SponsorshipRateLimitFragment>;
+export type SponsorshipRateLimit = FragmentOf<
+  typeof SponsorshipRateLimitFragment
+>;
 
 const SponsorshipFragment = graphql(
   `fragment Sponsorship on Sponsorship {
@@ -129,7 +133,9 @@ export const SponsorshipSignerQuery = graphql(
   }`,
   [SponsorshipSignerFragment, PaginatedResultInfoFragment],
 );
-export type SponsorshipSignersRequest = RequestOf<typeof SponsorshipSignerQuery>;
+export type SponsorshipSignersRequest = RequestOf<
+  typeof SponsorshipSignerQuery
+>;
 
 const SponsorshipLimitsExemptFragment = graphql(
   `fragment SponsorshipLimitsExempt on SponsorshipLimitsExempt {
@@ -140,7 +146,9 @@ const SponsorshipLimitsExemptFragment = graphql(
     createdAt
   }`,
 );
-export type SponsorshipLimitsExempt = FragmentOf<typeof SponsorshipLimitsExemptFragment>;
+export type SponsorshipLimitsExempt = FragmentOf<
+  typeof SponsorshipLimitsExemptFragment
+>;
 
 export const SponsorshipLimitExclusionsQuery = graphql(
   `query  SponsorshipLimitExclusions($request:  SponsorshipLimitExclusionsRequest!) {
@@ -155,7 +163,9 @@ export const SponsorshipLimitExclusionsQuery = graphql(
   }`,
   [SponsorshipLimitsExemptFragment, PaginatedResultInfoFragment],
 );
-export type SponsorshipLimitExclusionsRequest = RequestOf<typeof SponsorshipLimitExclusionsQuery>;
+export type SponsorshipLimitExclusionsRequest = RequestOf<
+  typeof SponsorshipLimitExclusionsQuery
+>;
 
 const CreateSponsorshipResponse = graphql(
   `fragment CreateSponsorshipResponse on CreateSponsorshipResponse {
@@ -163,7 +173,9 @@ const CreateSponsorshipResponse = graphql(
     hash
   }`,
 );
-export type CreateSponsorshipResponse = FragmentOf<typeof CreateSponsorshipResponse>;
+export type CreateSponsorshipResponse = FragmentOf<
+  typeof CreateSponsorshipResponse
+>;
 
 const CreateSponsorshipResultFragment = graphql(
   `fragment CreateSponsorshipResult on CreateSponsorshipResult {
@@ -177,9 +189,15 @@ const CreateSponsorshipResultFragment = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateSponsorshipResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+  [
+    CreateSponsorshipResponse,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type CreateSponsorshipResult = FragmentOf<typeof CreateSponsorshipResultFragment>;
+export type CreateSponsorshipResult = FragmentOf<
+  typeof CreateSponsorshipResultFragment
+>;
 
 export const CreateSponsorshipMutation = graphql(
   `mutation CreateSponsorship($request: CreateSponsorshipRequest!) {
@@ -189,7 +207,9 @@ export const CreateSponsorshipMutation = graphql(
   }`,
   [CreateSponsorshipResultFragment],
 );
-export type CreateSponsorshipRequest = RequestOf<typeof CreateSponsorshipMutation>;
+export type CreateSponsorshipRequest = RequestOf<
+  typeof CreateSponsorshipMutation
+>;
 
 const SetSponsorshipMetadataResultFragment = graphql(
   `fragment SetSponsorshipMetadataResult on SetSponsorshipMetadataResult {
@@ -209,7 +229,9 @@ const SetSponsorshipMetadataResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetSponsorshipMetadataResult = FragmentOf<typeof SetSponsorshipMetadataResultFragment>;
+export type SetSponsorshipMetadataResult = FragmentOf<
+  typeof SetSponsorshipMetadataResultFragment
+>;
 
 export const SetSponsorshipMetadataMutation = graphql(
   `mutation SetSponsorshipMetadata($request: SetSponsorshipMetadataRequest!) {
@@ -219,7 +241,9 @@ export const SetSponsorshipMetadataMutation = graphql(
   }`,
   [SetSponsorshipMetadataResultFragment],
 );
-export type SetSponsorshipMetadataRequest = RequestOf<typeof SetSponsorshipMetadataMutation>;
+export type SetSponsorshipMetadataRequest = RequestOf<
+  typeof SetSponsorshipMetadataMutation
+>;
 
 const UpdateSponsorshipLimitsResultFragment = graphql(
   `fragment UpdateSponsorshipLimitsResult on UpdateSponsorshipLimitsResult {
@@ -251,7 +275,9 @@ export const UpdateSponsorshipLimitsMutation = graphql(
   }`,
   [UpdateSponsorshipLimitsResultFragment],
 );
-export type UpdateSponsorshipLimitsRequest = RequestOf<typeof UpdateSponsorshipLimitsMutation>;
+export type UpdateSponsorshipLimitsRequest = RequestOf<
+  typeof UpdateSponsorshipLimitsMutation
+>;
 
 const UpdateSponsorshipExclusionListResultFragment = graphql(
   `fragment UpdateSponsorshipExclusionListResult on UpdateSponsorshipExclusionListResult {
@@ -317,7 +343,9 @@ export const UpdateSponsorshipSignersMutation = graphql(
   }`,
   [UpdateSponsorshipSignersResultFragment],
 );
-export type UpdateSponsorshipSignersRequest = RequestOf<typeof UpdateSponsorshipSignersMutation>;
+export type UpdateSponsorshipSignersRequest = RequestOf<
+  typeof UpdateSponsorshipSignersMutation
+>;
 
 const PausingResultFragment = graphql(
   `fragment PausingResult on PausingResult {

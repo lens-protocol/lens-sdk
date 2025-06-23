@@ -6,7 +6,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const CreateGraphResponseFragment = graphql(
   `fragment CreateGraphResponse on CreateGraphResponse {
@@ -14,7 +14,9 @@ const CreateGraphResponseFragment = graphql(
     hash
   }`,
 );
-export type CreateGraphResponse = FragmentOf<typeof CreateGraphResponseFragment>;
+export type CreateGraphResponse = FragmentOf<
+  typeof CreateGraphResponseFragment
+>;
 
 const CreateGraphResultFragment = graphql(
   `fragment CreateGraphResult on CreateGraphResult {
@@ -28,7 +30,11 @@ const CreateGraphResultFragment = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateGraphResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+  [
+    CreateGraphResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type CreateGraphResult = FragmentOf<typeof CreateGraphResultFragment>;
 
@@ -60,7 +66,9 @@ const SetGraphMetadataResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetGraphMetadataResult = FragmentOf<typeof SetGraphMetadataResultFragment>;
+export type SetGraphMetadataResult = FragmentOf<
+  typeof SetGraphMetadataResultFragment
+>;
 
 export const SetGraphMetadataMutation = graphql(
   `mutation SetGraphMetadata($request: SetGraphMetadataRequest!) {
@@ -70,7 +78,9 @@ export const SetGraphMetadataMutation = graphql(
   }`,
   [SetGraphMetadataResultFragment],
 );
-export type SetGraphMetadataRequest = RequestOf<typeof SetGraphMetadataMutation>;
+export type SetGraphMetadataRequest = RequestOf<
+  typeof SetGraphMetadataMutation
+>;
 
 export const GraphQuery = graphql(
   `query Graph($request: GraphRequest!) {
@@ -116,7 +126,9 @@ const UpdateGraphRulesResultFragment = graphql(
     SponsoredTransactionRequestFragment,
   ],
 );
-export type UpdateGraphRulesResult = FragmentOf<typeof UpdateGraphRulesResultFragment>;
+export type UpdateGraphRulesResult = FragmentOf<
+  typeof UpdateGraphRulesResultFragment
+>;
 
 export const UpdateGraphRulesMutation = graphql(
   `mutation UpdateGraphRules($request: UpdateGraphRulesRequest!) {
@@ -126,4 +138,6 @@ export const UpdateGraphRulesMutation = graphql(
   }`,
   [UpdateGraphRulesResultFragment],
 );
-export type UpdateGraphRulesRequest = RequestOf<typeof UpdateGraphRulesMutation>;
+export type UpdateGraphRulesRequest = RequestOf<
+  typeof UpdateGraphRulesMutation
+>;

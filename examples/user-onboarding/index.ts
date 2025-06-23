@@ -1,9 +1,12 @@
 import 'viem/window';
 
 import { chains } from '@lens-chain/sdk/viem';
-import { StorageClient, immutable } from '@lens-chain/storage-client';
+import { immutable, StorageClient } from '@lens-chain/storage-client';
 import { PublicClient, testnet } from '@lens-protocol/client';
-import { createAccountWithUsername, fetchAccount } from '@lens-protocol/client/actions';
+import {
+  createAccountWithUsername,
+  fetchAccount,
+} from '@lens-protocol/client/actions';
 import { handleOperationWith } from '@lens-protocol/client/viem';
 import { account } from '@lens-protocol/metadata';
 import { type Address, createWalletClient, custom } from 'viem';
@@ -11,7 +14,9 @@ import { type Address, createWalletClient, custom } from 'viem';
 const chain = chains.testnet;
 
 // hoist account
-const [address] = (await window.ethereum!.request({ method: 'eth_requestAccounts' })) as [Address];
+const [address] = (await window.ethereum!.request({
+  method: 'eth_requestAccounts',
+})) as [Address];
 
 const walletClient = createWalletClient({
   account: address,
@@ -45,7 +50,9 @@ const metadata = account({
 });
 
 const { uri } = await storageClient.uploadFile(
-  new File([JSON.stringify(metadata)], 'metadata.json', { type: 'application/json' }),
+  new File([JSON.stringify(metadata)], 'metadata.json', {
+    type: 'application/json',
+  }),
   { acl: immutable(chain.id) },
 );
 

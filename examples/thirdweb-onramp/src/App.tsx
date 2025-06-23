@@ -9,7 +9,9 @@ import { type Address, createWalletClient, custom } from 'viem';
 const chain = chains.testnet;
 
 // hoist account
-const [address] = (await window.ethereum!.request({ method: 'eth_requestAccounts' })) as [Address];
+const [address] = (await window.ethereum!.request({
+  method: 'eth_requestAccounts',
+})) as [Address];
 
 // create wallet client
 // this example assume you might not use thirdweb wallet already, if you
@@ -25,7 +27,9 @@ const thirdwebWallet = await viemAdapter.wallet.fromViem({
   walletClient: walletClient,
 });
 
-const client = createThirdwebClient({ clientId: '44323e7868feac3bd3ea4d91c9e879d4' });
+const client = createThirdwebClient({
+  clientId: '44323e7868feac3bd3ea4d91c9e879d4',
+});
 
 await thirdwebWallet.connect({ client });
 

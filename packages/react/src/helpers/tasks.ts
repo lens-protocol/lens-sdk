@@ -1,6 +1,5 @@
 import type { SessionClient } from '@lens-protocol/client';
-import { ResultAsync, invariant } from '@lens-protocol/types';
-import { Deferred } from '@lens-protocol/types';
+import { Deferred, invariant, ResultAsync } from '@lens-protocol/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSessionClient } from '../authentication';
 
@@ -18,10 +17,10 @@ export type AsyncTask<TInput, TResult extends ResultAsync<unknown, unknown>> = (
  *
  * @internal
  */
-export type AuthenticatedAsyncTask<TInput, TResult extends ResultAsync<unknown, unknown>> = (
-  sessionClient: SessionClient,
-  input: TInput,
-) => TResult;
+export type AuthenticatedAsyncTask<
+  TInput,
+  TResult extends ResultAsync<unknown, unknown>,
+> = (sessionClient: SessionClient, input: TInput) => TResult;
 
 /**
  * The initial state of a async task.
@@ -132,21 +131,30 @@ const AsyncTaskState = {
  * return <p>Task completed: {data}</p>;
  * ```
  */
-export type UseAsyncTask<TInput, TValue, TError> = AsyncTaskState<TValue, TError> & {
+export type UseAsyncTask<TInput, TValue, TError> = AsyncTaskState<
+  TValue,
+  TError
+> & {
   execute: AsyncTask<TInput, ResultAsync<TValue, TError>>;
 };
 
 /**
  * @internal
  */
-export function useAsyncTask<TInput, TValue, TError, TResult extends ResultAsync<TValue, TError>>(
-  handler: AsyncTask<TInput, TResult>,
-): UseAsyncTask<TInput, TValue, TError> {
+export function useAsyncTask<
+  TInput,
+  TValue,
+  TError,
+  TResult extends ResultAsync<TValue, TError>,
+>(handler: AsyncTask<TInput, TResult>): UseAsyncTask<TInput, TValue, TError> {
   const [state, setState] = useState(AsyncTaskState.Idle<TValue, TError>());
 
   const execute = useCallback(
     (input: TInput) => {
-      invariant(!state.loading, 'Cannot execute a task while another is in progress.');
+      invariant(
+        !state.loading,
+        'Cannot execute a task while another is in progress.',
+      );
 
       setState(({ data }) => {
         return {
@@ -201,7 +209,9 @@ export function useAuthenticatedAsyncTask<
   TValue,
   TError,
   TResult extends ResultAsync<TValue, TError>,
->(handler: AuthenticatedAsyncTask<TInput, TResult>): UseAsyncTask<TInput, TValue, TError> {
+>(
+  handler: AuthenticatedAsyncTask<TInput, TResult>,
+): UseAsyncTask<TInput, TValue, TError> {
   const { data: sessionClient, loading } = useSessionClient();
 
   const pendingRequests = useRef<DeferredCall<TInput, TValue, TError>[]>([]);
@@ -209,7 +219,8 @@ export function useAuthenticatedAsyncTask<
   const safeHandler = useCallback(
     (input: TInput) => {
       if (loading) {
-        const deferredCall: DeferredCall<TInput, TValue, TError> = createDeferredCall(input);
+        const deferredCall: DeferredCall<TInput, TValue, TError> =
+          createDeferredCall(input);
         pendingRequests.current.push(deferredCall);
 
         return deferredCall.result;

@@ -6,7 +6,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const Erc20BalanceErrorFragment = graphql(
   `fragment Erc20BalanceError on Erc20BalanceError {
@@ -78,7 +78,9 @@ export const SignerErc20ApprovalRequiredFragment = graphql(
 `,
   [Erc20AmountFragment],
 );
-export type SignerErc20ApprovalRequired = FragmentOf<typeof SignerErc20ApprovalRequiredFragment>;
+export type SignerErc20ApprovalRequired = FragmentOf<
+  typeof SignerErc20ApprovalRequiredFragment
+>;
 
 const WithdrawResultFragment = graphql(
   `fragment WithdrawResult on WithdrawResult{

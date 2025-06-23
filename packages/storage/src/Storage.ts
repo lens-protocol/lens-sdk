@@ -1,4 +1,10 @@
-import { Result, ResultAsync, ResultAwareError, ok, okAsync } from '@lens-protocol/types';
+import {
+  ok,
+  okAsync,
+  Result,
+  ResultAsync,
+  ResultAwareError,
+} from '@lens-protocol/types';
 
 import type {
   IStorageItem,
@@ -23,8 +29,12 @@ export class StorageError extends ResultAwareError {
   name = 'StorageError' as const;
 }
 
-const safeJsonParse = Result.fromThrowable(JSON.parse, (err) => StorageError.from(err));
-const safeJsonStringify = Result.fromThrowable(JSON.stringify, (err) => StorageError.from(err));
+const safeJsonParse = Result.fromThrowable(JSON.parse, (err) =>
+  StorageError.from(err),
+);
+const safeJsonStringify = Result.fromThrowable(JSON.stringify, (err) =>
+  StorageError.from(err),
+);
 
 /**
  * An implementation of `IStorage` with support for migration strategies
@@ -43,13 +53,17 @@ export class Storage<Data> implements IStorage<Data> {
 
   reset(): ResultAsync<Storage<Data>, StorageError> {
     const promise = Promise.any([this.provider.removeItem(this.schema.key)]);
-    return ResultAsync.fromPromise(promise, (err) => StorageError.from(err)).andThen((_) => {
+    return ResultAsync.fromPromise(promise, (err) =>
+      StorageError.from(err),
+    ).andThen((_) => {
       this.storageItem = null;
       return ok(this);
     });
   }
 
-  set(data: Data): ResultAsync<Storage<Data>, SchemaMismatchError | StorageError> {
+  set(
+    data: Data,
+  ): ResultAsync<Storage<Data>, SchemaMismatchError | StorageError> {
     const metadata: StorageMetadata = {
       createdAt: this.storageItem?.metadata.createdAt ?? Date.now(),
       updatedAt: Date.now(),
@@ -58,8 +72,12 @@ export class Storage<Data> implements IStorage<Data> {
 
     return this.schema.process({ data, metadata }).andThen((storageItem) => {
       return safeJsonStringify(storageItem).asyncAndThen((json) => {
-        const promise = Promise.any([this.provider.setItem(this.schema.key, json)]);
-        return ResultAsync.fromPromise(promise, (err) => StorageError.from(err)).andThen(() => {
+        const promise = Promise.any([
+          this.provider.setItem(this.schema.key, json),
+        ]);
+        return ResultAsync.fromPromise(promise, (err) =>
+          StorageError.from(err),
+        ).andThen(() => {
           this.storageItem = storageItem;
           return ok(this);
         });
@@ -92,18 +110,24 @@ export class Storage<Data> implements IStorage<Data> {
       };
     }
 
-    return this.provider.subscribe(this.schema.key, async (newValue, oldValue) => {
-      const newItem = newValue
-        ? await this.parse(newValue).unwrapOr({ data: null })
-        : { data: null };
-      const oldItem = oldValue
-        ? await this.parse(oldValue).unwrapOr({ data: null })
-        : { data: null };
-      subscriber(newItem.data, oldItem.data);
-    });
+    return this.provider.subscribe(
+      this.schema.key,
+      async (newValue, oldValue) => {
+        const newItem = newValue
+          ? await this.parse(newValue).unwrapOr({ data: null })
+          : { data: null };
+        const oldItem = oldValue
+          ? await this.parse(oldValue).unwrapOr({ data: null })
+          : { data: null };
+        subscriber(newItem.data, oldItem.data);
+      },
+    );
   }
 
-  static create<D>(schema: IStorageSchema<D>, provider: IStorageProvider): Storage<D> {
+  static create<D>(
+    schema: IStorageSchema<D>,
+    provider: IStorageProvider,
+  ): Storage<D> {
     // biome-ignore lint/complexity/noThisInStatic: valid use case
     return new this(schema, provider);
   }

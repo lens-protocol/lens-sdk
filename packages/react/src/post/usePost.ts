@@ -1,7 +1,12 @@
 import type { AnyPost, PostRequest } from '@lens-protocol/graphql';
 import { PostQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type UsePostArgs = PostRequest;
@@ -15,7 +20,9 @@ export type UsePostArgs = PostRequest;
  * const { data } = usePost({ post: postId('34…'), suspense: true });
  * ```
  */
-export function usePost(args: UsePostArgs & Suspendable): SuspenseResult<AnyPost | null>;
+export function usePost(
+  args: UsePostArgs & Suspendable,
+): SuspenseResult<AnyPost | null>;
 
 /**
  * Fetch a single post.

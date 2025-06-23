@@ -4,8 +4,11 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { InsufficientFundsFragment, SignerErc20ApprovalRequiredFragment } from './funds';
-import { type RequestOf, graphql } from './graphql';
+import {
+  InsufficientFundsFragment,
+  SignerErc20ApprovalRequiredFragment,
+} from './funds';
+import { graphql, type RequestOf } from './graphql';
 
 export const ConfigurePostActionResponseFragment = graphql(
   `fragment ConfigurePostActionResponse on ConfigurePostActionResponse {
@@ -14,7 +17,9 @@ export const ConfigurePostActionResponseFragment = graphql(
   }`,
 );
 
-export type ConfigurePostActionResponse = FragmentOf<typeof ConfigurePostActionResponseFragment>;
+export type ConfigurePostActionResponse = FragmentOf<
+  typeof ConfigurePostActionResponseFragment
+>;
 
 export const ConfigurePostActionResultFragment = graphql(
   `fragment ConfigurePostActionResult on ConfigurePostActionResult {
@@ -38,7 +43,9 @@ export const ConfigurePostActionResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type ConfigurePostActionResult = FragmentOf<typeof ConfigurePostActionResultFragment>;
+export type ConfigurePostActionResult = FragmentOf<
+  typeof ConfigurePostActionResultFragment
+>;
 
 export const ConfigurePostActionMutation = graphql(
   `mutation ConfigurePostAction($request: ConfigurePostActionRequest!) {
@@ -48,7 +55,9 @@ export const ConfigurePostActionMutation = graphql(
   }`,
   [ConfigurePostActionResultFragment],
 );
-export type ConfigurePostActionRequest = RequestOf<typeof ConfigurePostActionMutation>;
+export type ConfigurePostActionRequest = RequestOf<
+  typeof ConfigurePostActionMutation
+>;
 
 export const DisablePostActionResponseFragment = graphql(
   `fragment DisablePostActionResponse on DisablePostActionResponse {
@@ -57,7 +66,9 @@ export const DisablePostActionResponseFragment = graphql(
   }`,
 );
 
-export type DisablePostActionResponse = FragmentOf<typeof DisablePostActionResponseFragment>;
+export type DisablePostActionResponse = FragmentOf<
+  typeof DisablePostActionResponseFragment
+>;
 
 export const DisablePostActionResultFragment = graphql(
   `fragment DisablePostActionResult on DisablePostActionResult {
@@ -81,7 +92,9 @@ export const DisablePostActionResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type DisablePostActionResult = FragmentOf<typeof DisablePostActionResultFragment>;
+export type DisablePostActionResult = FragmentOf<
+  typeof DisablePostActionResultFragment
+>;
 
 export const DisablePostActionMutation = graphql(
   `mutation DisablePostAction($request: DisablePostActionRequest!) {
@@ -91,7 +104,9 @@ export const DisablePostActionMutation = graphql(
   }`,
   [DisablePostActionResultFragment],
 );
-export type DisablePostActionRequest = RequestOf<typeof DisablePostActionMutation>;
+export type DisablePostActionRequest = RequestOf<
+  typeof DisablePostActionMutation
+>;
 
 export const EnablePostActionResponseFragment = graphql(
   `fragment EnablePostActionResponse on EnablePostActionResponse {
@@ -100,7 +115,9 @@ export const EnablePostActionResponseFragment = graphql(
   }`,
 );
 
-export type EnablePostActionResponse = FragmentOf<typeof EnablePostActionResponseFragment>;
+export type EnablePostActionResponse = FragmentOf<
+  typeof EnablePostActionResponseFragment
+>;
 
 export const EnablePostActionResultFragment = graphql(
   `fragment EnablePostActionResult on EnablePostActionResult {
@@ -124,7 +141,9 @@ export const EnablePostActionResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type EnablePostActionResult = FragmentOf<typeof EnablePostActionResultFragment>;
+export type EnablePostActionResult = FragmentOf<
+  typeof EnablePostActionResultFragment
+>;
 
 export const EnablePostActionMutation = graphql(
   `mutation EnablePostAction($request: EnablePostActionRequest!) {
@@ -134,7 +153,9 @@ export const EnablePostActionMutation = graphql(
   }`,
   [EnablePostActionResultFragment],
 );
-export type EnablePostActionRequest = RequestOf<typeof EnablePostActionMutation>;
+export type EnablePostActionRequest = RequestOf<
+  typeof EnablePostActionMutation
+>;
 
 export const ExecutePostActionResponseFragment = graphql(
   `fragment ExecutePostActionResponse on ExecutePostActionResponse {
@@ -143,7 +164,9 @@ export const ExecutePostActionResponseFragment = graphql(
   }`,
 );
 
-export type ExecutePostActionResponse = FragmentOf<typeof ExecutePostActionResponseFragment>;
+export type ExecutePostActionResponse = FragmentOf<
+  typeof ExecutePostActionResponseFragment
+>;
 
 export const ExecutePostActionResultFragment = graphql(
   `fragment ExecutePostActionResult on ExecutePostActionResult {
@@ -175,7 +198,9 @@ export const ExecutePostActionResultFragment = graphql(
     SignerErc20ApprovalRequiredFragment,
   ],
 );
-export type ExecutePostActionResult = FragmentOf<typeof ExecutePostActionResultFragment>;
+export type ExecutePostActionResult = FragmentOf<
+  typeof ExecutePostActionResultFragment
+>;
 
 export const ExecutePostActionMutation = graphql(
   `mutation ExecutePostAction($request: ExecutePostActionRequest!) {
@@ -185,7 +210,9 @@ export const ExecutePostActionMutation = graphql(
   }`,
   [ExecutePostActionResultFragment],
 );
-export type ExecutePostActionRequest = RequestOf<typeof ExecutePostActionMutation>;
+export type ExecutePostActionRequest = RequestOf<
+  typeof ExecutePostActionMutation
+>;
 
 export const ConfigureAccountActionResponseFragment = graphql(
   `fragment ConfigureAccountActionResponse on ConfigureAccountActionResponse {
@@ -220,7 +247,9 @@ export const ConfigureAccountActionResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type ConfigureAccountActionResult = FragmentOf<typeof ConfigureAccountActionResultFragment>;
+export type ConfigureAccountActionResult = FragmentOf<
+  typeof ConfigureAccountActionResultFragment
+>;
 
 export const ConfigureAccountActionMutation = graphql(
   `mutation ConfigureAccountAction($request: ConfigureAccountActionRequest!) {
@@ -230,7 +259,9 @@ export const ConfigureAccountActionMutation = graphql(
   }`,
   [ConfigureAccountActionResultFragment],
 );
-export type ConfigureAccountActionRequest = RequestOf<typeof ConfigureAccountActionMutation>;
+export type ConfigureAccountActionRequest = RequestOf<
+  typeof ConfigureAccountActionMutation
+>;
 
 export const DisableAccountActionResponseFragment = graphql(
   `fragment DisableAccountActionResponse on DisableAccountActionResponse {
@@ -239,7 +270,9 @@ export const DisableAccountActionResponseFragment = graphql(
   }`,
 );
 
-export type DisableAccountActionResponse = FragmentOf<typeof DisableAccountActionResponseFragment>;
+export type DisableAccountActionResponse = FragmentOf<
+  typeof DisableAccountActionResponseFragment
+>;
 
 export const DisableAccountActionResultFragment = graphql(
   `fragment DisableAccountActionResult on DisableAccountActionResult {
@@ -263,7 +296,9 @@ export const DisableAccountActionResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type DisableAccountActionResult = FragmentOf<typeof DisableAccountActionResultFragment>;
+export type DisableAccountActionResult = FragmentOf<
+  typeof DisableAccountActionResultFragment
+>;
 
 export const DisableAccountActionMutation = graphql(
   `mutation DisableAccountAction($request: DisableAccountActionRequest!) {
@@ -273,7 +308,9 @@ export const DisableAccountActionMutation = graphql(
   }`,
   [DisableAccountActionResultFragment],
 );
-export type DisableAccountActionRequest = RequestOf<typeof DisableAccountActionMutation>;
+export type DisableAccountActionRequest = RequestOf<
+  typeof DisableAccountActionMutation
+>;
 
 export const EnableAccountActionResponseFragment = graphql(
   `fragment EnableAccountActionResponse on EnableAccountActionResponse {
@@ -282,7 +319,9 @@ export const EnableAccountActionResponseFragment = graphql(
   }`,
 );
 
-export type EnableAccountActionResponse = FragmentOf<typeof EnableAccountActionResponseFragment>;
+export type EnableAccountActionResponse = FragmentOf<
+  typeof EnableAccountActionResponseFragment
+>;
 
 export const EnableAccountActionResultFragment = graphql(
   `fragment EnableAccountActionResult on EnableAccountActionResult {
@@ -306,7 +345,9 @@ export const EnableAccountActionResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type EnableAccountActionResult = FragmentOf<typeof EnableAccountActionResultFragment>;
+export type EnableAccountActionResult = FragmentOf<
+  typeof EnableAccountActionResultFragment
+>;
 
 export const EnableAccountActionMutation = graphql(
   `mutation EnableAccountAction($request: EnableAccountActionRequest!) {
@@ -316,7 +357,9 @@ export const EnableAccountActionMutation = graphql(
   }`,
   [EnableAccountActionResultFragment],
 );
-export type EnableAccountActionRequest = RequestOf<typeof EnableAccountActionMutation>;
+export type EnableAccountActionRequest = RequestOf<
+  typeof EnableAccountActionMutation
+>;
 
 export const ExecuteAccountActionResponseFragment = graphql(
   `fragment ExecuteAccountActionResponse on ExecuteAccountActionResponse {
@@ -325,7 +368,9 @@ export const ExecuteAccountActionResponseFragment = graphql(
   }`,
 );
 
-export type ExecuteAccountActionResponse = FragmentOf<typeof ExecuteAccountActionResponseFragment>;
+export type ExecuteAccountActionResponse = FragmentOf<
+  typeof ExecuteAccountActionResponseFragment
+>;
 
 export const ExecuteAccountActionResultFragment = graphql(
   `fragment ExecuteAccountActionResult on ExecuteAccountActionResult {
@@ -357,7 +402,9 @@ export const ExecuteAccountActionResultFragment = graphql(
     SignerErc20ApprovalRequiredFragment,
   ],
 );
-export type ExecuteAccountActionResult = FragmentOf<typeof ExecuteAccountActionResultFragment>;
+export type ExecuteAccountActionResult = FragmentOf<
+  typeof ExecuteAccountActionResultFragment
+>;
 
 export const ExecuteAccountActionMutation = graphql(
   `mutation ExecuteAccountAction($request: ExecuteAccountActionRequest!) {
@@ -367,4 +414,6 @@ export const ExecuteAccountActionMutation = graphql(
   }`,
   [ExecuteAccountActionResultFragment],
 );
-export type ExecuteAccountActionRequest = RequestOf<typeof ExecuteAccountActionMutation>;
+export type ExecuteAccountActionRequest = RequestOf<
+  typeof ExecuteAccountActionMutation
+>;

@@ -18,7 +18,10 @@ export function isValidHexString(value: string): value is HexString {
  * Creates a hex string from a given value.
  */
 export function hexString<T extends string = HexString>(value: string): T {
-  invariant(isValidHexString(value), `Expected a valid hex string, but got: ${value}`);
+  invariant(
+    isValidHexString(value),
+    `Expected a valid hex string, but got: ${value}`,
+  );
   return value as T;
 }
 
@@ -65,6 +68,9 @@ export const txHash = hexString<TxHash>;
  */
 export type FixedBytes32 = Tagged<HexString, 'FixedBytes32'>;
 export function fixedBytes32(value: string) {
-  invariant(value.length === 66, `FixedBytes32: invalid length ${value.length}`);
+  invariant(
+    value.length === 66,
+    `FixedBytes32: invalid length ${value.length}`,
+  );
   return hexString<FixedBytes32>(value);
 }

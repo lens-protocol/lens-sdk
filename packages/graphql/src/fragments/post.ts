@@ -59,8 +59,9 @@ export type PayToCollectConfig = {
   referralShare: number | null;
 };
 
-export const PayToCollectConfigFragment: FragmentDocumentFor<PayToCollectConfig> = graphql(
-  `fragment PayToCollectConfig on PayToCollectConfig {
+export const PayToCollectConfigFragment: FragmentDocumentFor<PayToCollectConfig> =
+  graphql(
+    `fragment PayToCollectConfig on PayToCollectConfig {
     __typename
     amount {
       ...Erc20Amount
@@ -73,8 +74,8 @@ export const PayToCollectConfigFragment: FragmentDocumentFor<PayToCollectConfig>
     }
     referralShare
   }`,
-  [Erc20AmountFragment, RecipientPercentFragment, PayableAmountFragment],
-);
+    [Erc20AmountFragment, RecipientPercentFragment, PayableAmountFragment],
+  );
 
 export const SimpleCollectActionFragment = graphql(
   `fragment SimpleCollectAction on SimpleCollectAction {
@@ -93,7 +94,9 @@ export const SimpleCollectActionFragment = graphql(
   }`,
   [PayToCollectConfigFragment, FollowerOnFragment],
 );
-export type SimpleCollectAction = FragmentOf<typeof SimpleCollectActionFragment>;
+export type SimpleCollectAction = FragmentOf<
+  typeof SimpleCollectActionFragment
+>;
 
 export const PostActionFragment = graphql(
   `fragment PostAction on PostAction {
@@ -244,7 +247,9 @@ export const PostUnsatisfiedRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export type PostUnsatisfiedRule = FragmentOf<typeof PostUnsatisfiedRuleFragment>;
+export type PostUnsatisfiedRule = FragmentOf<
+  typeof PostUnsatisfiedRuleFragment
+>;
 
 export const PostUnsatisfiedRulesFragment = graphql(
   `fragment PostUnsatisfiedRules on PostUnsatisfiedRules {
@@ -258,7 +263,9 @@ export const PostUnsatisfiedRulesFragment = graphql(
   }`,
   [PostUnsatisfiedRuleFragment],
 );
-export type PostUnsatisfiedRules = FragmentOf<typeof PostUnsatisfiedRulesFragment>;
+export type PostUnsatisfiedRules = FragmentOf<
+  typeof PostUnsatisfiedRulesFragment
+>;
 
 export const PostOperationValidationFailedFragment = graphql(
   `fragment PostOperationValidationFailed on PostOperationValidationFailed {
@@ -351,7 +358,10 @@ export const SimpleCollectValidationOutcomeFragment = graphql(
       ...SimpleCollectValidationFailed
     }
   }`,
-  [SimpleCollectValidationPassedFragment, SimpleCollectValidationFailedFragment],
+  [
+    SimpleCollectValidationPassedFragment,
+    SimpleCollectValidationFailedFragment,
+  ],
 );
 export type SimpleCollectValidationOutcome =
   | SimpleCollectValidationPassed
@@ -409,7 +419,8 @@ export const LoggedInPostOperationsFragment = graphql(
     SimpleCollectValidationOutcomeFragment,
   ],
 );
-export interface LoggedInPostOperations extends FragmentOf<typeof LoggedInPostOperationsFragment> {}
+export interface LoggedInPostOperations
+  extends FragmentOf<typeof LoggedInPostOperationsFragment> {}
 
 export const MentionReplaceFragment = graphql(
   `fragment MentionReplace on MentionReplace {
@@ -495,7 +506,9 @@ export const MarketplaceMetadataAttributeFragment = graphql(
     value
   }`,
 );
-export type MarketplaceMetadataAttribute = FragmentOf<typeof MarketplaceMetadataAttributeFragment>;
+export type MarketplaceMetadataAttribute = FragmentOf<
+  typeof MarketplaceMetadataAttributeFragment
+>;
 
 export const NftMetadataFragment = graphql(
   `fragment NftMetadata on NftMetadata {
@@ -523,7 +536,8 @@ export const PostGroupInfoFragment = graphql(
   }`,
   [GroupMetadataFragment],
 );
-export interface PostGroupInfo extends FragmentOf<typeof PostGroupInfoFragment> {}
+export interface PostGroupInfo
+  extends FragmentOf<typeof PostGroupInfoFragment> {}
 
 export const PostFeedInfoFragment = graphql(
   `fragment PostFeedInfo on PostFeedInfo {
@@ -602,9 +616,12 @@ export interface ReferencedPost
 
 // mitigates error TS7056: The inferred type of this node exceeds the maximum length
 // the compiler will serialize. An explicit type annotation is needed.
-export const ReferencedPostFragment: FragmentDocumentFor<ReferencedPost, 'Post', 'ReferencedPost'> =
-  graphql(
-    `fragment ReferencedPost on Post {
+export const ReferencedPostFragment: FragmentDocumentFor<
+  ReferencedPost,
+  'Post',
+  'ReferencedPost'
+> = graphql(
+  `fragment ReferencedPost on Post {
       __typename
       id
       author {
@@ -612,8 +629,8 @@ export const ReferencedPostFragment: FragmentDocumentFor<ReferencedPost, 'Post',
       }
       ...PostFields
     }`,
-    [AccountFragment, PostFieldsFragment],
-  );
+  [AccountFragment, PostFieldsFragment],
+);
 
 export interface Post
   extends Prettify<
@@ -717,4 +734,6 @@ export const AccountPostReactionFragment = graphql(
   }`,
   [AccountFragment, PostReactionFragment],
 );
-export type AccountPostReaction = FragmentOf<typeof AccountPostReactionFragment>;
+export type AccountPostReaction = FragmentOf<
+  typeof AccountPostReactionFragment
+>;

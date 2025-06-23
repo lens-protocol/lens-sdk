@@ -13,9 +13,10 @@ export function nonNullable<T>(value: T): Exclude<T, null | undefined> {
 /**
  * Creates a refinement function to check if a value has a specific `__typename` in a union of types with `__typename`.
  */
-export function expectTypename<T extends { __typename: string }, Name extends T['__typename']>(
-  typename: Name,
-) {
+export function expectTypename<
+  T extends { __typename: string },
+  Name extends T['__typename'],
+>(typename: Name) {
   return (value: T): Extract<T, { __typename: Name }> => {
     if (value.__typename !== typename) {
       throw new InvariantError(

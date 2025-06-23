@@ -1,6 +1,7 @@
 import type { PublicClient } from '@lens-protocol/client';
-import React from 'react';
 import type { ReactNode } from 'react';
+// biome-ignore lint/correctness/noUnusedImports: needed for types
+import React from 'react';
 
 import { LensContextProvider } from './context';
 

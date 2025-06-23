@@ -1,20 +1,26 @@
 import type {
+  Account,
   AccountExecutedActions,
   AccountPostReaction,
   AnyPost,
   Paginated,
-  Post,
   PostActionContract,
   PostActionContractsRequest,
   PostBookmarksRequest,
+  PostEdit,
+  PostEditsRequest,
   PostExecutedActions,
+  PostReactionStatus,
+  PostReactionStatusRequest,
   PostReactionsRequest,
   PostReferencesRequest,
   PostRequest,
-  PostTag,
   PostsRequest,
+  PostTag,
+  PostTagsRequest,
   WhoExecutedActionOnAccountRequest,
   WhoExecutedActionOnPostRequest,
+  WhoReferencedPostRequest,
 } from '@lens-protocol/graphql';
 import {
   PostActionContractsQuery,
@@ -24,23 +30,13 @@ import {
   PostReactionStatusQuery,
   PostReactionsQuery,
   PostReferencesQuery,
-  PostTagsQuery,
   PostsQuery,
+  PostTagsQuery,
   WhoExecutedActionOnAccountQuery,
   WhoExecutedActionOnPostQuery,
   WhoReferencedPostQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
-
-import type {
-  Account,
-  PostEdit,
-  PostEditsRequest,
-  PostReactionStatus,
-  PostReactionStatusRequest,
-  PostTagsRequest,
-} from '@lens-protocol/graphql';
-import type { WhoReferencedPostRequest } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 

@@ -1,7 +1,16 @@
-import type { Paginated, Post, TimelineHighlightsRequest } from '@lens-protocol/graphql';
+import type {
+  Paginated,
+  Post,
+  TimelineHighlightsRequest,
+} from '@lens-protocol/graphql';
 import { TimelineHighlightsQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type TimelineHighlightsArgs = TimelineHighlightsRequest;
@@ -26,12 +35,16 @@ export function useTimelineHighlights(
  * const { data, loading } = useTimelineHighlights({ account: evmAddress('0x…') });
  * ```
  */
-export function useTimelineHighlights(args: TimelineHighlightsArgs): ReadResult<Paginated<Post>>;
+export function useTimelineHighlights(
+  args: TimelineHighlightsArgs,
+): ReadResult<Paginated<Post>>;
 
 export function useTimelineHighlights({
   suspense = false,
   ...request
-}: TimelineHighlightsArgs & { suspense?: boolean }): SuspendableResult<Paginated<Post>> {
+}: TimelineHighlightsArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<Post>
+> {
   return useSuspendableQuery({
     document: TimelineHighlightsQuery,
     variables: { request },

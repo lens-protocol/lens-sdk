@@ -7,7 +7,10 @@ import type { Account, Chain, Transport, WalletClient } from 'viem';
 export function isOnLensChain<T extends Transport = Transport>(
   client: WalletClient<T>,
 ): client is WalletClient<T, chains.LensChain> {
-  return client.chain?.id === chains.mainnet.id || client.chain?.id === chains.testnet.id;
+  return (
+    client.chain?.id === chains.mainnet.id ||
+    client.chain?.id === chains.testnet.id
+  );
 }
 
 /**

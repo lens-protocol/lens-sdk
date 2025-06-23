@@ -98,7 +98,9 @@ export const FeedUnsatisfiedRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export type FeedUnsatisfiedRule = FragmentOf<typeof FeedUnsatisfiedRuleFragment>;
+export type FeedUnsatisfiedRule = FragmentOf<
+  typeof FeedUnsatisfiedRuleFragment
+>;
 
 export const FeedUnsatisfiedRulesFragment = graphql(
   `fragment FeedUnsatisfiedRules on FeedUnsatisfiedRules {
@@ -112,7 +114,9 @@ export const FeedUnsatisfiedRulesFragment = graphql(
   }`,
   [FeedUnsatisfiedRuleFragment],
 );
-export type FeedUnsatisfiedRules = FragmentOf<typeof FeedUnsatisfiedRulesFragment>;
+export type FeedUnsatisfiedRules = FragmentOf<
+  typeof FeedUnsatisfiedRulesFragment
+>;
 
 export const FeedOperationValidationFailedFragment = graphql(
   `fragment FeedOperationValidationFailed on FeedOperationValidationFailed {
@@ -211,7 +215,8 @@ export const GraphMetadataFragment = graphql(
       name
   }`,
 );
-export interface GraphMetadata extends FragmentOf<typeof GraphMetadataFragment> {}
+export interface GraphMetadata
+  extends FragmentOf<typeof GraphMetadataFragment> {}
 
 export const GraphRuleFragment = graphql(
   `fragment GraphRule on GraphRule {
@@ -266,7 +271,9 @@ export const UsernameNamespaceMetadataFragment = graphql(
       id
   }`,
 );
-export type UsernameNamespaceMetadata = FragmentOf<typeof UsernameNamespaceMetadataFragment>;
+export type UsernameNamespaceMetadata = FragmentOf<
+  typeof UsernameNamespaceMetadataFragment
+>;
 
 export const NamespaceRuleFragment = graphql(
   `fragment NamespaceRule on NamespaceRule {
@@ -281,7 +288,8 @@ export const NamespaceRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export interface NamespaceRule extends FragmentOf<typeof NamespaceRuleFragment> {}
+export interface NamespaceRule
+  extends FragmentOf<typeof NamespaceRuleFragment> {}
 
 export const NamespaceRulesFragment = graphql(
   `fragment NamespaceRules on NamespaceRules {
@@ -311,7 +319,9 @@ export const NamespaceUnsatisfiedRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export type NamespaceUnsatisfiedRule = FragmentOf<typeof NamespaceUnsatisfiedRuleFragment>;
+export type NamespaceUnsatisfiedRule = FragmentOf<
+  typeof NamespaceUnsatisfiedRuleFragment
+>;
 
 export const NamespaceOperationValidationPassedFragment = graphql(
   `fragment NamespaceOperationValidationPassed on NamespaceOperationValidationPassed {
@@ -346,7 +356,9 @@ export const NamespaceUnsatisfiedRulesFragment = graphql(
   }`,
   [NamespaceUnsatisfiedRuleFragment],
 );
-export type NamespaceUnsatisfiedRules = FragmentOf<typeof NamespaceUnsatisfiedRulesFragment>;
+export type NamespaceUnsatisfiedRules = FragmentOf<
+  typeof NamespaceUnsatisfiedRulesFragment
+>;
 
 export const NamespaceOperationValidationFailedFragment = graphql(
   `fragment NamespaceOperationValidationFailed on NamespaceOperationValidationFailed {
@@ -409,7 +421,9 @@ const UsernameNamespaceStatsFragment = graphql(
     totalUsernames
   }`,
 );
-export type UsernameNamespaceStats = FragmentOf<typeof UsernameNamespaceStatsFragment>;
+export type UsernameNamespaceStats = FragmentOf<
+  typeof UsernameNamespaceStatsFragment
+>;
 
 const UsernameNamespaceMetadataStandardFragment = graphql(
   `fragment UsernameNamespaceMetadataStandard on UsernameNamespaceMetadataStandard {
@@ -459,7 +473,8 @@ export const UsernameNamespaceFragment = graphql(
     UsernameNamespaceStatsFragment,
   ],
 );
-export interface UsernameNamespace extends FragmentOf<typeof UsernameNamespaceFragment> {}
+export interface UsernameNamespace
+  extends FragmentOf<typeof UsernameNamespaceFragment> {}
 
 export const GroupMetadataFragment = graphql(
   `fragment GroupMetadata on GroupMetadata {
@@ -471,7 +486,8 @@ export const GroupMetadataFragment = graphql(
       coverPicture
   }`,
 );
-export interface GroupMetadata extends FragmentOf<typeof GroupMetadataFragment> {}
+export interface GroupMetadata
+  extends FragmentOf<typeof GroupMetadataFragment> {}
 
 export const GroupRuleFragment = graphql(
   `fragment GroupRule on GroupRule {
@@ -536,7 +552,9 @@ export const GroupUnsatisfiedRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export type GroupUnsatisfiedRule = FragmentOf<typeof GroupUnsatisfiedRuleFragment>;
+export type GroupUnsatisfiedRule = FragmentOf<
+  typeof GroupUnsatisfiedRuleFragment
+>;
 
 export const GroupUnsatisfiedRulesFragment = graphql(
   `fragment GroupUnsatisfiedRules on GroupUnsatisfiedRules {
@@ -550,7 +568,9 @@ export const GroupUnsatisfiedRulesFragment = graphql(
   }`,
   [GroupUnsatisfiedRuleFragment],
 );
-export type GroupUnsatisfiedRules = FragmentOf<typeof GroupUnsatisfiedRulesFragment>;
+export type GroupUnsatisfiedRules = FragmentOf<
+  typeof GroupUnsatisfiedRulesFragment
+>;
 
 export const GroupOperationValidationFailedFragment = graphql(
   `fragment GroupOperationValidationFailed on GroupOperationValidationFailed {
@@ -639,6 +659,11 @@ export const GroupFragment = graphql(
       ...LoggedInGroupOperations
     }
   }`,
-  [FeedFragment, GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
+  [
+    FeedFragment,
+    GroupMetadataFragment,
+    GroupRulesFragment,
+    LoggedInGroupOperationsFragment,
+  ],
 );
 export interface Group extends FragmentOf<typeof GroupFragment> {}

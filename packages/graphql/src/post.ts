@@ -11,7 +11,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const PostResponseFragment = graphql(
   `fragment PostResponse on PostResponse {
@@ -111,7 +111,9 @@ export const SimpleCollectActionContractFragment = graphql(
   }`,
   [],
 );
-export type SimpleCollectActionContract = FragmentOf<typeof SimpleCollectActionContractFragment>;
+export type SimpleCollectActionContract = FragmentOf<
+  typeof SimpleCollectActionContractFragment
+>;
 
 export const TippingPostActionContractFragment = graphql(
   `fragment TippingPostActionContract on TippingPostActionContract {
@@ -120,7 +122,9 @@ export const TippingPostActionContractFragment = graphql(
   }`,
   [],
 );
-export type TippingPostActionContract = FragmentOf<typeof TippingPostActionContractFragment>;
+export type TippingPostActionContract = FragmentOf<
+  typeof TippingPostActionContractFragment
+>;
 
 export const UnknownPostActionContractFragment = graphql(
   `fragment UnknownPostActionContract on UnknownPostActionContract {
@@ -132,7 +136,9 @@ export const UnknownPostActionContractFragment = graphql(
   }`,
   [ActionMetadataFragment],
 );
-export type UnknownPostActionContract = FragmentOf<typeof UnknownPostActionContractFragment>;
+export type UnknownPostActionContract = FragmentOf<
+  typeof UnknownPostActionContractFragment
+>;
 
 export const PostActionContractFragment = graphql(
   `fragment PostActionContract on PostActionContract {
@@ -167,7 +173,9 @@ export const PostActionContractsQuery = graphql(
   }`,
   [PostActionContractFragment, PaginatedResultInfoFragment],
 );
-export type PostActionContractsRequest = RequestOf<typeof PostActionContractsQuery>;
+export type PostActionContractsRequest = RequestOf<
+  typeof PostActionContractsQuery
+>;
 
 export const PostReactionsQuery = graphql(
   `query PostReactions($request: PostReactionsRequest!) {
@@ -274,7 +282,9 @@ export const UndoBookmarkPostMutation = graphql(
     value: undoBookmarkPost(request: $request) 
   }`,
 );
-export type UndoBookmarkPostRequest = RequestOf<typeof UndoBookmarkPostMutation>;
+export type UndoBookmarkPostRequest = RequestOf<
+  typeof UndoBookmarkPostMutation
+>;
 
 const DeletePostResponseFragment = graphql(
   `fragment DeletePostResponse on DeletePostResponse {
@@ -383,7 +393,9 @@ export const PostReactionStatusQuery = graphql(
   }`,
   [PostReactionStatusFragment],
 );
-export type PostReactionStatusRequest = RequestOf<typeof PostReactionStatusQuery>;
+export type PostReactionStatusRequest = RequestOf<
+  typeof PostReactionStatusQuery
+>;
 
 export const WhoReferencedPostQuery = graphql(
   `query WhoReferencedPost($request: WhoReferencedPostRequest!) {
@@ -413,7 +425,9 @@ export const PostExecutedActionsFragment = graphql(
   }`,
   [AccountFragment],
 );
-export type PostExecutedActions = FragmentOf<typeof PostExecutedActionsFragment>;
+export type PostExecutedActions = FragmentOf<
+  typeof PostExecutedActionsFragment
+>;
 
 export const WhoExecutedActionOnPostQuery = graphql(
   `query WhoExecutedActionOnPost($request: WhoExecutedActionOnPostRequest!) {
@@ -429,7 +443,9 @@ export const WhoExecutedActionOnPostQuery = graphql(
   }`,
   [PostExecutedActionsFragment, PaginatedResultInfoFragment],
 );
-export type WhoExecutedActionOnPostRequest = RequestOf<typeof WhoExecutedActionOnPostQuery>;
+export type WhoExecutedActionOnPostRequest = RequestOf<
+  typeof WhoExecutedActionOnPostQuery
+>;
 
 const AccountExecutedActionsFragment = graphql(
   `fragment AccountExecutedActions on AccountExecutedActions {
@@ -443,7 +459,9 @@ const AccountExecutedActionsFragment = graphql(
   }`,
   [AccountFragment],
 );
-export type AccountExecutedActions = FragmentOf<typeof AccountExecutedActionsFragment>;
+export type AccountExecutedActions = FragmentOf<
+  typeof AccountExecutedActionsFragment
+>;
 
 export const WhoExecutedActionOnAccountQuery = graphql(
   `query WhoExecutedActionOnAccount($request: WhoExecutedActionOnAccountRequest!) {
@@ -459,7 +477,9 @@ export const WhoExecutedActionOnAccountQuery = graphql(
   }`,
   [AccountExecutedActionsFragment, PaginatedResultInfoFragment],
 );
-export type WhoExecutedActionOnAccountRequest = RequestOf<typeof WhoExecutedActionOnAccountQuery>;
+export type WhoExecutedActionOnAccountRequest = RequestOf<
+  typeof WhoExecutedActionOnAccountQuery
+>;
 
 export const PostEditFragment = graphql(
   `fragment PostEdit on PostEdit {
@@ -495,7 +515,9 @@ const UpdatePostRulesResponseFragment = graphql(
     hash
   }`,
 );
-export type UpdatePostRulesResponse = FragmentOf<typeof UpdatePostRulesResponseFragment>;
+export type UpdatePostRulesResponse = FragmentOf<
+  typeof UpdatePostRulesResponseFragment
+>;
 
 const UpdatePostRulesResultFragment = graphql(
   `fragment UpdatePostRulesResult on UpdatePostRulesResult {
@@ -519,7 +541,9 @@ const UpdatePostRulesResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type UpdatePostRulesResult = FragmentOf<typeof UpdatePostRulesResultFragment>;
+export type UpdatePostRulesResult = FragmentOf<
+  typeof UpdatePostRulesResultFragment
+>;
 
 export const UpdatePostRulesMutation = graphql(
   `mutation UpdatePostRules($request: UpdatePostRulesRequest!) {

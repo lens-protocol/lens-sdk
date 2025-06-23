@@ -6,7 +6,8 @@ import { describe, expect, it } from 'vitest';
 import { OperationType } from '../authorization';
 import { OperationApprovalSigner } from './authorization';
 
-const privateKey = '0xa7d25f98c7996df6418d5205d03386b254451d45de060dcd4c7f486d9c12061e';
+const privateKey =
+  '0xa7d25f98c7996df6418d5205d03386b254451d45de060dcd4c7f486d9c12061e';
 const appAddress = evmAddress('0x3a24d26AdEBA0d6330F207d0ca699cBE5fFbE553');
 const accountAddress = '0xbca85dda68cC21B98F6a416c28F9de94C4cBdcB9';
 const lensPrimitive = '0x07753ab956B70498196772E8421379DB12de54eb';

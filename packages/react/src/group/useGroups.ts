@@ -1,7 +1,12 @@
 import type { Group, GroupsRequest, Paginated } from '@lens-protocol/graphql';
 import { GroupsQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type GroupsArgs = GroupsRequest;
@@ -21,7 +26,9 @@ export type GroupsArgs = GroupsRequest;
  * });
  * ```
  */
-export function useGroups(args: GroupsArgs & Suspendable): SuspenseResult<Paginated<Group>>;
+export function useGroups(
+  args: GroupsArgs & Suspendable,
+): SuspenseResult<Paginated<Group>>;
 
 /**
  * Fetch groups available filtered by the given arguments.

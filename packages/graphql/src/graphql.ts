@@ -21,12 +21,16 @@ import type {
   TxHash,
   URI,
   URL,
-  UUID,
   UsernameValue,
+  UUID,
   Void,
 } from '@lens-protocol/types';
 import { InvariantError } from '@lens-protocol/types';
-import { type DocumentDecoration, type TadaDocumentNode, initGraphQLTada } from 'gql.tada';
+import {
+  type DocumentDecoration,
+  initGraphQLTada,
+  type TadaDocumentNode,
+} from 'gql.tada';
 import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
@@ -36,8 +40,8 @@ import type {
   AccountReportReason,
   AccountsOrderBy,
   AppMetadataLensPlatformsItem,
-  AppUsersOrderBy,
   AppsOrderBy,
+  AppUsersOrderBy,
   BlockErrorType,
   ContentWarning,
   EntityType,
@@ -93,10 +97,11 @@ import type {
   PostVisibilityFilter,
   PrimitiveMetadataSchema,
   ReferenceRelevancyFilter,
+  RulesSubject,
   SelfFundedFallbackReason,
   SimpleCollectValidationFailedReason,
-  SponsorLimitType,
   SponsoredFallbackReason,
+  SponsorLimitType,
   SponsorshipLimitExclusionsOrderBy,
   SponsorshipRateLimitWindow,
   SponsorshipSignersOrderBy,
@@ -206,6 +211,7 @@ export const graphql = initGraphQLTada<{
     ReferenceRelevancyFilter: ReferenceRelevancyFilter;
     RefreshToken: RefreshToken;
     RuleId: RuleId;
+    RulesSubject: RulesSubject;
     SelfFundedFallbackReason: SelfFundedFallbackReason;
     ServerAPIKey: ServerAPIKey;
     Signature: Signature;
@@ -278,7 +284,9 @@ export type AnyVariables = Record<string, unknown>;
 /**
  * @internal
  */
-export type TypedSelectionSet<TTypename extends string = string> = { __typename: TTypename };
+export type TypedSelectionSet<TTypename extends string = string> = {
+  __typename: TTypename;
+};
 
 /**
  * @internal
@@ -299,7 +307,9 @@ export type FragmentDocumentFor<
   }
 >;
 
-export type RequestFrom<In extends string> = RequestOf<GetDocumentNode<In, FragmentShape[]>>;
+export type RequestFrom<In extends string> = RequestOf<
+  GetDocumentNode<In, FragmentShape[]>
+>;
 
 // biome-ignore lint/suspicious/noExplicitAny: simplifies necessary type assertions
 export type StandardDocumentNode<Value = any, Request = any> = TadaDocumentNode<

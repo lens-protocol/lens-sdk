@@ -4,20 +4,33 @@ import type {
   SponsoredTransactionRequest,
 } from '@lens-protocol/graphql';
 import {
-  ResultAsync,
-  type TxHash,
   errAsync,
   invariant,
   okAsync,
+  ResultAsync,
+  type TxHash,
   txHash,
 } from '@lens-protocol/types';
-import type { Account, CustomSource, Hash, Transport, WalletClient } from 'viem';
-import { sendTransaction as sendEip1559Transaction, waitForTransactionReceipt } from 'viem/actions';
+import type {
+  Account,
+  CustomSource,
+  Hash,
+  Transport,
+  WalletClient,
+} from 'viem';
+import {
+  sendTransaction as sendEip1559Transaction,
+  waitForTransactionReceipt,
+} from 'viem/actions';
 import { sendEip712Transaction } from 'viem/zksync';
 
 import type { SignMessage } from '../clients';
 import { SigningError, ValidationError } from '../errors';
-import { type OperationHandler, type OperationResult, isTransactionRequest } from '../types';
+import {
+  isTransactionRequest,
+  type OperationHandler,
+  type OperationResult,
+} from '../types';
 import { hasHoistedAccount, isOnLensChain } from './types';
 
 async function sendTransaction(
@@ -61,8 +74,9 @@ function sendTransactionWith(
   walletClient: WalletClient<Transport, chains.LensChain, Account>,
   request: SponsoredTransactionRequest | SelfFundedTransactionRequest,
 ): ResultAsync<TxHash, SigningError> {
-  return ResultAsync.fromPromise(sendTransaction(walletClient, request), (err) =>
-    SigningError.from(err),
+  return ResultAsync.fromPromise(
+    sendTransaction(walletClient, request),
+    (err) => SigningError.from(err),
   )
     .map(async (hash) =>
       waitForTransactionReceipt(walletClient, {
@@ -80,7 +94,9 @@ function sendTransactionWith(
  *
  * In case the result is a transaction request, it will be signed and sent using the provided wallet client.
  */
-export function handleOperationWith(walletClient: WalletClient | undefined): OperationHandler {
+export function handleOperationWith(
+  walletClient: WalletClient | undefined,
+): OperationHandler {
   return <T extends string, E extends string>(
     result: OperationResult<T, E>,
   ): ResultAsync<TxHash, SigningError | ValidationError<E>> => {
@@ -88,13 +104,19 @@ export function handleOperationWith(walletClient: WalletClient | undefined): Ope
       return okAsync(result.hash);
     }
 
-    invariant(walletClient, 'Expected a WalletClient to handle the operation result.');
+    invariant(
+      walletClient,
+      'Expected a WalletClient to handle the operation result.',
+    );
 
     invariant(
       isOnLensChain(walletClient),
       `Unsupported chain ${walletClient.chain?.id}. Expected a Lens chain.`,
     );
-    invariant(hasHoistedAccount(walletClient), 'Expected a WalletClient with a hoisted account.');
+    invariant(
+      hasHoistedAccount(walletClient),
+      'Expected a WalletClient with a hoisted account.',
+    );
 
     if (isTransactionRequest(result)) {
       return sendTransactionWith(walletClient, result);
@@ -115,9 +137,14 @@ export const handleWith = handleOperationWith;
  * @param signer - A WalletClient or a custom source (e.g., a viem's LocalAccount)
  * @returns A function that signs a message.
  */
-export function signMessageWith(signer: CustomSource | WalletClient): SignMessage {
+export function signMessageWith(
+  signer: CustomSource | WalletClient,
+): SignMessage {
   if ('request' in signer) {
-    invariant(hasHoistedAccount(signer), 'Expected a WalletClient with a hoisted account.');
+    invariant(
+      hasHoistedAccount(signer),
+      'Expected a WalletClient with a hoisted account.',
+    );
   }
   return (message: string) => signer.signMessage({ message });
 }

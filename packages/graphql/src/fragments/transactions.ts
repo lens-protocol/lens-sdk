@@ -7,7 +7,9 @@ export const TransactionWillFailFragment = graphql(`
     reason
   }
 `);
-export type TransactionWillFail = FragmentOf<typeof TransactionWillFailFragment>;
+export type TransactionWillFail = FragmentOf<
+  typeof TransactionWillFailFragment
+>;
 
 const Eip1559TransactionRequestFragment = graphql(
   `fragment Eip1559TransactionRequest on Eip1559TransactionRequest {
@@ -24,7 +26,9 @@ const Eip1559TransactionRequestFragment = graphql(
     chainId
   }`,
 );
-export type Eip1559TransactionRequest = FragmentOf<typeof Eip1559TransactionRequestFragment>;
+export type Eip1559TransactionRequest = FragmentOf<
+  typeof Eip1559TransactionRequestFragment
+>;
 
 export const SelfFundedTransactionRequestFragment = graphql(
   `fragment SelfFundedTransactionRequest on SelfFundedTransactionRequest {
@@ -37,7 +41,9 @@ export const SelfFundedTransactionRequestFragment = graphql(
   }`,
   [Eip1559TransactionRequestFragment],
 );
-export type SelfFundedTransactionRequest = FragmentOf<typeof SelfFundedTransactionRequestFragment>;
+export type SelfFundedTransactionRequest = FragmentOf<
+  typeof SelfFundedTransactionRequestFragment
+>;
 
 const Eip712TransactionRequestFragment = graphql(
   `fragment Eip712TransactionRequest on Eip712TransactionRequest {
@@ -65,7 +71,9 @@ const Eip712TransactionRequestFragment = graphql(
     }
   }`,
 );
-export type Eip712TransactionRequest = FragmentOf<typeof Eip712TransactionRequestFragment>;
+export type Eip712TransactionRequest = FragmentOf<
+  typeof Eip712TransactionRequestFragment
+>;
 
 export const SponsoredTransactionRequestFragment = graphql(
   `fragment SponsoredTransactionRequest on SponsoredTransactionRequest {
@@ -78,4 +86,6 @@ export const SponsoredTransactionRequestFragment = graphql(
   }`,
   [Eip712TransactionRequestFragment],
 );
-export type SponsoredTransactionRequest = FragmentOf<typeof SponsoredTransactionRequestFragment>;
+export type SponsoredTransactionRequest = FragmentOf<
+  typeof SponsoredTransactionRequestFragment
+>;

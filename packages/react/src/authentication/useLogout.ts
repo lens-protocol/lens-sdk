@@ -1,4 +1,7 @@
-import type { UnauthenticatedError, UnexpectedError } from '@lens-protocol/client';
+import type {
+  UnauthenticatedError,
+  UnexpectedError,
+} from '@lens-protocol/client';
 import { invariant } from '@lens-protocol/types';
 
 import { useLensContext } from '../context';

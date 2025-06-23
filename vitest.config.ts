@@ -40,7 +40,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'e2e',
-          include: ['packages/**/*.{e2e}.test.{ts,tsx}'],
+          include: ['packages/**/*.e2e.test.{ts,tsx}'],
           environment: 'node',
         },
       },

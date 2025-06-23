@@ -9,7 +9,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const FollowResponseFragment = graphql(
   `fragment FollowResponse on FollowResponse {

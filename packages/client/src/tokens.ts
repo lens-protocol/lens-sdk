@@ -1,7 +1,11 @@
 import type { Role } from '@lens-protocol/graphql';
-import type { AccessToken, EvmAddress, Result } from '@lens-protocol/types';
-import type { UUID } from '@lens-protocol/types';
-import { type IdToken, err, ok } from '@lens-protocol/types';
+import type {
+  AccessToken,
+  EvmAddress,
+  Result,
+  UUID,
+} from '@lens-protocol/types';
+import { err, type IdToken, ok } from '@lens-protocol/types';
 import { jwtDecode } from 'jwt-decode';
 import { UnexpectedError } from './errors';
 
@@ -71,7 +75,9 @@ export interface IdTokenClaims {
  * @param token - The Id Token to decode.
  * @returns The Id Token claims or an Unexpected Error.
  */
-export function decodeIdToken(token: IdToken): Result<IdTokenClaims, UnexpectedError> {
+export function decodeIdToken(
+  token: IdToken,
+): Result<IdTokenClaims, UnexpectedError> {
   try {
     return ok(jwtDecode(token));
   } catch (cause) {
@@ -154,7 +160,9 @@ export interface AccessTokenClaims {
 /**
  * @internal
  */
-export function decodeAccessToken(token: AccessToken): Result<AccessTokenClaims, UnexpectedError> {
+export function decodeAccessToken(
+  token: AccessToken,
+): Result<AccessTokenClaims, UnexpectedError> {
   try {
     return ok(jwtDecode(token));
   } catch (cause) {

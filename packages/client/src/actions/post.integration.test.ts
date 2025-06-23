@@ -1,7 +1,6 @@
-import { assertOk, nonNullable } from '@lens-protocol/types';
-
 import { justPost } from '@lens-protocol/graphql';
 import { textOnly } from '@lens-protocol/metadata';
+import { assertOk, nonNullable } from '@lens-protocol/types';
 import { describe, expect, it } from 'vitest';
 import { loginAsAccountOwner, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';

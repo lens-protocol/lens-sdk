@@ -1,7 +1,12 @@
 import type { Account, AccountsBulkRequest } from '@lens-protocol/graphql';
 import { AccountsBulkQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
 export type AccountsBulkArgs = AccountsBulkRequest;
@@ -18,7 +23,9 @@ export type AccountsBulkArgs = AccountsBulkRequest;
  * });
  * ```
  */
-export function useAccountsBulk(args: AccountsBulkArgs & Suspendable): SuspenseResult<Account[]>;
+export function useAccountsBulk(
+  args: AccountsBulkArgs & Suspendable,
+): SuspenseResult<Account[]>;
 
 /**
  * Fetch Accounts in Bulk.

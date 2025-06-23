@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 export const HealthQuery = graphql(
   `query Health {
@@ -12,7 +12,9 @@ const AccessControlResultFragment = graphql(`
     address
     createdAt
   }`);
-export type AccessControlResult = FragmentOf<typeof AccessControlResultFragment>;
+export type AccessControlResult = FragmentOf<
+  typeof AccessControlResultFragment
+>;
 
 export const AccessControlQuery = graphql(
   `query AccessControl($request: AccessControlRequest!) {

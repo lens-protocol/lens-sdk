@@ -1,15 +1,15 @@
-import {
-  CreateFrameTypedDataQuery,
-  type FrameVerifySignatureResult,
-  SignFrameActionMutation,
-  VerifyFrameSignatureQuery,
-} from '@lens-protocol/graphql';
 import type {
   CreateFrameEip712TypedDataFragment,
   CreateFrameTypedDataRequest,
   FrameLensManagerSignatureResultFragment,
   SignFrameActionRequest,
   VerifyFrameSignatureRequest,
+} from '@lens-protocol/graphql';
+import {
+  CreateFrameTypedDataQuery,
+  type FrameVerifySignatureResult,
+  SignFrameActionMutation,
+  VerifyFrameSignatureQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 import type { AnyClient, SessionClient } from '../clients';
@@ -72,7 +72,10 @@ export function createFrameTypedData(
 export function signFrameAction(
   client: SessionClient,
   request: SignFrameActionRequest,
-): ResultAsync<FrameLensManagerSignatureResultFragment, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  FrameLensManagerSignatureResultFragment,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SignFrameActionMutation, { request });
 }
 

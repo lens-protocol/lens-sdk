@@ -10,7 +10,7 @@ import {
   TransactionWillFailFragment,
   UsernameFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const CreateUsernameResponseFragment = graphql(
   `fragment CreateUsernameResponse on CreateUsernameResponse {
@@ -18,7 +18,9 @@ const CreateUsernameResponseFragment = graphql(
     hash
   }`,
 );
-export type CreateUsernameResponse = FragmentOf<typeof CreateUsernameResponseFragment>;
+export type CreateUsernameResponse = FragmentOf<
+  typeof CreateUsernameResponseFragment
+>;
 
 const CreateUsernameResultFragment = graphql(
   `fragment CreateUsernameResult on CreateUsernameResult {
@@ -50,7 +52,9 @@ const CreateUsernameResultFragment = graphql(
     UsernameTakenFragment,
   ],
 );
-export type CreateUsernameResult = FragmentOf<typeof CreateUsernameResultFragment>;
+export type CreateUsernameResult = FragmentOf<
+  typeof CreateUsernameResultFragment
+>;
 
 export const CreateUsernameMutation = graphql(
   `mutation CreateUsername($request: CreateUsernameRequest!) {
@@ -68,7 +72,9 @@ const AssignUsernameResponseFragment = graphql(
     hash
   }`,
 );
-export type AssignUsernameResponse = FragmentOf<typeof AssignUsernameResponseFragment>;
+export type AssignUsernameResponse = FragmentOf<
+  typeof AssignUsernameResponseFragment
+>;
 
 const AssignUsernameToAccountResultFragment = graphql(
   `fragment AssignUsernameToAccountResult on AssignUsernameToAccountResult {
@@ -108,7 +114,9 @@ export const AssignUsernameToAccountMutation = graphql(
   }`,
   [AssignUsernameToAccountResultFragment],
 );
-export type AssignUsernameToAccountRequest = RequestOf<typeof AssignUsernameToAccountMutation>;
+export type AssignUsernameToAccountRequest = RequestOf<
+  typeof AssignUsernameToAccountMutation
+>;
 
 const UnassignUsernameResponseFragment = graphql(
   `fragment UnassignUsernameResponse on UnassignUsernameResponse {
@@ -116,7 +124,9 @@ const UnassignUsernameResponseFragment = graphql(
     hash
   }`,
 );
-export type UnassignUsernameResponse = FragmentOf<typeof UnassignUsernameResponseFragment>;
+export type UnassignUsernameResponse = FragmentOf<
+  typeof UnassignUsernameResponseFragment
+>;
 
 const UnassignUsernameToAccountResultFragment = graphql(
   `fragment UnassignUsernameToAccountResult on UnassignUsernameToAccountResult {
@@ -209,7 +219,9 @@ const CanCreateUsernameResultFragment = graphql(
     UsernameTakenFragment,
   ],
 );
-export type CanCreateUsernameResult = FragmentOf<typeof CanCreateUsernameResultFragment>;
+export type CanCreateUsernameResult = FragmentOf<
+  typeof CanCreateUsernameResultFragment
+>;
 
 export const CanCreateUsernameQuery = graphql(
   `query CanCreateUsername($request: UsernameInput!) {
