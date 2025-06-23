@@ -15,6 +15,7 @@ import {
   TEST_SIGNER,
   wallet,
 } from '../test-utils';
+import { delay } from '../utils';
 import { handleOperationWith } from '../viem';
 import {
   createAccount,
@@ -94,13 +95,15 @@ describe('Given a new user', { timeout: 10000 }, () => {
           )
 
           // Create a username
-          .andThrough(() =>
-            createUsername(sessionClient, {
-              username: { localName, namespace },
-              rulesSubject: RulesSubject.Signer,
-            })
-              .andThen(handleOperationWith(wallet))
-              .andThen(sessionClient.waitForTransaction),
+          .andThrough(
+            () =>
+              createUsername(sessionClient, {
+                username: { localName, namespace },
+                rulesSubject: RulesSubject.Signer,
+              })
+                .andThen(handleOperationWith(wallet))
+                .andThen(sessionClient.waitForTransaction)
+                .map(() => delay(1000)), // Patch on race condition we are investigating
           ),
       );
 
