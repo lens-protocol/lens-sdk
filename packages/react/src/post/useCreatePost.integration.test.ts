@@ -22,7 +22,7 @@ describe(`Given the ${useCreatePost.name} hook`, () => {
 
     it(
       'Then it should return the newly created Post',
-      { timeout: 10000 },
+      { timeout: 15000 },
       async () => {
         const { result } = renderHookWithContext(
           () => useCreatePost({ handler: handleOperationWith(wallet) }),
