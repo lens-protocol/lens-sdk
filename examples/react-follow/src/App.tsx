@@ -1,4 +1,4 @@
-import { AccountsToFollow } from './ToFollow';
+import { AccountsToFollow } from './AccountToFollow';
 
 export function App() {
   return (
