@@ -13,12 +13,12 @@ import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
  * @alpha This is an alpha API and may be subject to breaking changes.
  *
  * ```tsx
- * import { evmAddress, useBookmarkPost } from '@lens-protocol/react';
+ * import { PostId, useBookmarkPost } from '@lens-protocol/react';
  *
  * const { execute } = useBookmarkPost();
  *
  * const result = await execute({
- *   post: postId('42'),
+ *   post: PostId('42'),
  * });
  *
  * if (result.isErr()) {
