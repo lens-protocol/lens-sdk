@@ -16,12 +16,10 @@ export function AccountsToFollow() {
         {data?.items.map((account) => (
           <li key={account.address}>
             <p>
-              {account.username?.localName ?? account.address}
-              {': '}
-              {account.operations?.isFollowedByMe
+              <span>{account.username?.localName ?? account.address}</span>
+              <span>{account.operations?.isFollowedByMe
                 ? 'Following'
-                : 'Not Following'}
-              {' → '}
+                : 'Not Following'}</span>
               <FollowButton account={account} />
             </p>
           </li>
