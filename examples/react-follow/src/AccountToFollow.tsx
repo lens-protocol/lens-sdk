@@ -17,9 +17,11 @@ export function AccountsToFollow() {
           <li key={account.address}>
             <p>
               <span>{account.username?.localName ?? account.address}</span>
-              <span>{account.operations?.isFollowedByMe
-                ? 'Following'
-                : 'Not Following'}</span>
+              <span>
+                {account.operations?.isFollowedByMe
+                  ? 'Following'
+                  : 'Not Following'}
+              </span>
               <FollowButton account={account} />
             </p>
           </li>
