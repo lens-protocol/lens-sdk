@@ -1,3 +1,4 @@
+export * from './useAccessControl';
 export * from './useAccountsAvailable';
 export * from './useAuthenticatedUser';
 export * from './useLogin';
