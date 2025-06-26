@@ -17,14 +17,14 @@ export default defineConfig({
           name: 'react',
           environment: 'happy-dom',
           setupFiles: [resolve(__dirname, './packages/react/vitest.setup.ts')],
-          include: ['packages/react/src/**/*.test.{ts,tsx}'],
+          include: ['packages/react/**/*.test.{ts,tsx}'],
         },
       },
       {
         extends: true,
         test: {
           name: 'client',
-          include: ['packages/client/src/**/*.test.ts'],
+          include: ['packages/client/**/*.test.ts'],
           environment: 'node',
         },
       },
@@ -32,7 +32,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'storage',
-          include: ['packages/storage/src/**/*.test.ts'],
+          include: ['packages/storage/**/*.test.ts'],
           environment: 'node',
         },
       },
@@ -40,7 +40,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'e2e',
-          include: ['packages/client/e2e/*.test.ts'],
+          include: ['packages/client/**/*.e2e.ts'],
           environment: 'node',
         },
       },

@@ -3,12 +3,11 @@ import type { Account } from '@lens-protocol/graphql';
 import * as metadata from '@lens-protocol/metadata';
 import { assertErr, assertOk, never } from '@lens-protocol/types';
 import { beforeEach, describe, expect, it } from 'vitest';
-
 import {
   createAccountWithUsername,
   fetchAccount,
   setAccountMetadata,
-} from './actions/account';
+} from './actions';
 import type { SessionClient } from './clients';
 import {
   CHAIN,

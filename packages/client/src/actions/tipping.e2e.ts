@@ -12,7 +12,7 @@ import {
   wallet,
 } from '../test-utils';
 import { handleOperationWith } from '../viem';
-import { executeAccountAction, executePostAction } from './actions';
+import { executeAccountAction, executePostAction } from '.';
 import { fetchAccountBalances, wrapTokens } from './funds';
 import { findErc20Amount } from './helpers';
 import { post } from './post';
