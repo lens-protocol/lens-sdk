@@ -23,7 +23,7 @@ describe('Given the ML query actions', () => {
         account: TEST_ACCOUNT,
       });
       assertOk(result);
-    }); 
+    });
   });
 
   describe(`When invoking the '${fetchPostsForYou.name}' action`, () => {
