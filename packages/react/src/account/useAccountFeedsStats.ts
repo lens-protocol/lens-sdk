@@ -28,7 +28,7 @@ export type AccountFeedStatsArgs = AccountFeedsStatsRequest;
  */
 export function useAccountFeedsStats(
   args: AccountFeedStatsArgs & Suspendable,
-): SuspenseResult<AccountFeedsStats | null>;
+): SuspenseResult<AccountFeedsStats>;
 
 /**
  * Fetch an Account Feed Stats.
@@ -41,14 +41,14 @@ export function useAccountFeedsStats(
  */
 export function useAccountFeedsStats(
   args: AccountFeedStatsArgs,
-): ReadResult<AccountFeedsStats | null>;
+): ReadResult<AccountFeedsStats>;
 
 export function useAccountFeedsStats({
   suspense = false,
   ...request
 }: AccountFeedStatsArgs & {
   suspense?: boolean;
-}): SuspendableResult<AccountFeedsStats | null> {
+}): SuspendableResult<AccountFeedsStats> {
   return useSuspendableQuery({
     document: AccountFeedsStatsQuery,
     variables: { request },
