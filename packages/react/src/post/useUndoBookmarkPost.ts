@@ -13,12 +13,12 @@ import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
  * @alpha This is an alpha API and may be subject to breaking changes.
  *
  * ```tsx
- * import { PostId, useUndoBookmarkPost } from '@lens-protocol/react';
+ * import { postId, useUndoBookmarkPost } from '@lens-protocol/react';
  *
  * const { execute } = useUndoBookmarkPost();
  *
  * const result = await execute({
- *   post: PostId('42'),
+ *   post: postId('42'),
  * });
  *
  * if (result.isErr()) {
