@@ -30,3 +30,6 @@ examples/*/pnpm-lock.yaml
 
 # typescript
 *.tsbuildinfo
+
+# cursor
+.cursorignore
