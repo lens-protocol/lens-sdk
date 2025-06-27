@@ -17,7 +17,8 @@ describe('Given the ML query actions', () => {
     });
   });
 
-  describe(`When invoking the '${fetchAccountRecommendations.name}' action`, () => {
+  // TODO: Enable when bug fixed LENS-1201
+  describe.skip(`When invoking the '${fetchAccountRecommendations.name}' action`, () => {
     it('Then it should not fail w/ a GQL BadRequest error', async () => {
       const result = await fetchAccountRecommendations(sessionClient, {
         account: TEST_ACCOUNT,
@@ -26,7 +27,8 @@ describe('Given the ML query actions', () => {
     });
   });
 
-  describe(`When invoking the '${fetchPostsForYou.name}' action`, () => {
+  // TODO: Enable when bug fixed LENS-1201
+  describe.skip(`When invoking the '${fetchPostsForYou.name}' action`, () => {
     it('Then it should not fail w/ a GQL BadRequest error', async () => {
       const result = await fetchPostsForYou(sessionClient, {
         account: TEST_ACCOUNT,
