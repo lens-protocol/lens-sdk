@@ -32,20 +32,52 @@ export type LensContextValue = {
   afterLogout: () => Promise<void>;
 };
 
+function createInitialSessionState(publicClient: PublicClient): SessionState {
+  return publicClient.currentSession.isSessionClient()
+    ? {
+        resolved: true,
+        client: publicClient.currentSession,
+      }
+    : {
+        resolved: false,
+        client: publicClient,
+      };
+}
+
+async function attemptSessionRestoration(
+  publicClient: PublicClient,
+  setState: (state: SessionState) => void,
+) {
+  const result = await publicClient.resumeSession();
+  setState({
+    resolved: true,
+    client: result.isOk() ? result.value : publicClient,
+  });
+}
+
 function useCreateLensContextValue(
   publicClient: PublicClient,
 ): LensContextValue {
-  const [state, setState] = useState<SessionState>(
-    publicClient.currentSession.isSessionClient()
-      ? {
-          resolved: true,
-          client: publicClient.currentSession,
-        }
-      : {
-          resolved: false,
-          client: publicClient,
-        },
+  const [state, setState] = useState<SessionState>(() => 
+    createInitialSessionState(publicClient)
   );
+
+  // Update state when publicClient changes
+  useEffect(() => {
+    const currentPublicClient = state.client.isSessionClient() 
+      ? state.client.parent 
+      : state.client;
+    
+    // Only update if the client reference has actually changed
+    if (currentPublicClient !== publicClient) {
+      if (state.resolved) {
+        // Preserve authenticated state by attempting session restoration
+        attemptSessionRestoration(publicClient, setState);
+      } else {
+        setState(createInitialSessionState(publicClient));
+      }
+    }
+  }, [publicClient]); // Only react to prop changes, not internal state changes
 
   return {
     state,
