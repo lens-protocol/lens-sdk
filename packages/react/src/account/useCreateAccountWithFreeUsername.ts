@@ -6,25 +6,31 @@ import type {
   UnexpectedError,
   ValidationError,
 } from '@lens-protocol/client';
-import { createAccount, fetchAccount } from '@lens-protocol/client/actions';
-
-import type { Account, CreateAccountRequest } from '@lens-protocol/graphql';
+import {
+  createAccountWithUsername,
+  fetchAccount,
+} from '@lens-protocol/client/actions';
+import type {
+  Account,
+  CreateAccountWithUsernameRequest,
+} from '@lens-protocol/graphql';
 import { nonNullable } from '@lens-protocol/types';
+
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
-export type UseCreateAccountArgs = {
+export type UseCreateAccountWithFreeUsernameArgs = {
   handler: OperationHandler;
 };
 
 /**
- * Creates an Account on Lens.
+ * Use this hook to create an Account on Lens with a free username (no rules enforced)
  *
  * @alpha This is an alpha API and may be subject to breaking changes.
  */
-export function useCreateAccount(
-  args: UseCreateAccountArgs,
+export function useCreateAccountWithFreeUsername(
+  args: UseCreateAccountWithFreeUsernameArgs,
 ): UseAsyncTask<
-  CreateAccountRequest,
+  CreateAccountWithUsernameRequest,
   Account,
   | SigningError
   | ValidationError
@@ -33,7 +39,7 @@ export function useCreateAccount(
   | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    createAccount(sessionClient, request)
+    createAccountWithUsername(sessionClient, request)
       .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
