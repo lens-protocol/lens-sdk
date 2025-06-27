@@ -24,10 +24,7 @@ export type UseCreateAccountWithRestrictedUsernameArgs = {
   handler: OperationHandler;
 };
 
-export type UseCreateAccountWithRestrictedUsernameRequest = {
-  createAccountRequest: CreateAccountRequest;
-  createUsernameRequest: CreateUsernameRequest;
-};
+export type UseCreateAccountWithRestrictedUsernameRequest = CreateAccountRequest & CreateUsernameRequest;
 
 /**
  * Use this hook to create an Account with a username in a Namespace that enforces token gating or fees
@@ -47,7 +44,7 @@ export function useCreateAccountWithRestrictedUsername(
   | AuthenticationError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    createAccount(sessionClient, request.createAccountRequest)
+    createAccount(sessionClient, request)
       .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
@@ -56,13 +53,13 @@ export function useCreateAccountWithRestrictedUsername(
         sessionClient.switchAccount({ account: account.address }),
       )
       .andThen(() =>
-        createUsername(sessionClient, request.createUsernameRequest),
+        createUsername(sessionClient, request),
       )
       .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen(() =>
         fetchAccount(sessionClient, {
-          username: request.createUsernameRequest.username,
+          username: request.username,
         }),
       )
       .map(nonNullable),
