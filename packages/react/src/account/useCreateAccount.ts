@@ -9,7 +9,7 @@ import type {
 import { createAccount, fetchAccount } from '@lens-protocol/client/actions';
 
 import type { Account, CreateAccountRequest } from '@lens-protocol/graphql';
-import { expectTypename, nonNullable } from '@lens-protocol/types';
+import { nonNullable } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
 export type UseCreateAccountArgs = {
@@ -37,7 +37,6 @@ export function useCreateAccount(
       .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
-      .map(nonNullable)
-      .map(expectTypename('Account')),
+      .map(nonNullable),
   );
 }
