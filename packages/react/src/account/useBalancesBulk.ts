@@ -1,5 +1,5 @@
-import type { BalancesBulkRequest } from '@lens-protocol/graphql';
-import { BalancesBulkQuery, AnyBalance } from '@lens-protocol/graphql';
+import type { AnyBalance, BalancesBulkRequest } from '@lens-protocol/graphql';
+import { BalancesBulkQuery } from '@lens-protocol/graphql';
 
 import type {
   ReadResult,
@@ -38,7 +38,9 @@ export function useBalancesBulk(
  * });
  * ```
  */
-export function useBalancesBulk(args: BalancesBulkArgs): ReadResult<AnyBalance[]>;
+export function useBalancesBulk(
+  args: BalancesBulkArgs,
+): ReadResult<AnyBalance[]>;
 
 export function useBalancesBulk({
   suspense = false,
