@@ -30,7 +30,7 @@ export type UseCreateAccountWithRestrictedUsernameRequest = {
 };
 
 /**
- * Use this hook to create an Account on Lens and with a username in a Namespace that enforces token gating or fees
+ * Use this hook to create an Account with a username in a Namespace that enforces token gating or fees
  *
  * @alpha This is an alpha API and may be subject to breaking changes.
  */

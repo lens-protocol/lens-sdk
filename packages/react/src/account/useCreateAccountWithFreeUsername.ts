@@ -23,7 +23,7 @@ export type UseCreateAccountWithFreeUsernameArgs = {
 };
 
 /**
- * Use this hook to create an Account on Lens with a free username (no rules enforced)
+ * Use this hook to create an Account with a free username (no rules enforced)
  *
  * @alpha This is an alpha API and may be subject to breaking changes.
  */
