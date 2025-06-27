@@ -58,16 +58,16 @@ async function attemptSessionRestoration(
 function useCreateLensContextValue(
   publicClient: PublicClient,
 ): LensContextValue {
-  const [state, setState] = useState<SessionState>(() => 
-    createInitialSessionState(publicClient)
+  const [state, setState] = useState<SessionState>(() =>
+    createInitialSessionState(publicClient),
   );
 
-  // Update state when publicClient changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: update state when publicClient changes
   useEffect(() => {
-    const currentPublicClient = state.client.isSessionClient() 
-      ? state.client.parent 
+    const currentPublicClient = state.client.isSessionClient()
+      ? state.client.parent
       : state.client;
-    
+
     // Only update if the client reference has actually changed
     if (currentPublicClient !== publicClient) {
       if (state.resolved) {
