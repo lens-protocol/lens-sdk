@@ -55,7 +55,9 @@ export function useCreateAccountWithRestrictedUsername(
       .andThen((account) =>
         sessionClient.switchAccount({ account: account.address }),
       )
-      .andThen(() => createUsername(sessionClient, request.createUsernameRequest))
+      .andThen(() =>
+        createUsername(sessionClient, request.createUsernameRequest),
+      )
       .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .andThen(() =>

@@ -3,5 +3,5 @@ export * from './useAccountManagers';
 export * from './useAccounts';
 export * from './useAccountsBlocked';
 export * from './useAccountsBulk';
-export * from './useCreateAccountWithRestrictedUsername';
 export * from './useCreateAccountWithFreeUsername';
+export * from './useCreateAccountWithRestrictedUsername';
