@@ -17,7 +17,7 @@ export type UseCreateAccountArgs = {
 };
 
 /**
- * Creates an account on Lens.
+ * Creates an Account on Lens.
  *
  * @alpha This is an alpha API and may be subject to breaking changes.
  */
