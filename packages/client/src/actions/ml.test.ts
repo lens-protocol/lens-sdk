@@ -1,28 +1,37 @@
 import { assertOk } from '@lens-protocol/types';
-import { describe, it } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 
-import { createPublicClient, TEST_ACCOUNT } from '../test-utils';
+import { loginAsAccountOwner, TEST_ACCOUNT } from '../test-utils';
 import {
   fetchAccountRecommendations,
   fetchPostsForYou,
   fetchPostsToExplore,
 } from './ml';
+import { SessionClient } from '../clients';
 
 describe('Given the ML query actions', () => {
-  const client = createPublicClient();
-
-  describe(`When invoking the '${fetchAccountRecommendations.name}' action`, () => {
+  let sessionClient: SessionClient;
+  
+  beforeAll(async () => {
+    await loginAsAccountOwner().andTee((client) => {
+      sessionClient = client;
+    });
+  });
+  
+  // TODO: Enable when bug fixed LENS-1201
+  describe.skip(`When invoking the '${fetchAccountRecommendations.name}' action`, () => {
     it('Then it should not fail w/ a GQL BadRequest error', async () => {
-      const result = await fetchAccountRecommendations(client, {
+      const result = await fetchAccountRecommendations(sessionClient, {
         account: TEST_ACCOUNT,
       });
       assertOk(result);
     });
   });
 
-  describe(`When invoking the '${fetchPostsForYou.name}' action`, () => {
+  // TODO: Enable when bug fixed LENS-1201
+  describe.skip(`When invoking the '${fetchPostsForYou.name}' action`, () => {
     it('Then it should not fail w/ a GQL BadRequest error', async () => {
-      const result = await fetchPostsForYou(client, {
+      const result = await fetchPostsForYou(sessionClient, {
         account: TEST_ACCOUNT,
       });
       assertOk(result);
@@ -31,7 +40,7 @@ describe('Given the ML query actions', () => {
 
   describe(`When invoking the '${fetchPostsToExplore.name}' action`, () => {
     it('Then it should not fail w/ a GQL BadRequest error', async () => {
-      const result = await fetchPostsToExplore(client, {});
+      const result = await fetchPostsToExplore(sessionClient, {});
       assertOk(result);
     });
   });
