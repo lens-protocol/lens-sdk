@@ -45,7 +45,9 @@ export function useBalancesBulk(
 export function useBalancesBulk({
   suspense = false,
   ...request
-}: UseBalancesBulkArgs & { suspense?: boolean }): SuspendableResult<AnyBalance[]> {
+}: UseBalancesBulkArgs & { suspense?: boolean }): SuspendableResult<
+  AnyBalance[]
+> {
   return useSuspendableQuery({
     document: BalancesBulkQuery,
     variables: { request },

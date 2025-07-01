@@ -36,7 +36,9 @@ export function useAccountsBulk(
  * });
  * ```
  */
-export function useAccountsBulk(args: UseAccountsBulkArgs): ReadResult<Account[]>;
+export function useAccountsBulk(
+  args: UseAccountsBulkArgs,
+): ReadResult<Account[]>;
 
 export function useAccountsBulk({
   suspense = false,

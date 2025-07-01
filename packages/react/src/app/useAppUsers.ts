@@ -40,7 +40,9 @@ export function useAppUsers(
  * });
  * ```
  */
-export function useAppUsers(args: UseAppUsersArgs): ReadResult<Paginated<AppUser>>;
+export function useAppUsers(
+  args: UseAppUsersArgs,
+): ReadResult<Paginated<AppUser>>;
 
 export function useAppUsers({
   suspense = false,

@@ -43,7 +43,9 @@ export function useGroups(args: UseGroupsArgs): ReadResult<Paginated<Group>>;
 export function useGroups({
   suspense = false,
   ...request
-}: UseGroupsArgs & { suspense?: boolean }): SuspendableResult<Paginated<Group>> {
+}: UseGroupsArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<Group>
+> {
   return useSuspendableQuery({
     document: GroupsQuery,
     variables: { request },

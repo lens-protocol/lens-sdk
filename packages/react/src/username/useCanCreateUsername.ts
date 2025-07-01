@@ -3,10 +3,12 @@ import type {
   UnexpectedError,
 } from '@lens-protocol/client';
 import { canCreateUsername } from '@lens-protocol/client/actions';
-import type { CanCreateUsernameRequest } from '@lens-protocol/graphql';
+import type {
+  CanCreateUsernameRequest,
+  CanCreateUsernameResult,
+} from '@lens-protocol/graphql';
 
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
-import { CanCreateUsernameResult } from '@lens-protocol/graphql';
 
 /**
  * Checks if a username can be created.

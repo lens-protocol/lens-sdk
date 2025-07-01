@@ -48,7 +48,9 @@ export function useAccounts(
  * );
  * ```
  */
-export function useAccounts(args: UseAccountsArgs): ReadResult<Paginated<Account>>;
+export function useAccounts(
+  args: UseAccountsArgs,
+): ReadResult<Paginated<Account>>;
 
 export function useAccounts({
   suspense = false,

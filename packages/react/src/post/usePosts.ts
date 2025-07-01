@@ -45,7 +45,9 @@ export function usePosts(args: UsePostsArgs): ReadResult<Paginated<AnyPost>>;
 export function usePosts({
   suspense = false,
   ...request
-}: UsePostsArgs & { suspense?: boolean }): SuspendableResult<Paginated<AnyPost>> {
+}: UsePostsArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<AnyPost>
+> {
   return useSuspendableQuery({
     document: PostsQuery,
     variables: { request },
