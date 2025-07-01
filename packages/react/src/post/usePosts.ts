@@ -9,7 +9,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type PostsArgs = PostsRequest;
+export type UsePostsArgs = PostsRequest;
 
 /**
  * Fetch posts available filtered by the given arguments.
@@ -26,7 +26,7 @@ export type PostsArgs = PostsRequest;
  * ```
  */
 export function usePosts(
-  args: PostsArgs & Suspendable,
+  args: UsePostsArgs & Suspendable,
 ): SuspenseResult<Paginated<AnyPost>>;
 
 /**
@@ -40,12 +40,14 @@ export function usePosts(
  * });
  * ```
  */
-export function usePosts(args: PostsArgs): ReadResult<Paginated<AnyPost>>;
+export function usePosts(args: UsePostsArgs): ReadResult<Paginated<AnyPost>>;
 
 export function usePosts({
   suspense = false,
   ...request
-}: PostsArgs & { suspense?: boolean }): SuspendableResult<Paginated<AnyPost>> {
+}: UsePostsArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<AnyPost>
+> {
   return useSuspendableQuery({
     document: PostsQuery,
     variables: { request },

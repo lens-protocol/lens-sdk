@@ -38,7 +38,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 export function fetchAccountRecommendations(
   client: AnyClient,
   request: AccountRecommendationsRequest,
-): ResultAsync<Paginated<Account> | null, UnexpectedError> {
+): ResultAsync<Paginated<Account>, UnexpectedError> {
   return client.query(MlAccountRecommendationsQuery, { request });
 }
 
@@ -58,7 +58,7 @@ export function fetchAccountRecommendations(
 export function fetchPostsForYou(
   client: AnyClient,
   request: PostsForYouRequest,
-): ResultAsync<Paginated<PostForYou> | null, UnexpectedError> {
+): ResultAsync<Paginated<PostForYou>, UnexpectedError> {
   return client.query(MlPostsForYouQuery, { request });
 }
 
@@ -76,7 +76,7 @@ export function fetchPostsForYou(
 export function fetchPostsToExplore(
   client: AnyClient,
   request: PostsExploreRequest,
-): ResultAsync<Paginated<Post> | null, UnexpectedError> {
+): ResultAsync<Paginated<Post>, UnexpectedError> {
   return client.query(MlPostsExploreQuery, { request });
 }
 

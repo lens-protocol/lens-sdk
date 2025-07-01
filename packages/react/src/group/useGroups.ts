@@ -9,7 +9,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type GroupsArgs = GroupsRequest;
+export type UseGroupsArgs = GroupsRequest;
 
 /**
  * Fetch groups available filtered by the given arguments.
@@ -27,7 +27,7 @@ export type GroupsArgs = GroupsRequest;
  * ```
  */
 export function useGroups(
-  args: GroupsArgs & Suspendable,
+  args: UseGroupsArgs & Suspendable,
 ): SuspenseResult<Paginated<Group>>;
 
 /**
@@ -38,12 +38,14 @@ export function useGroups(
  * const { data, loading } = useGroups({ filter: { searchQuery: 'test' }});
  * ```
  */
-export function useGroups(args: GroupsArgs): ReadResult<Paginated<Group>>;
+export function useGroups(args: UseGroupsArgs): ReadResult<Paginated<Group>>;
 
 export function useGroups({
   suspense = false,
   ...request
-}: GroupsArgs & { suspense?: boolean }): SuspendableResult<Paginated<Group>> {
+}: UseGroupsArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<Group>
+> {
   return useSuspendableQuery({
     document: GroupsQuery,
     variables: { request },

@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type PostReactionsArgs = PostReactionsRequest;
+export type UsePostReactionsArgs = PostReactionsRequest;
 
 /**
  * Fetch reactions to a post.
@@ -28,7 +28,7 @@ export type PostReactionsArgs = PostReactionsRequest;
  * ```
  */
 export function usePostReactions(
-  args: PostReactionsArgs & Suspendable,
+  args: UsePostReactionsArgs & Suspendable,
 ): SuspenseResult<Paginated<AccountPostReaction>>;
 
 /**
@@ -41,13 +41,13 @@ export function usePostReactions(
  * ```
  */
 export function usePostReactions(
-  args: PostReactionsArgs,
+  args: UsePostReactionsArgs,
 ): ReadResult<Paginated<AccountPostReaction>>;
 
 export function usePostReactions({
   suspense = false,
   ...request
-}: PostReactionsArgs & { suspense?: boolean }): SuspendableResult<
+}: UsePostReactionsArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<AccountPostReaction>
 > {
   return useSuspendableQuery({

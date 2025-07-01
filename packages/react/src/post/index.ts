@@ -5,6 +5,7 @@ export * from './usePostBookmarks';
 export * from './usePostReactions';
 export * from './usePostReferences';
 export * from './usePosts';
+export * from './usePostTags';
 export * from './useUndoBookmarkPost';
 export * from './useWhoExecutedActionOnPost';
 export * from './useWhoReferencedPost';

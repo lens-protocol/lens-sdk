@@ -1,6 +1,7 @@
 export * from '@lens-protocol/client';
 
 export * from './account';
+export * from './app';
 export * from './authentication';
 export * from './feed';
 export * from './follow';

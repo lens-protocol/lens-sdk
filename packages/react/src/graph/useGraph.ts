@@ -9,7 +9,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type GraphArgs = GraphRequest;
+export type UseGraphArgs = GraphRequest;
 
 /**
  * Fetch a single Graph.
@@ -21,7 +21,7 @@ export type GraphArgs = GraphRequest;
  * ```
  */
 export function useGraph(
-  args: GraphArgs & Suspendable,
+  args: UseGraphArgs & Suspendable,
 ): SuspenseResult<Graph | null>;
 
 /**
@@ -31,12 +31,12 @@ export function useGraph(
  * const { data, loading } = useGraph({ graph: evmAddress('0x…') });
  * ```
  */
-export function useGraph(args: GraphArgs): ReadResult<Graph | null>;
+export function useGraph(args: UseGraphArgs): ReadResult<Graph | null>;
 
 export function useGraph({
   suspense = false,
   ...request
-}: GraphArgs & { suspense?: boolean }): SuspendableResult<Graph | null> {
+}: UseGraphArgs & { suspense?: boolean }): SuspendableResult<Graph | null> {
   return useSuspendableQuery({
     document: GraphQuery,
     variables: { request },
