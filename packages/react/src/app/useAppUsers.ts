@@ -37,7 +37,7 @@ export function useAppUsers(
  * ```tsx
  * const { data } = useAppUsers({
  *   app: evmAddress('0x123…'),
- * );
+ * });
  * ```
  */
 export function useAppUsers(args: UseAppUsersArgs): ReadResult<Paginated<AppUser>>;
