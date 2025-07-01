@@ -21,7 +21,10 @@ export type UseWhoExecutedActionOnPostArgs = WhoExecutedActionOnPostRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useWhoExecutedActionOnPost({ post: postId('34…'), suspense: true });
+ * const { data } = useWhoExecutedActionOnPost({
+ *   post: postId('34…'),
+ *   suspense: true,
+ * });
  * ```
  */
 export function useWhoExecutedActionOnPost(
@@ -32,7 +35,9 @@ export function useWhoExecutedActionOnPost(
  * Fetch who executed action on a post.
  *
  * ```tsx
- * const { data, loading } = useWhoExecutedActionOnPost({ post: postId('34…') });
+ * const { data, loading } = useWhoExecutedActionOnPost({
+ *   post: postId('34…'),
+ * });
  * ```
  */
 export function useWhoExecutedActionOnPost(

@@ -21,7 +21,10 @@ export type UseWhoReferencedPostArgs = WhoReferencedPostRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useWhoReferencedPost({ post: postId('34…'), suspense: true });
+ * const { data } = useWhoReferencedPost({
+ *   post: postId('34…'),
+ *   suspense: true,
+ * });
  * ```
  */
 export function useWhoReferencedPost(

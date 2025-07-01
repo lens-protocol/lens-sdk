@@ -13,7 +13,8 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type WhoExecutedActionOnAccountArgs = WhoExecutedActionOnAccountRequest;
+export type UseWhoExecutedActionOnAccountArgs =
+  WhoExecutedActionOnAccountRequest;
 
 /**
  * Fetch who executed action on an Account.
@@ -23,12 +24,12 @@ export type WhoExecutedActionOnAccountArgs = WhoExecutedActionOnAccountRequest;
  * ```tsx
  * const { data } = useWhoExecutedActionOnAccount({
  *   account: evmAddress('0x…'),
- *   suspense: true
+ *   suspense: true,
  * });
  * ```
  */
 export function useWhoExecutedActionOnAccount(
-  args: WhoExecutedActionOnAccountArgs & Suspendable,
+  args: UseWhoExecutedActionOnAccountArgs & Suspendable,
 ): SuspenseResult<Paginated<AccountExecutedActions>>;
 
 /**
@@ -37,20 +38,19 @@ export function useWhoExecutedActionOnAccount(
  * ```tsx
  * const { data, loading } = useWhoExecutedActionOnAccount({
  *   account: evmAddress('0x…'),
- *   },
- * );
+ * });
  * ```
  */
 export function useWhoExecutedActionOnAccount(
-  args: WhoExecutedActionOnAccountArgs,
+  args: UseWhoExecutedActionOnAccountArgs,
 ): ReadResult<Paginated<AccountExecutedActions>>;
 
 export function useWhoExecutedActionOnAccount({
   suspense = false,
   ...request
-}: WhoExecutedActionOnAccountArgs & { suspense?: boolean }): SuspendableResult<
-  Paginated<AccountExecutedActions>
-> {
+}: UseWhoExecutedActionOnAccountArgs & {
+  suspense?: boolean;
+}): SuspendableResult<Paginated<AccountExecutedActions>> {
   return useSuspendableQuery({
     document: WhoExecutedActionOnAccountQuery,
     variables: { request },
