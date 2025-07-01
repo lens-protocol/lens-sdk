@@ -12,7 +12,7 @@ import { useSuspendableQuery } from '../helpers';
 export type UseBalancesBulkArgs = BalancesBulkRequest;
 
 /**
- * Fetch a finite number of balances for the specific address.
+ * Fetch a finite number of balances for the specified address.
  *
  * This signature supports React Suspense:
  *
@@ -29,7 +29,7 @@ export function useBalancesBulk(
 ): SuspenseResult<AnyBalance[]>;
 
 /**
- * Fetch a finite number of balances for the specific address.
+ * Fetch a finite number of balances for the specified address.
  *
  * ```tsx
  * const { data, loading } = useBalancesBulk({

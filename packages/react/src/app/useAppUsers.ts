@@ -22,7 +22,7 @@ export type UseAppUsersArgs = AppUsersRequest;
  *
  * ```tsx
  * const { data } = useAppUsers({
- *   app: evmAddress('0x123...'),
+ *   app: evmAddress('0x123…'),
  *   suspense: true
  * });
  * ```
@@ -36,7 +36,7 @@ export function useAppUsers(
  *
  * ```tsx
  * const { data } = useAppUsers({
- *   app: evmAddress('0x123...'),
+ *   app: evmAddress('0x123…'),
  * );
  * ```
  */
