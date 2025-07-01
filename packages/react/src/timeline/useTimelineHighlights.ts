@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type TimelineHighlightsArgs = TimelineHighlightsRequest;
+export type UseTimelineHighlightsArgs = TimelineHighlightsRequest;
 
 /**
  * Fetch Timeline Highlights for an account.
@@ -25,7 +25,7 @@ export type TimelineHighlightsArgs = TimelineHighlightsRequest;
  * ```
  */
 export function useTimelineHighlights(
-  args: TimelineHighlightsArgs & Suspendable,
+  args: UseTimelineHighlightsArgs & Suspendable,
 ): SuspenseResult<Paginated<Post>>;
 
 /**
@@ -36,13 +36,13 @@ export function useTimelineHighlights(
  * ```
  */
 export function useTimelineHighlights(
-  args: TimelineHighlightsArgs,
+  args: UseTimelineHighlightsArgs,
 ): ReadResult<Paginated<Post>>;
 
 export function useTimelineHighlights({
   suspense = false,
   ...request
-}: TimelineHighlightsArgs & { suspense?: boolean }): SuspendableResult<
+}: UseTimelineHighlightsArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<Post>
 > {
   return useSuspendableQuery({

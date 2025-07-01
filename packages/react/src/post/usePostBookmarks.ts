@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type PostBookmarksArgs = PostBookmarksRequest;
+export type UsePostBookmarksArgs = PostBookmarksRequest;
 
 /**
  * Fetch bookmarked posts.
@@ -25,7 +25,7 @@ export type PostBookmarksArgs = PostBookmarksRequest;
  * ```
  */
 export function usePostBookmarks(
-  args: PostBookmarksArgs & Suspendable,
+  args: UsePostBookmarksArgs & Suspendable,
 ): SuspenseResult<Paginated<AnyPost>>;
 
 /**
@@ -36,13 +36,13 @@ export function usePostBookmarks(
  * ```
  */
 export function usePostBookmarks(
-  args?: PostBookmarksArgs,
+  args?: UsePostBookmarksArgs,
 ): ReadResult<Paginated<AnyPost>>;
 
 export function usePostBookmarks({
   suspense = false,
   ...request
-}: PostBookmarksArgs & { suspense?: boolean } = {}): SuspendableResult<
+}: UsePostBookmarksArgs & { suspense?: boolean } = {}): SuspendableResult<
   Paginated<AnyPost>
 > {
   return useSuspendableQuery({
