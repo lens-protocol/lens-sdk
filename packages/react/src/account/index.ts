@@ -8,3 +8,4 @@ export * from './useAccountsBulk';
 export * from './useBalancesBulk';
 export * from './useCreateAccountWithFreeUsername';
 export * from './useCreateAccountWithRestrictedUsername';
+export * from './useWhoExecutedActionOnAccount';
