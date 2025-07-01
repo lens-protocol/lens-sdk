@@ -15,6 +15,8 @@ export const MediaAudioFragment = graphql(
     lyrics
     recordLabel
     type
+    title
+    durationSeconds
   }`,
 );
 export interface MediaAudio extends FragmentOf<typeof MediaAudioFragment> {}
@@ -41,6 +43,9 @@ export const MediaVideoFragment = graphql(
     item
     license
     type
+    durationSeconds
+    width
+    height
   }`,
 );
 export interface MediaVideo extends FragmentOf<typeof MediaVideoFragment> {}

@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AccountsBlockedArgs = AccountsBlockedRequest;
+export type UseAccountsBlockedArgs = AccountsBlockedRequest;
 
 /**
  * Fetch Blocked Accounts.
@@ -25,7 +25,7 @@ export type AccountsBlockedArgs = AccountsBlockedRequest;
  * ```
  */
 export function useAccountsBlocked(
-  args: AccountsBlockedArgs & Suspendable,
+  args: UseAccountsBlockedArgs & Suspendable,
 ): SuspenseResult<Paginated<AccountBlocked>>;
 
 /**
@@ -36,13 +36,13 @@ export function useAccountsBlocked(
  * ```
  */
 export function useAccountsBlocked(
-  args?: AccountsBlockedArgs,
+  args?: UseAccountsBlockedArgs,
 ): ReadResult<Paginated<AccountBlocked>>;
 
 export function useAccountsBlocked({
   suspense = false,
   ...request
-}: AccountsBlockedArgs & { suspense?: boolean } = {}): SuspendableResult<
+}: UseAccountsBlockedArgs & { suspense?: boolean } = {}): SuspendableResult<
   Paginated<AccountBlocked>
 > {
   return useSuspendableQuery({

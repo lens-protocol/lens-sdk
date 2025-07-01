@@ -224,7 +224,7 @@ export type CanCreateUsernameResult = FragmentOf<
 >;
 
 export const CanCreateUsernameQuery = graphql(
-  `query CanCreateUsername($request: UsernameInput!) {
+  `query CanCreateUsername($request: CanCreateUsernameRequest!) {
     value: canCreateUsername(request: $request) {
       ...CanCreateUsernameResult
     }

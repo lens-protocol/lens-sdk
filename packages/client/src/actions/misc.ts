@@ -27,6 +27,12 @@ export function health(
 /**
  * Fetch an Access Control details.
  *
+ * ```ts
+ * const result = await fetchAccessControl(anyClient, {
+ *   address: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
  * @param client - Any Lens client.
  * @param request - The Access Control query request.
  * @returns The Access Control or `null` if it does not exist.

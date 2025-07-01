@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type FollowingArgs = FollowingRequest;
+export type UseFollowingArgs = FollowingRequest;
 
 /**
  * Fetch accounts following.
@@ -25,7 +25,7 @@ export type FollowingArgs = FollowingRequest;
  * ```
  */
 export function useFollowing(
-  args: FollowingArgs & Suspendable,
+  args: UseFollowingArgs & Suspendable,
 ): SuspenseResult<Paginated<Following>>;
 
 /**
@@ -36,13 +36,13 @@ export function useFollowing(
  * ```
  */
 export function useFollowing(
-  args: FollowingArgs,
+  args: UseFollowingArgs,
 ): ReadResult<Paginated<Following>>;
 
 export function useFollowing({
   suspense = false,
   ...request
-}: FollowingArgs & { suspense?: boolean }): SuspendableResult<
+}: UseFollowingArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<Following>
 > {
   return useSuspendableQuery({

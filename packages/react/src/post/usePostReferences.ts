@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type PostReferencesArgs = PostReferencesRequest;
+export type UsePostReferencesArgs = PostReferencesRequest;
 
 /**
  * Fetch references to a post.
@@ -29,7 +29,7 @@ export type PostReferencesArgs = PostReferencesRequest;
  * ```
  */
 export function usePostReferences(
-  args: PostReferencesArgs & Suspendable,
+  args: UsePostReferencesArgs & Suspendable,
 ): SuspenseResult<Paginated<AnyPost>>;
 
 /**
@@ -43,13 +43,13 @@ export function usePostReferences(
  * ```
  */
 export function usePostReferences(
-  args: PostReferencesArgs,
+  args: UsePostReferencesArgs,
 ): ReadResult<Paginated<AnyPost>>;
 
 export function usePostReferences({
   suspense = false,
   ...request
-}: PostReferencesArgs & { suspense?: boolean }): SuspendableResult<
+}: UsePostReferencesArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<AnyPost>
 > {
   return useSuspendableQuery({
