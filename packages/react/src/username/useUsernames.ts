@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type UsernamesArgs = UsernamesRequest;
+export type UseUsernamesArgs = UsernamesRequest;
 
 /**
  * Fetch usernames available filtered by the given arguments.
@@ -31,7 +31,7 @@ export type UsernamesArgs = UsernamesRequest;
  * ```
  */
 export function useUsernames(
-  args: UsernamesArgs & Suspendable,
+  args: UseUsernamesArgs & Suspendable,
 ): SuspenseResult<Paginated<Username>>;
 
 /**
@@ -47,13 +47,13 @@ export function useUsernames(
  * ```
  */
 export function useUsernames(
-  args: UsernamesArgs,
+  args: UseUsernamesArgs,
 ): ReadResult<Paginated<Username>>;
 
 export function useUsernames({
   suspense = false,
   ...request
-}: UsernamesArgs & { suspense?: boolean }): SuspendableResult<
+}: UseUsernamesArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<Username>
 > {
   return useSuspendableQuery({

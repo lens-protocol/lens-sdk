@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AccountsArgs = AccountsRequest;
+export type UseAccountsArgs = AccountsRequest;
 
 /**
  * Fetch accounts available filtered by the given arguments.
@@ -32,7 +32,7 @@ export type AccountsArgs = AccountsRequest;
  * ```
  */
 export function useAccounts(
-  args: AccountsArgs & Suspendable,
+  args: UseAccountsArgs & Suspendable,
 ): SuspenseResult<Paginated<Account>>;
 
 /**
@@ -48,12 +48,12 @@ export function useAccounts(
  * );
  * ```
  */
-export function useAccounts(args: AccountsArgs): ReadResult<Paginated<Account>>;
+export function useAccounts(args: UseAccountsArgs): ReadResult<Paginated<Account>>;
 
 export function useAccounts({
   suspense = false,
   ...request
-}: AccountsArgs & { suspense?: boolean }): SuspendableResult<
+}: UseAccountsArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<Account>
 > {
   return useSuspendableQuery({

@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AccountManagersArgs = AccountManagersRequest;
+export type UseAccountManagersArgs = AccountManagersRequest;
 
 /**
  * Fetch Account Managers.
@@ -25,7 +25,7 @@ export type AccountManagersArgs = AccountManagersRequest;
  * ```
  */
 export function useAccountManagers(
-  args: AccountManagersArgs & Suspendable,
+  args: UseAccountManagersArgs & Suspendable,
 ): SuspenseResult<Paginated<AccountManager>>;
 
 /**
@@ -36,13 +36,13 @@ export function useAccountManagers(
  * ```
  */
 export function useAccountManagers(
-  args?: AccountManagersArgs,
+  args?: UseAccountManagersArgs,
 ): ReadResult<Paginated<AccountManager>>;
 
 export function useAccountManagers({
   suspense = false,
   ...request
-}: AccountManagersArgs & { suspense?: boolean } = {}): SuspendableResult<
+}: UseAccountManagersArgs & { suspense?: boolean } = {}): SuspendableResult<
   Paginated<AccountManager>
 > {
   return useSuspendableQuery({

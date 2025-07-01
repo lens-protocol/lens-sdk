@@ -9,7 +9,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type BalancesBulkArgs = BalancesBulkRequest;
+export type UseBalancesBulkArgs = BalancesBulkRequest;
 
 /**
  * Fetch a finite number of balances for the specific address.
@@ -25,7 +25,7 @@ export type BalancesBulkArgs = BalancesBulkRequest;
  * ```
  */
 export function useBalancesBulk(
-  args: BalancesBulkArgs & Suspendable,
+  args: UseBalancesBulkArgs & Suspendable,
 ): SuspenseResult<AnyBalance[]>;
 
 /**
@@ -39,13 +39,13 @@ export function useBalancesBulk(
  * ```
  */
 export function useBalancesBulk(
-  args: BalancesBulkArgs,
+  args: UseBalancesBulkArgs,
 ): ReadResult<AnyBalance[]>;
 
 export function useBalancesBulk({
   suspense = false,
   ...request
-}: BalancesBulkArgs & { suspense?: boolean }): SuspendableResult<AnyBalance[]> {
+}: UseBalancesBulkArgs & { suspense?: boolean }): SuspendableResult<AnyBalance[]> {
   return useSuspendableQuery({
     document: BalancesBulkQuery,
     variables: { request },

@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type TimelineArgs = TimelineRequest;
+export type UseTimelineArgs = TimelineRequest;
 
 /**
  * Fetch timeline from an account.
@@ -25,7 +25,7 @@ export type TimelineArgs = TimelineRequest;
  * ```
  */
 export function useTimeline(
-  args: TimelineArgs & Suspendable,
+  args: UseTimelineArgs & Suspendable,
 ): SuspenseResult<Paginated<TimelineItem>>;
 
 /**
@@ -36,13 +36,13 @@ export function useTimeline(
  * ```
  */
 export function useTimeline(
-  args: TimelineArgs,
+  args: UseTimelineArgs,
 ): ReadResult<Paginated<TimelineItem>>;
 
 export function useTimeline({
   suspense = false,
   ...request
-}: TimelineArgs & { suspense?: boolean }): SuspendableResult<
+}: UseTimelineArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<TimelineItem>
 > {
   return useSuspendableQuery({

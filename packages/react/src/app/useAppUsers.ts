@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AppUsersArgs = AppUsersRequest;
+export type UseAppUsersArgs = AppUsersRequest;
 
 /**
  * Fetch list of users using an App.
@@ -28,7 +28,7 @@ export type AppUsersArgs = AppUsersRequest;
  * ```
  */
 export function useAppUsers(
-  args: AppUsersArgs & Suspendable,
+  args: UseAppUsersArgs & Suspendable,
 ): SuspenseResult<Paginated<AppUser>>;
 
 /**
@@ -40,12 +40,12 @@ export function useAppUsers(
  * );
  * ```
  */
-export function useAppUsers(args: AppUsersArgs): ReadResult<Paginated<AppUser>>;
+export function useAppUsers(args: UseAppUsersArgs): ReadResult<Paginated<AppUser>>;
 
 export function useAppUsers({
   suspense = false,
   ...request
-}: AppUsersArgs & { suspense?: boolean }): SuspendableResult<
+}: UseAppUsersArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<AppUser>
 > {
   return useSuspendableQuery({

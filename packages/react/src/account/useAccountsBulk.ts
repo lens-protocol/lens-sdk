@@ -9,7 +9,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AccountsBulkArgs = AccountsBulkRequest;
+export type UseAccountsBulkArgs = AccountsBulkRequest;
 
 /**
  * Fetch Accounts in Bulk.
@@ -24,7 +24,7 @@ export type AccountsBulkArgs = AccountsBulkRequest;
  * ```
  */
 export function useAccountsBulk(
-  args: AccountsBulkArgs & Suspendable,
+  args: UseAccountsBulkArgs & Suspendable,
 ): SuspenseResult<Account[]>;
 
 /**
@@ -36,12 +36,12 @@ export function useAccountsBulk(
  * });
  * ```
  */
-export function useAccountsBulk(args: AccountsBulkArgs): ReadResult<Account[]>;
+export function useAccountsBulk(args: UseAccountsBulkArgs): ReadResult<Account[]>;
 
 export function useAccountsBulk({
   suspense = false,
   ...request
-}: AccountsBulkArgs & { suspense?: boolean }): SuspendableResult<Account[]> {
+}: UseAccountsBulkArgs & { suspense?: boolean }): SuspendableResult<Account[]> {
   return useSuspendableQuery({
     document: AccountsBulkQuery,
     variables: { request },

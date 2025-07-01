@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type NotificationsArgs = NotificationsRequest;
+export type UseNotificationsArgs = NotificationsRequest;
 
 /**
  * Fetch notifications for the authenticated Account.
@@ -25,7 +25,7 @@ export type NotificationsArgs = NotificationsRequest;
  * ```
  */
 export function useNotifications(
-  args: NotificationsArgs & Suspendable,
+  args: UseNotificationsArgs & Suspendable,
 ): SuspenseResult<Paginated<Notification>>;
 
 /**
@@ -36,13 +36,13 @@ export function useNotifications(
  * ```
  */
 export function useNotifications(
-  args?: NotificationsArgs,
+  args?: UseNotificationsArgs,
 ): ReadResult<Paginated<Notification>>;
 
 export function useNotifications({
   suspense = false,
   ...request
-}: NotificationsArgs & { suspense?: boolean } = {}): SuspendableResult<
+}: UseNotificationsArgs & { suspense?: boolean } = {}): SuspendableResult<
   Paginated<Notification>
 > {
   return useSuspendableQuery({

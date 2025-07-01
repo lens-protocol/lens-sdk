@@ -12,7 +12,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AccountStatsArgs = AccountStatsRequest;
+export type UseAccountStatsArgs = AccountStatsRequest;
 
 /**
  * Fetch an Account Stats.
@@ -27,7 +27,7 @@ export type AccountStatsArgs = AccountStatsRequest;
  * ```
  */
 export function useAccountStats(
-  args: AccountStatsArgs & Suspendable,
+  args: UseAccountStatsArgs & Suspendable,
 ): SuspenseResult<AccountStats>;
 
 /**
@@ -40,13 +40,13 @@ export function useAccountStats(
  * ```
  */
 export function useAccountStats(
-  args: AccountStatsArgs,
+  args: UseAccountStatsArgs,
 ): ReadResult<AccountStats>;
 
 export function useAccountStats({
   suspense = false,
   ...request
-}: AccountStatsArgs & {
+}: UseAccountStatsArgs & {
   suspense?: boolean;
 }): SuspendableResult<AccountStats> {
   return useSuspendableQuery({

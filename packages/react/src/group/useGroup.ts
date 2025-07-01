@@ -9,7 +9,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type GroupArgs = GroupRequest;
+export type UseGroupArgs = GroupRequest;
 
 /**
  * Fetch a single Group.
@@ -21,7 +21,7 @@ export type GroupArgs = GroupRequest;
  * ```
  */
 export function useGroup(
-  args: GroupArgs & Suspendable,
+  args: UseGroupArgs & Suspendable,
 ): SuspenseResult<Group | null>;
 
 /**
@@ -31,12 +31,12 @@ export function useGroup(
  * const { data, loading } = useGroup({ group: evmAddress('0x…') });
  * ```
  */
-export function useGroup(args: GroupArgs): ReadResult<Group | null>;
+export function useGroup(args: UseGroupArgs): ReadResult<Group | null>;
 
 export function useGroup({
   suspense = false,
   ...request
-}: GroupArgs & { suspense?: boolean }): SuspendableResult<Group | null> {
+}: UseGroupArgs & { suspense?: boolean }): SuspendableResult<Group | null> {
   return useSuspendableQuery({
     document: GroupQuery,
     variables: { request },
