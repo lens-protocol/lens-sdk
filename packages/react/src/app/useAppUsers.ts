@@ -35,7 +35,7 @@ export function useAppUsers(
  * Fetch list of users using an App.
  *
  * ```tsx
- * const { data } = useAppUsers({
+ * const { data, loading } = useAppUsers({
  *   app: evmAddress('0x123…'),
  * });
  * ```
