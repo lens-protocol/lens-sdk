@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type GroupMembershipRequestsArgs = GroupMembershipRequestsRequest;
+export type UseGroupMembershipRequestsArgs = GroupMembershipRequestsRequest;
 
 /**
  * Fetch group membership requests.
@@ -21,28 +21,33 @@ export type GroupMembershipRequestsArgs = GroupMembershipRequestsRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useGroupMembershipRequests({ group: evmAddress('0x…'), suspense: true });
+ * const { data } = useGroupMembershipRequests({
+ *   group: evmAddress('0x…'),
+ *   suspense: true
+ * });
  * ```
  */
 export function useGroupMembershipRequests(
-  args: GroupMembershipRequestsArgs & Suspendable,
+  args: UseGroupMembershipRequestsArgs & Suspendable,
 ): SuspenseResult<Paginated<GroupMembershipRequest>>;
 
 /**
  * Fetch group membership requests.
  *
  * ```tsx
- * const { data, loading } = useGroupMembershipRequests({ group: evmAddress('0x…') });
+ * const { data, loading } = useGroupMembershipRequests({
+ *   group: evmAddress('0x…'),
+ * });
  * ```
  */
 export function useGroupMembershipRequests(
-  args: GroupMembershipRequestsArgs,
+  args: UseGroupMembershipRequestsArgs,
 ): ReadResult<Paginated<GroupMembershipRequest>>;
 
 export function useGroupMembershipRequests({
   suspense = false,
   ...request
-}: GroupMembershipRequestsArgs & { suspense?: boolean }): SuspendableResult<
+}: UseGroupMembershipRequestsArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<GroupMembershipRequest>
 > {
   return useSuspendableQuery({

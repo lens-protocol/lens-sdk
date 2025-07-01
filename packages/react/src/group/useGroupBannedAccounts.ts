@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type GroupBannedAccountsArgs = GroupBannedAccountsRequest;
+export type UseGroupBannedAccountsArgs = GroupBannedAccountsRequest;
 
 /**
  * Fetch group banned accounts.
@@ -21,28 +21,33 @@ export type GroupBannedAccountsArgs = GroupBannedAccountsRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useGroupBannedAccounts({ group: evmAddress('0x…'), suspense: true });
+ * const { data } = useGroupBannedAccounts({
+ *   group: evmAddress('0x…'),
+ *   suspense: true
+ * });
  * ```
  */
 export function useGroupBannedAccounts(
-  args: GroupBannedAccountsArgs & Suspendable,
+  args: UseGroupBannedAccountsArgs & Suspendable,
 ): SuspenseResult<Paginated<GroupBannedAccount>>;
 
 /**
  * Fetch group banned accounts.
  *
  * ```tsx
- * const { data, loading } = useGroupBannedAccounts({ group: evmAddress('0x…') });
+ * const { data, loading } = useGroupBannedAccounts({
+ *   group: evmAddress('0x…'),
+ * });
  * ```
  */
 export function useGroupBannedAccounts(
-  args: GroupBannedAccountsArgs,
+  args: UseGroupBannedAccountsArgs,
 ): ReadResult<Paginated<GroupBannedAccount>>;
 
 export function useGroupBannedAccounts({
   suspense = false,
   ...request
-}: GroupBannedAccountsArgs & { suspense?: boolean }): SuspendableResult<
+}: UseGroupBannedAccountsArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<GroupBannedAccount>
 > {
   return useSuspendableQuery({

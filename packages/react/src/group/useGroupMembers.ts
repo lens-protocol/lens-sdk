@@ -21,7 +21,10 @@ export type UseGroupMembersArgs = GroupMembersRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useGroupMembers({ group: evmAddress('0x…'), suspense: true });
+ * const { data } = useGroupMembers({
+ *   group: evmAddress('0x…'),
+ *   suspense: true
+ * });
  * ```
  */
 export function useGroupMembers(
@@ -32,7 +35,9 @@ export function useGroupMembers(
  * Fetch group members.
  *
  * ```tsx
- * const { data, loading } = useGroups({ group: evmAddress('0x…') });
+ * const { data, loading } = useGroupMembers({
+ *   group: evmAddress('0x…'),
+ * });
  * ```
  */
 export function useGroupMembers(

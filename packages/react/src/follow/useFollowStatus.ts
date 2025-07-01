@@ -12,7 +12,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type FollowStatusArgs = FollowStatusRequest;
+export type UseFollowStatusArgs = FollowStatusRequest;
 
 /**
  * Fetch follow status.
@@ -27,11 +27,12 @@ export type FollowStatusArgs = FollowStatusRequest;
  *       follower: evmAddress('0x…'),
  *     }
  *   ],
- * }, suspense: true });
+ *   suspense: true
+ * });
  * ```
  */
 export function useFollowStatus(
-  args: FollowStatusArgs & Suspendable,
+  args: UseFollowStatusArgs & Suspendable,
 ): SuspenseResult<FollowStatusResult[]>;
 
 /**
@@ -49,13 +50,13 @@ export function useFollowStatus(
  * ```
  */
 export function useFollowStatus(
-  args: FollowStatusArgs,
+  args: UseFollowStatusArgs,
 ): ReadResult<FollowStatusResult[]>;
 
 export function useFollowStatus({
   suspense = false,
   ...request
-}: FollowStatusArgs & { suspense?: boolean }): SuspendableResult<
+}: UseFollowStatusArgs & { suspense?: boolean }): SuspendableResult<
   FollowStatusResult[]
 > {
   return useSuspendableQuery({
