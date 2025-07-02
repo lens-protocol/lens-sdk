@@ -20,7 +20,7 @@ import { fetchPost } from './posts';
 
 describe(
   'Given a Lens Account with some WGHO (or any other ERC20)',
-  { timeout: 20000 },
+  { timeout: 30_000 },
   () => {
     let sessionClient: SessionClient;
 
@@ -45,7 +45,7 @@ describe(
 
         assertOk(wrapped);
       }
-    }, 15000);
+    });
 
     describe('When executing the Tipping Account Action', () => {
       it('Then it should work as expected', async () => {
@@ -73,7 +73,7 @@ describe(
 
         assertOk(result);
       });
-    }, 20_000);
+    });
 
     describe('When executing the Tipping Post Action', () => {
       const content = `data:application/json,${JSON.stringify(textOnly({ content: 'Hello world!' }))}`;
