@@ -39,6 +39,7 @@ async function fetchBalances(
   return result.value;
 }
 
+// TODO: remove this once LENS-1212 is fixed
 async function retryBalanceCheck(
   sessionClient: SessionClient,
   assertion: (balances: [NativeAmount, Erc20Amount]) => void,
