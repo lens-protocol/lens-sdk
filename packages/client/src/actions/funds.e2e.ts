@@ -5,7 +5,13 @@ import { zeroAddress } from 'viem';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { SessionClient } from '../clients';
-import { CHAIN, loginAsAccountOwner, TEST_ACCOUNT, TEST_ERC20, wallet } from '../test-utils';
+import {
+  CHAIN,
+  loginAsAccountOwner,
+  TEST_ACCOUNT,
+  TEST_ERC20,
+  wallet,
+} from '../test-utils';
 import { handleOperationWith } from '../viem';
 import {
   deposit,
