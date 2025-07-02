@@ -42,7 +42,7 @@ async function fetchBalances(
 async function retryBalanceCheck(
   sessionClient: SessionClient,
   assertion: (balances: [NativeAmount, Erc20Amount]) => void,
-  ): Promise<void> {
+): Promise<void> {
   let lastError: Error | null = null;
   let attempt = 0;
 
@@ -55,7 +55,7 @@ async function retryBalanceCheck(
       lastError = error as Error;
     }
     attempt++;
-    await new Promise(resolve => setTimeout(resolve, 250));
+    await new Promise((resolve) => setTimeout(resolve, 250));
   } while (attempt < 4);
 
   throw lastError || new Error('Balance check failed after all retries');
@@ -147,10 +147,10 @@ describe('Given a Lens Account', { timeout: 20_000 }, () => {
 
         const result = await deposit(sessionClient, {
           native: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet))
+        }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        
+
         await retryBalanceCheck(sessionClient, ([newNative]) => {
           expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
         });
@@ -164,10 +164,10 @@ describe('Given a Lens Account', { timeout: 20_000 }, () => {
 
         const result = await wrapTokens(sessionClient, {
           amount: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet))
+        }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        
+
         await retryBalanceCheck(sessionClient, ([newNative, newWrapped]) => {
           expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
           expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
@@ -185,10 +185,10 @@ describe('Given a Lens Account', { timeout: 20_000 }, () => {
             currency: TEST_ERC20,
             value: bigDecimal(1),
           },
-        }).andThen(handleOperationWith(wallet))
+        }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        
+
         await retryBalanceCheck(sessionClient, ([, newWrapped]) => {
           expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
         });
@@ -204,10 +204,10 @@ describe('Given a Lens Account', { timeout: 20_000 }, () => {
             currency: TEST_ERC20,
             value: bigDecimal(1),
           },
-        }).andThen(handleOperationWith(wallet))
+        }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        
+
         await retryBalanceCheck(sessionClient, ([, newWrapped]) => {
           expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
         });
@@ -221,10 +221,10 @@ describe('Given a Lens Account', { timeout: 20_000 }, () => {
 
         const result = await unwrapTokens(sessionClient, {
           amount: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet))
+        }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        
+
         await retryBalanceCheck(sessionClient, ([newNative, newWrapped]) => {
           expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
           expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
@@ -239,10 +239,10 @@ describe('Given a Lens Account', { timeout: 20_000 }, () => {
 
         const result = await withdraw(sessionClient, {
           native: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet))
+        }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        
+
         await retryBalanceCheck(sessionClient, ([newNative]) => {
           expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
         });
