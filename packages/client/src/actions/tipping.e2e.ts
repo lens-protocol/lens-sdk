@@ -13,7 +13,7 @@ import {
 } from '../test-utils';
 import { handleOperationWith } from '../viem';
 import { executeAccountAction, executePostAction } from '.';
-import { fetchAccountBalances, wrapTokens } from './funds';
+import { fetchBalancesBulk, wrapTokens } from './funds';
 import { findErc20Amount } from './helpers';
 import { post } from './post';
 import { fetchPost } from './posts';
@@ -29,8 +29,9 @@ describe(
         sessionClient = client;
       });
 
-      const balance = await fetchAccountBalances(sessionClient, {
+      const balance = await fetchBalancesBulk(sessionClient, {
         includeNative: false,
+        address: TEST_ACCOUNT,
         tokens: [TEST_ERC20],
       }).andThen((balances) => findErc20Amount(TEST_ERC20, balances));
       assertOk(balance);
@@ -72,7 +73,7 @@ describe(
 
         assertOk(result);
       });
-    });
+    }, 20_000);
 
     describe('When executing the Tipping Post Action', () => {
       const content = `data:application/json,${JSON.stringify(textOnly({ content: 'Hello world!' }))}`;

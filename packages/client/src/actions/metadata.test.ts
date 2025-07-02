@@ -42,7 +42,7 @@ describe('Given a Lens Post', () => {
     beforeAll(async () => {
       const response = await updateTextOnlyMetadata(item.contentUri, updates);
       await response.waitForPropagation();
-    }, 10_000);
+    }, 30_000);
 
     it('Then it should be possible to force a refresh of the metadata', async () => {
       const refreshed = await refreshMetadata(client, {

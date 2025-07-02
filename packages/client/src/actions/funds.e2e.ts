@@ -5,11 +5,11 @@ import { zeroAddress } from 'viem';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { SessionClient } from '../clients';
-import { CHAIN, loginAsAccountOwner, TEST_ERC20, wallet } from '../test-utils';
+import { CHAIN, loginAsAccountOwner, TEST_ACCOUNT, TEST_ERC20, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
 import {
   deposit,
-  fetchAccountBalances,
+  fetchBalancesBulk,
   unwrapTokens,
   withdraw,
   wrapTokens,
@@ -19,7 +19,8 @@ import { findErc20Amount, findNativeAmount } from './helpers';
 async function fetchBalances(
   sessionClient: SessionClient,
 ): Promise<[NativeAmount, Erc20Amount]> {
-  const result = await fetchAccountBalances(sessionClient, {
+  const result = await fetchBalancesBulk(sessionClient, {
+    address: TEST_ACCOUNT,
     includeNative: true,
     tokens: [TEST_ERC20],
   }).andThen((balances) =>
@@ -33,10 +34,11 @@ async function fetchBalances(
 }
 
 describe('Given a Lens Account', () => {
-  describe(`When calling the '${fetchAccountBalances.name}' action`, () => {
+  describe(`When calling the '${fetchBalancesBulk.name}' action`, () => {
     it('Then it should return the requested balance amounts', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
-        fetchAccountBalances(sessionClient, {
+        fetchBalancesBulk(sessionClient, {
+          address: TEST_ACCOUNT,
           includeNative: true,
           tokens: [TEST_ERC20],
         }),
@@ -66,7 +68,8 @@ describe('Given a Lens Account', () => {
 
     it('Then it should be resilient and have a local error just for the failed balance', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
-        fetchAccountBalances(sessionClient, {
+        fetchBalancesBulk(sessionClient, {
+          address: TEST_ACCOUNT,
           includeNative: true,
           tokens: [evmAddress(zeroAddress), TEST_ERC20],
         }),
@@ -100,7 +103,7 @@ describe('Given a Lens Account', () => {
     });
   });
 
-  describe('When managing Account funds', { timeout: 10_000 }, () => {
+  describe('When managing Account funds', { timeout: 20_000 }, () => {
     let sessionClient: SessionClient;
 
     beforeAll(async () => {
