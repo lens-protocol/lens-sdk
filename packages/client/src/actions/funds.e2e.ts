@@ -39,7 +39,7 @@ async function fetchBalances(
   return result.value;
 }
 
-describe('Given a Lens Account', { timeout: 30_000 }, () => {
+describe('Given a Lens Account', { timeout: 20_000 }, () => {
   describe(`When calling the '${fetchBalancesBulk.name}' action`, () => {
     it('Then it should return the requested balance amounts', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
@@ -125,7 +125,10 @@ describe('Given a Lens Account', { timeout: 30_000 }, () => {
 
         const result = await deposit(sessionClient, {
           native: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet));
+        })
+          .andThen(handleOperationWith(wallet))
+          // Temporary fix for the test to pass
+          .andTee(() => setTimeout(() => {}, 500));
 
         assertOk(result);
         const [newNative] = await fetchBalances(sessionClient);
@@ -140,7 +143,10 @@ describe('Given a Lens Account', { timeout: 30_000 }, () => {
 
         const result = await wrapTokens(sessionClient, {
           amount: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet));
+        })
+          .andThen(handleOperationWith(wallet))
+          // Temporary fix for the test to pass
+          .andTee(() => setTimeout(() => {}, 500));
 
         assertOk(result);
         const [newNative, newWrapped] = await fetchBalances(sessionClient);
@@ -159,7 +165,10 @@ describe('Given a Lens Account', { timeout: 30_000 }, () => {
             currency: TEST_ERC20,
             value: bigDecimal(1),
           },
-        }).andThen(handleOperationWith(wallet));
+        })
+          .andThen(handleOperationWith(wallet))
+          // Temporary fix for the test to pass
+          .andTee(() => setTimeout(() => {}, 500));
 
         assertOk(result);
         const [, newWrapped] = await fetchBalances(sessionClient);
@@ -176,7 +185,10 @@ describe('Given a Lens Account', { timeout: 30_000 }, () => {
             currency: TEST_ERC20,
             value: bigDecimal(1),
           },
-        }).andThen(handleOperationWith(wallet));
+        })
+          .andThen(handleOperationWith(wallet))
+          // Temporary fix for the test to pass
+          .andTee(() => setTimeout(() => {}, 500));
 
         assertOk(result);
         const [, newWrapped] = await fetchBalances(sessionClient);
@@ -191,7 +203,10 @@ describe('Given a Lens Account', { timeout: 30_000 }, () => {
 
         const result = await unwrapTokens(sessionClient, {
           amount: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet));
+        })
+          .andThen(handleOperationWith(wallet))
+          // Temporary fix for the test to pass
+          .andTee(() => setTimeout(() => {}, 500));
 
         assertOk(result);
         const [newNative, newWrapped] = await fetchBalances(sessionClient);
@@ -207,7 +222,10 @@ describe('Given a Lens Account', { timeout: 30_000 }, () => {
 
         const result = await withdraw(sessionClient, {
           native: bigDecimal(1),
-        }).andThen(handleOperationWith(wallet));
+        })
+          .andThen(handleOperationWith(wallet))
+          // Temporary fix for the test to pass
+          .andTee(() => setTimeout(() => {}, 500));
 
         assertOk(result);
         const [newNative] = await fetchBalances(sessionClient);
