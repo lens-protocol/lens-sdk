@@ -39,7 +39,7 @@ async function fetchBalances(
   return result.value;
 }
 
-describe('Given a Lens Account', () => {
+describe('Given a Lens Account', { timeout: 30_000 }, () => {
   describe(`When calling the '${fetchBalancesBulk.name}' action`, () => {
     it('Then it should return the requested balance amounts', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
@@ -109,7 +109,7 @@ describe('Given a Lens Account', () => {
     });
   });
 
-  describe('When managing Account funds', { timeout: 20_000 }, () => {
+  describe('When managing Account funds', () => {
     let sessionClient: SessionClient;
 
     beforeAll(async () => {

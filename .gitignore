@@ -33,3 +33,4 @@ examples/*/pnpm-lock.yaml
 
 # cursor
 .cursorignore
+CLAUDE.md
