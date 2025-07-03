@@ -33,7 +33,7 @@ describe('Given a Lens Account with some WGHO (or any other ERC20)', () => {
     }).andThen((balances) => findErc20Amount(TEST_ERC20, balances));
     assertOk(balance);
 
-    if (balance.value.value < '2') {
+    if (balance.value.value < '1') {
       const wrapped = await wrapTokens(sessionClient, {
         amount: bigDecimal(1),
       })
@@ -51,7 +51,7 @@ describe('Given a Lens Account with some WGHO (or any other ERC20)', () => {
         action: {
           tipping: {
             currency: TEST_ERC20,
-            value: bigDecimal(1),
+            value: bigDecimal(0.1),
             referrals: [
               {
                 address: TEST_SIGNER,
@@ -95,7 +95,7 @@ describe('Given a Lens Account with some WGHO (or any other ERC20)', () => {
         action: {
           tipping: {
             currency: TEST_ERC20,
-            value: bigDecimal(1),
+            value: bigDecimal(0.1),
             referrals: [
               {
                 address: TEST_SIGNER,
