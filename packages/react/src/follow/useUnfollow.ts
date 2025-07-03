@@ -35,7 +35,6 @@ export function useUnfollow(
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     unfollow(sessionClient, request)
       .andThen(args.handler)
-      .andThen(sessionClient.waitForTransaction)
-      .andTee(() => fetchAccount(sessionClient, request.account)),
+      .andThen(sessionClient.waitForTransaction),
   );
 }
