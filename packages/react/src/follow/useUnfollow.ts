@@ -7,7 +7,7 @@ import type {
   UnexpectedError,
   ValidationError,
 } from '@lens-protocol/client';
-import { fetchAccount, unfollow } from '@lens-protocol/client/actions';
+import { unfollow } from '@lens-protocol/client/actions';
 
 import type { TxHash } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
