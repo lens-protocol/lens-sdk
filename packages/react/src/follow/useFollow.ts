@@ -35,7 +35,6 @@ export function useFollow(
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     follow(sessionClient, request)
       .andThen(args.handler)
-      .andThen(sessionClient.waitForTransaction)
-      .andTee(() => fetchAccount(sessionClient, request.account)),
+      .andThen(sessionClient.waitForTransaction),
   );
 }
