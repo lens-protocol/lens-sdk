@@ -877,7 +877,7 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
     if (this.context.cache) {
       return [this.context.cache, ...constantExchanges];
     }
-    return [...constantExchanges];
+    return constantExchanges;
   }
 
   private handleAuthentication<

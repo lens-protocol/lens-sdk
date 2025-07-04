@@ -11,7 +11,7 @@ export type ClientConfig = {
    */
   environment: EnvironmentConfig;
   /**
-   * Whether to enable caching.
+   * The GraphQL cache exchange from urql.
    *
    * @experimental This feature is experimental and may change in the future.
    */
