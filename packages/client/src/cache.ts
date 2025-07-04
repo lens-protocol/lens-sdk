@@ -1,8 +1,7 @@
 import introspectedSchema from '@lens-protocol/graphql/introspectionSchema.json';
 import { cacheExchange } from '@urql/exchange-graphcache';
-// import { relayPagination } from '@urql/exchange-graphcache/extras';
 
-export const cache = cacheExchange({
+export const cache = /*#__PURE__*/ cacheExchange({
   schema: introspectedSchema,
   keys: {
     // Entities with address field as key
@@ -318,9 +317,4 @@ export const cache = cacheExchange({
     RefreshMetadataStatusResult: () => null,
     AccessControlResult: () => null,
   },
-  // resolvers: {
-  //   Query: {
-  //     accounts: relayPagination(),
-  //   },
-  // },
 });
