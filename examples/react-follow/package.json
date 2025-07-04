@@ -1,6 +1,6 @@
 {
-  "name": "react-login",
-  "description": "Log in to Lens",
+  "name": "react-follow",
+  "description": "Follow/Unfollow accounts on Lens",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,19 +9,25 @@
   },
   "dependencies": {
     "@lens-chain/sdk": "latest",
-    "@lens-protocol/react": "canary",
+    "@lens-protocol/react": "workspace:*",
+    "@lens-protocol/client": "workspace:*",
+    "@lens-protocol/graphql": "workspace:*",
+    "@lens-protocol/types": "workspace:*",
+    "@lens-protocol/env": "workspace:*",
+    "@lens-protocol/storage": "workspace:*",
     "@tanstack/react-query": "^5.63.0",
     "connectkit": "^1.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "wagmi": "^2.15.6",
     "viem": "^2.22.4",
-    "wagmi": "^2.14.6"
+    "vite": "^5.4.9",
+    "urql": "^4.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react-swc": "^3.8.1",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.9"
+    "typescript": "^5.6.3"
   }
 }

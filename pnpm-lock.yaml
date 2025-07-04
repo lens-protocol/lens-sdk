@@ -68,6 +68,9 @@ importers:
       '@urql/exchange-auth':
         specifier: ^2.2.0
         version: 2.2.0(@urql/core@5.0.8(graphql@16.9.0))
+      '@urql/exchange-graphcache':
+        specifier: ^7.2.4
+        version: 7.2.4(@urql/core@5.0.8(graphql@16.9.0))(graphql@16.9.0)
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
@@ -161,6 +164,9 @@ importers:
       '@lens-protocol/types':
         specifier: workspace:*
         version: link:../types
+      '@urql/exchange-graphcache':
+        specifier: ^7.2.4
+        version: 7.2.4(@urql/core@5.0.8(graphql@16.9.0))(graphql@16.9.0)
       urql:
         specifier: ^4.2.1
         version: 4.2.1(graphql@16.9.0)(react@18.3.1)
@@ -238,6 +244,14 @@ packages:
 
   '@0no-co/graphql.web@1.0.9':
     resolution: {integrity: sha512-lXSg4bDHvP8CiMdpQf9f/rca12IIjXHN/p0Rc5mgzgLe4JBlIoA1zFa9NKhfG1bW0OyI2hgaOldFCfkEQwZuEQ==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    peerDependenciesMeta:
+      graphql:
+        optional: true
+
+  '@0no-co/graphql.web@1.1.2':
+    resolution: {integrity: sha512-N2NGsU5FLBhT8NZ+3l2YrzZSHITjNXNuDhC4iDiikv0IujaJ0Xc6xIxQZ/Ek3Cb+rgPjnLHYyJm11tInuJn+cw==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     peerDependenciesMeta:
@@ -1116,6 +1130,11 @@ packages:
 
   '@urql/exchange-auth@2.2.0':
     resolution: {integrity: sha512-4bJR22EYa/flbhwMBj4lU8MI4cO3ddo/DX7FygWeaeHZU+RWfnQKifCKwxIYlnoV8/CgYRM4lFSMIByYlhmWcg==}
+    peerDependencies:
+      '@urql/core': ^5.0.0
+
+  '@urql/exchange-graphcache@7.2.4':
+    resolution: {integrity: sha512-kiKbT0ZrtyQmmgNLYR0qkZAJjWHQOtrd+6Dt9JMtm3L/A8r3D6ptcJn668BADP6J+vkxcfNFtdI+0OdmBBkRgw==}
     peerDependencies:
       '@urql/core': ^5.0.0
 
@@ -2917,6 +2936,10 @@ snapshots:
     optionalDependencies:
       graphql: 16.9.0
 
+  '@0no-co/graphql.web@1.1.2(graphql@16.9.0)':
+    optionalDependencies:
+      graphql: 16.9.0
+
   '@0no-co/graphqlsp@1.12.16(graphql@16.9.0)(typescript@5.7.2)':
     dependencies:
       '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.7.2)
@@ -3651,6 +3674,14 @@ snapshots:
     dependencies:
       '@urql/core': 5.0.8(graphql@16.9.0)
       wonka: 6.3.4
+
+  '@urql/exchange-graphcache@7.2.4(@urql/core@5.0.8(graphql@16.9.0))(graphql@16.9.0)':
+    dependencies:
+      '@0no-co/graphql.web': 1.1.2(graphql@16.9.0)
+      '@urql/core': 5.0.8(graphql@16.9.0)
+      wonka: 6.3.4
+    transitivePeerDependencies:
+      - graphql
 
   '@vitest/expect@3.2.0':
     dependencies:
