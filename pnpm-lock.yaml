@@ -164,9 +164,6 @@ importers:
       '@lens-protocol/types':
         specifier: workspace:*
         version: link:../types
-      '@urql/exchange-graphcache':
-        specifier: ^7.2.4
-        version: 7.2.4(@urql/core@5.0.8(graphql@16.9.0))(graphql@16.9.0)
       urql:
         specifier: ^4.2.1
         version: 4.2.1(graphql@16.9.0)(react@18.3.1)

@@ -20,6 +20,10 @@
       "import": "./dist/test-utils.js",
       "require": "./dist/test-utils.cjs",
       "types": "./dist/test-utils.d.cts"
+    },
+    "./introspectionSchema.json": {
+      "import": "./dist/introspectionSchema.json",
+      "require": "./dist/introspectionSchema.json"
     }
   },
   "typesVersions": {
@@ -35,12 +39,15 @@
     "build": "tsup",
     "check": "gql.tada check",
     "doctor": "gql.tada doctor",
+    "introspect:local": "BASE_URL=http://localhost:3000/graphql ./introspection-curl.sh",
+    "introspect:staging": "BASE_URL=https://api.staging.lens.dev/graphql ./introspection-curl.sh",
     "gql:generate:cache": "gql.tada generate turbo",
     "gql:download:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
     "gql:download:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
     "gql:generate": "gql-tada generate output",
     "gql:turbo": "gql-tada turbo",
-    "prebuild": "pnpm run gql:turbo"
+    "prebuild": "pnpm run gql:turbo",
+    "postbuild": "cp ./src/introspectionSchema.json ./dist/introspectionSchema.json"
   },
   "dependencies": {
     "@lens-protocol/types": "workspace:*",

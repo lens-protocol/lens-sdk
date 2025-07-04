@@ -1,6 +1,6 @@
 import type { EnvironmentConfig } from '@lens-protocol/env';
 import type { IStorageProvider } from '@lens-protocol/storage';
-import type { TypedDocumentNode } from '@urql/core';
+import type { Exchange, TypedDocumentNode } from '@urql/core';
 
 /**
  * The client configuration.
@@ -13,9 +13,9 @@ export type ClientConfig = {
   /**
    * Whether to enable caching.
    *
-   * @defaultValue `false`
+   * @experimental This feature is experimental and may change in the future.
    */
-  cache?: boolean;
+  cache?: Exchange;
   /**
    * Whether to enable debug mode.
    *
