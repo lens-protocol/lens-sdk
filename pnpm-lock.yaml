@@ -76,8 +76,8 @@ importers:
         version: 4.0.0
     devDependencies:
       '@lens-chain/storage-client':
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^1.0.5
+        version: 1.0.5
       '@lens-protocol/metadata':
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.7.2)(zod@3.23.8)
@@ -767,8 +767,8 @@ packages:
       zksync-ethers:
         optional: true
 
-  '@lens-chain/storage-client@1.0.2':
-    resolution: {integrity: sha512-D1jsobIDAejVpVIY7jiE26XjGDU965vKrd0unipLD64JXnYHtOxvuPH1KtIQKzjW+2sSANXkqj5qeY+CeKtPsA==}
+  '@lens-chain/storage-client@1.0.5':
+    resolution: {integrity: sha512-rK8vqS7dTyCYlx3NDma9kTGcAdecxW4G+owQX5hczWdFPllsSQfuSz0ez2+ApiMJl0sTyGvUEy8mqvfr0RtDBw==}
 
   '@lens-protocol/metadata@2.0.0':
     resolution: {integrity: sha512-KLm9hQvPw8zCYOxnZFA02Cnzfrphbt6i1YIzAK5fBki1ZTMqAnlSoKxCesEXVjDd6m9MM6dd3neRxmvDGwer4Q==}
@@ -3359,7 +3359,7 @@ snapshots:
       viem: 2.22.4(typescript@5.7.2)(zod@3.23.8)
       zksync-ethers: 6.15.3(ethers@6.13.4)
 
-  '@lens-chain/storage-client@1.0.2': {}
+  '@lens-chain/storage-client@1.0.5': {}
 
   '@lens-protocol/metadata@2.0.0(typescript@5.7.2)(zod@3.23.8)':
     dependencies:
