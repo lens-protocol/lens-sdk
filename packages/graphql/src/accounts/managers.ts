@@ -115,7 +115,7 @@ export type UpdateAccountManagerResult = FragmentOf<
 >;
 
 export const UpdateAccountManagerMutation = graphql(
-  `mutation RemoveAccountManager($request: UpdateAccountManagerRequest!) {
+  `mutation UpdateAccountManager($request: UpdateAccountManagerRequest!) {
     value: updateAccountManager(request: $request) {
       ...UpdateAccountManagerResult
     }
