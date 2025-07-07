@@ -4,11 +4,9 @@ import type {
   TransactionIndexingError,
   UnauthenticatedError,
   UnexpectedError,
-  ValidationError
+  ValidationError,
 } from '@lens-protocol/client';
-import { removeSignless } from '@lens-protocol/client/actions';
-
-import { fetchMeDetails } from '@lens-protocol/client/actions';
+import { fetchMeDetails, removeSignless } from '@lens-protocol/client/actions';
 import type { TxHash } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
@@ -36,6 +34,6 @@ export function useRemoveSignless(
     removeSignless(sessionClient)
       .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
-      .andTee(() => fetchMeDetails(sessionClient))
+      .andTee(() => fetchMeDetails(sessionClient)),
   );
 }
