@@ -26,7 +26,7 @@ export type UseSetAccountMetadataArgs = {
 export function useSetAccountMetadata(
   args: UseSetAccountMetadataArgs,
 ): UseAsyncTask<
-  { metadata: SetAccountMetadataRequest; account: string },
+  SetAccountMetadataRequest,
   void,
   | SigningError
   | ValidationError
@@ -35,10 +35,14 @@ export function useSetAccountMetadata(
   | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    setAccountMetadata(sessionClient, request.metadata)
+    setAccountMetadata(sessionClient, request)
       .andThen(args.handler)
       .andThen(sessionClient.waitForTransaction)
       .map(() => undefined)
-      .andTee(() => fetchAccount(sessionClient, { address: request.account })),
+      .andTee(() =>
+        sessionClient.getAuthenticatedUser().andTee((user) =>
+          fetchAccount(sessionClient, { address: user.address }),
+        ),
+      ),
   );
 }
