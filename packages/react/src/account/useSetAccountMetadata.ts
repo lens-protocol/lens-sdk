@@ -40,9 +40,11 @@ export function useSetAccountMetadata(
       .andThen(sessionClient.waitForTransaction)
       .map(() => undefined)
       .andTee(() =>
-        sessionClient.getAuthenticatedUser().andTee((user) =>
-          fetchAccount(sessionClient, { address: user.address }),
-        ),
+        sessionClient
+          .getAuthenticatedUser()
+          .andTee((user) =>
+            fetchAccount(sessionClient, { address: user.address }),
+          ),
       ),
   );
 }
