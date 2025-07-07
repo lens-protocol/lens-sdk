@@ -5,11 +5,17 @@ import { zeroAddress } from 'viem';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { SessionClient } from '../clients';
-import { CHAIN, loginAsAccountOwner, TEST_ERC20, wallet } from '../test-utils';
+import {
+  CHAIN,
+  loginAsAccountOwner,
+  TEST_ACCOUNT,
+  TEST_ERC20,
+  wallet,
+} from '../test-utils';
 import { handleOperationWith } from '../viem';
 import {
   deposit,
-  fetchAccountBalances,
+  fetchBalancesBulk,
   unwrapTokens,
   withdraw,
   wrapTokens,
@@ -19,7 +25,8 @@ import { findErc20Amount, findNativeAmount } from './helpers';
 async function fetchBalances(
   sessionClient: SessionClient,
 ): Promise<[NativeAmount, Erc20Amount]> {
-  const result = await fetchAccountBalances(sessionClient, {
+  const result = await fetchBalancesBulk(sessionClient, {
+    address: TEST_ACCOUNT,
     includeNative: true,
     tokens: [TEST_ERC20],
   }).andThen((balances) =>
@@ -32,11 +39,35 @@ async function fetchBalances(
   return result.value;
 }
 
-describe('Given a Lens Account', () => {
-  describe(`When calling the '${fetchAccountBalances.name}' action`, () => {
+// TODO: remove this once LENS-1212 is fixed
+async function retryBalanceCheck(
+  sessionClient: SessionClient,
+  assertion: (balances: [NativeAmount, Erc20Amount]) => void,
+): Promise<void> {
+  let lastError: Error | null = null;
+  let attempt = 0;
+
+  do {
+    try {
+      const balances = await fetchBalances(sessionClient);
+      assertion(balances);
+      return;
+    } catch (error) {
+      lastError = error as Error;
+    }
+    attempt++;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  } while (attempt < 4);
+
+  throw lastError || new Error('Balance check failed after all retries');
+}
+
+describe('Given a Lens Account', { timeout: 20_000 }, () => {
+  describe(`When calling the '${fetchBalancesBulk.name}' action`, () => {
     it('Then it should return the requested balance amounts', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
-        fetchAccountBalances(sessionClient, {
+        fetchBalancesBulk(sessionClient, {
+          address: TEST_ACCOUNT,
           includeNative: true,
           tokens: [TEST_ERC20],
         }),
@@ -66,7 +97,8 @@ describe('Given a Lens Account', () => {
 
     it('Then it should be resilient and have a local error just for the failed balance', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
-        fetchAccountBalances(sessionClient, {
+        fetchBalancesBulk(sessionClient, {
+          address: TEST_ACCOUNT,
           includeNative: true,
           tokens: [evmAddress(zeroAddress), TEST_ERC20],
         }),
@@ -100,7 +132,7 @@ describe('Given a Lens Account', () => {
     });
   });
 
-  describe('When managing Account funds', { timeout: 10_000 }, () => {
+  describe('When managing Account funds', () => {
     let sessionClient: SessionClient;
 
     beforeAll(async () => {
@@ -119,8 +151,10 @@ describe('Given a Lens Account', () => {
         }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        const [newNative] = await fetchBalances(sessionClient);
-        expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
+
+        await retryBalanceCheck(sessionClient, ([newNative]) => {
+          expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
+        });
       },
     );
 
@@ -134,9 +168,11 @@ describe('Given a Lens Account', () => {
         }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        const [newNative, newWrapped] = await fetchBalances(sessionClient);
-        expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
-        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
+
+        await retryBalanceCheck(sessionClient, ([newNative, newWrapped]) => {
+          expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
+          expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
+        });
       },
     );
 
@@ -153,8 +189,10 @@ describe('Given a Lens Account', () => {
         }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        const [, newWrapped] = await fetchBalances(sessionClient);
-        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
+
+        await retryBalanceCheck(sessionClient, ([, newWrapped]) => {
+          expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
+        });
       },
     );
 
@@ -170,8 +208,10 @@ describe('Given a Lens Account', () => {
         }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        const [, newWrapped] = await fetchBalances(sessionClient);
-        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
+
+        await retryBalanceCheck(sessionClient, ([, newWrapped]) => {
+          expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).add(1));
+        });
       },
     );
 
@@ -185,9 +225,11 @@ describe('Given a Lens Account', () => {
         }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        const [newNative, newWrapped] = await fetchBalances(sessionClient);
-        expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
-        expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
+
+        await retryBalanceCheck(sessionClient, ([newNative, newWrapped]) => {
+          expect(Big(newNative.value)).toEqual(Big(native.value).add(1));
+          expect(Big(newWrapped.value)).toEqual(Big(wrapped.value).sub(1));
+        });
       },
     );
 
@@ -201,8 +243,10 @@ describe('Given a Lens Account', () => {
         }).andThen(handleOperationWith(wallet));
 
         assertOk(result);
-        const [newNative] = await fetchBalances(sessionClient);
-        expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
+
+        await retryBalanceCheck(sessionClient, ([newNative]) => {
+          expect(Big(newNative.value)).toEqual(Big(native.value).sub(1));
+        });
       },
     );
   });

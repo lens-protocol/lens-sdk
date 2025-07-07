@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type FollowersArgs = FollowersRequest;
+export type UseFollowersArgs = FollowersRequest;
 
 /**
  * Fetch followers accounts.
@@ -25,7 +25,7 @@ export type FollowersArgs = FollowersRequest;
  * ```
  */
 export function useFollowers(
-  args: FollowersArgs & Suspendable,
+  args: UseFollowersArgs & Suspendable,
 ): SuspenseResult<Paginated<Follower>>;
 
 /**
@@ -36,13 +36,13 @@ export function useFollowers(
  * ```
  */
 export function useFollowers(
-  args: FollowersArgs,
+  args: UseFollowersArgs,
 ): ReadResult<Paginated<Follower>>;
 
 export function useFollowers({
   suspense = false,
   ...request
-}: FollowersArgs & { suspense?: boolean }): SuspendableResult<
+}: UseFollowersArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<Follower>
 > {
   return useSuspendableQuery({

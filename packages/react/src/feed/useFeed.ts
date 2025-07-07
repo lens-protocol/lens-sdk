@@ -9,7 +9,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type FeedArgs = FeedRequest;
+export type UseFeedArgs = FeedRequest;
 
 /**
  * Fetch a single Feed.
@@ -21,7 +21,7 @@ export type FeedArgs = FeedRequest;
  * ```
  */
 export function useFeed(
-  args: FeedArgs & Suspendable,
+  args: UseFeedArgs & Suspendable,
 ): SuspenseResult<Feed | null>;
 
 /**
@@ -31,12 +31,12 @@ export function useFeed(
  * const { data, loading } = useFeed({ feed: evmAddress('0x…') });
  * ```
  */
-export function useFeed(args: FeedArgs): ReadResult<Feed | null>;
+export function useFeed(args: UseFeedArgs): ReadResult<Feed | null>;
 
 export function useFeed({
   suspense = false,
   ...request
-}: FeedArgs & { suspense?: boolean }): SuspendableResult<Feed | null> {
+}: UseFeedArgs & { suspense?: boolean }): SuspendableResult<Feed | null> {
   return useSuspendableQuery({
     document: FeedQuery,
     variables: { request },

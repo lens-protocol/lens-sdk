@@ -13,7 +13,7 @@ import type {
 } from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type GroupMembersArgs = GroupMembersRequest;
+export type UseGroupMembersArgs = GroupMembersRequest;
 
 /**
  * Fetch group members.
@@ -21,28 +21,33 @@ export type GroupMembersArgs = GroupMembersRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useGroupMembers({ group: evmAddress('0x…'), suspense: true });
+ * const { data } = useGroupMembers({
+ *   group: evmAddress('0x…'),
+ *   suspense: true
+ * });
  * ```
  */
 export function useGroupMembers(
-  args: GroupMembersArgs & Suspendable,
+  args: UseGroupMembersArgs & Suspendable,
 ): SuspenseResult<Paginated<GroupMember>>;
 
 /**
  * Fetch group members.
  *
  * ```tsx
- * const { data, loading } = useGroups({ group: evmAddress('0x…') });
+ * const { data, loading } = useGroupMembers({
+ *   group: evmAddress('0x…'),
+ * });
  * ```
  */
 export function useGroupMembers(
-  args: GroupMembersArgs,
+  args: UseGroupMembersArgs,
 ): ReadResult<Paginated<GroupMember>>;
 
 export function useGroupMembers({
   suspense = false,
   ...request
-}: GroupMembersArgs & { suspense?: boolean }): SuspendableResult<
+}: UseGroupMembersArgs & { suspense?: boolean }): SuspendableResult<
   Paginated<GroupMember>
 > {
   return useSuspendableQuery({
