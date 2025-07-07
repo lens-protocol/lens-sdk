@@ -17,5 +17,4 @@ export default defineConfig(() => ({
   loader: {
     '.graphql': 'text',
   },
-  onSuccess: 'cp ./src/schema.json ./dist/schema.json',
 }));
