@@ -32,7 +32,8 @@ export function useUndoBookmarkPost(): UseAsyncTask<
   UnauthenticatedError | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    undoBookmarkPost(sessionClient, request)
-      .andTee(() => fetchPost(sessionClient, { post: request.post }))
+    undoBookmarkPost(sessionClient, request).andTee(() =>
+      fetchPost(sessionClient, { post: request.post }),
+    ),
   );
 }

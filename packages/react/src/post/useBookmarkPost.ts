@@ -32,7 +32,8 @@ export function useBookmarkPost(): UseAsyncTask<
   UnauthenticatedError | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    bookmarkPost(sessionClient, request)
-      .andTee(() => fetchPost(sessionClient, { post: request.post }))
+    bookmarkPost(sessionClient, request).andTee(() =>
+      fetchPost(sessionClient, { post: request.post }),
+    ),
   );
 }
