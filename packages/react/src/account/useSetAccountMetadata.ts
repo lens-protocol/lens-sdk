@@ -7,9 +7,11 @@ import type {
   UnexpectedError,
   ValidationError,
 } from '@lens-protocol/client';
-import { setAccountMetadata } from '@lens-protocol/client/actions';
+import {
+  fetchAccount,
+  setAccountMetadata,
+} from '@lens-protocol/client/actions';
 
-import type { TxHash } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
 export type UseSetAccountMetadataArgs = {
@@ -24,8 +26,8 @@ export type UseSetAccountMetadataArgs = {
 export function useSetAccountMetadata(
   args: UseSetAccountMetadataArgs,
 ): UseAsyncTask<
-  SetAccountMetadataRequest,
-  TxHash,
+  { metadata: SetAccountMetadataRequest; account: string },
+  void,
   | SigningError
   | ValidationError
   | TransactionIndexingError
@@ -33,8 +35,10 @@ export function useSetAccountMetadata(
   | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    setAccountMetadata(sessionClient, request)
+    setAccountMetadata(sessionClient, request.metadata)
       .andThen(args.handler)
-      .andThen(sessionClient.waitForTransaction),
+      .andThen(sessionClient.waitForTransaction)
+      .map(() => undefined)
+      .andTee(() => fetchAccount(sessionClient, { address: request.account })),
   );
 }
