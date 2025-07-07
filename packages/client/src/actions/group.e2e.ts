@@ -1,7 +1,7 @@
 import type { EvmAddress } from '@lens-chain/storage-client';
 import { group } from '@lens-protocol/metadata';
 import { assertOk, nonNullable, uri } from '@lens-protocol/types';
-import { beforeAll, describe, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   loginAsAccountOwner,
   loginAsBuilder,
@@ -17,7 +17,7 @@ const metadata = group({
 
 describe('Given a logged-in user', () => {
   describe('When joining a Group with SimplePaymentRule in native token denomination', () => {
-    let groupAddress: EvmAddress = '0x9904A9E96dfB83409Cd0D89DF15588eDBb99B322';
+    let groupAddress: EvmAddress;
 
     beforeAll(async () => {
       const result = await loginAsBuilder().andThen((sessionClient) =>
@@ -52,9 +52,14 @@ describe('Given a logged-in user', () => {
           group: groupAddress,
         })
           .andThen(handleOperationWith(wallet))
-          .andThen(sessionClient.waitForTransaction),
+          .andThen(sessionClient.waitForTransaction)
+          .andThen(() =>
+            fetchGroup(sessionClient, { group: groupAddress }).map(nonNullable),
+          ),
       );
+
       assertOk(result);
+      expect(result.value.operations?.isMember).toBe(true);
     });
   });
 });
