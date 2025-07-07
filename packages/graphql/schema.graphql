@@ -2313,6 +2313,9 @@ input FeedsFilter {
   Uses fuzzy search on feed name
   """
   searchQuery: String
+
+  """The optional filter for apps"""
+  app: EvmAddress
 }
 
 enum FeedsOrderBy {
@@ -3041,6 +3044,9 @@ input GroupsFilter {
   Uses fuzzy search on group name
   """
   searchQuery: String
+
+  """The optional filter for apps"""
+  app: EvmAddress
 }
 
 enum GroupsOrderBy {
@@ -5621,7 +5627,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1750589209
+  since: Int! = 1751613304
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5635,7 +5641,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1750589209, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1751613304, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -6492,8 +6498,14 @@ input SimplePaymentFollowRuleConfig {
 }
 
 input SimplePaymentGroupRuleConfig {
-  """The group joining fee."""
-  cost: Erc20AmountInput!
+  """Use `erc20` or `native` instead."""
+  cost: Erc20AmountInput
+
+  """The ERC 20 token amount. Mutually exclusive with `native`"""
+  erc20: Erc20AmountInput
+
+  """The native token amount. Mutually exclusive with `erc20`"""
+  native: BigDecimal
 
   """The group joining fee recipient."""
   recipient: EvmAddress!
@@ -7763,6 +7775,7 @@ enum TransactionOperation {
   SPONSORSHIP_UNPAUSED
   SPONSORSHIP_SIGNER_ADDED
   SPONSORSHIP_SIGNER_REMOVED
+  NAMESPACE_INFO
 }
 
 input TransactionStatusRequest {
@@ -8207,6 +8220,12 @@ type UsernameNamespace {
 
   """The namespace for example `lens`"""
   namespace: String!
+
+  """The namespace ERC-721 token name."""
+  tokenName: String!
+
+  """The namespace ERC-721 token symbol."""
+  tokenSymbol: String!
   createdAt: DateTime!
   metadata: UsernameNamespaceMetadata
   collectionMetadata: UsernameNamespaceMetadataStandard
