@@ -20,6 +20,10 @@
       "import": "./dist/test-utils.js",
       "require": "./dist/test-utils.cjs",
       "types": "./dist/test-utils.d.cts"
+    },
+    "./schema.json": {
+      "import": "./src/schema.json",
+      "require": "./src/schema.json"
     }
   },
   "typesVersions": {
@@ -35,9 +39,13 @@
     "build": "tsup",
     "check": "gql.tada check",
     "doctor": "gql.tada doctor",
+    "introspect:local": "BASE_URL=http://localhost:3000/graphql ./scripts/introspection-curl.sh",
+    "introspect:staging": "BASE_URL=https://api.staging.lens.dev/graphql ./scripts/introspection-curl.sh",
     "gql:generate:cache": "gql.tada generate turbo",
-    "gql:download:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
-    "gql:download:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
+    "schema:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
+    "schema:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
+    "gql:download:local": "pnpm run schema:local && pnpm run introspect:local",
+    "gql:download:staging": "pnpm run schema:staging && pnpm run introspect:staging",
     "gql:generate": "gql-tada generate output",
     "gql:turbo": "gql-tada turbo",
     "prebuild": "pnpm run gql:turbo"

@@ -1,6 +1,6 @@
 {
-  "name": "react-login",
-  "description": "Log in to Lens",
+  "name": "react-follow",
+  "description": "Follow/Unfollow accounts on Lens",
   "private": true,
   "version": "0.0.0",
   "type": "module",

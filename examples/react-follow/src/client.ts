@@ -1,6 +1,7 @@
 import { fetchAccountsAvailable } from '@lens-protocol/client/actions';
 import {
   assertOk,
+  cache,
   invariant,
   PublicClient,
   testnet,
@@ -11,6 +12,7 @@ import { walletClient } from './wallet';
 
 export const client = PublicClient.create({
   environment: testnet,
+  cache: cache,
   storage: window.localStorage,
 });
 
