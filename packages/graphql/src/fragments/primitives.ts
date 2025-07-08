@@ -448,6 +448,8 @@ export const UsernameNamespaceFragment = graphql(
     address
     namespace
     createdAt
+    tokenName
+    tokenSymbol
     metadata {
       ...UsernameNamespaceMetadata
     }
