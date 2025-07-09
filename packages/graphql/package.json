@@ -22,8 +22,8 @@
       "types": "./dist/test-utils.d.cts"
     },
     "./schema.json": {
-      "import": "./src/schema.json",
-      "require": "./src/schema.json"
+      "import": "./dist/schema.json",
+      "require": "./dist/schema.json"
     }
   },
   "typesVersions": {
