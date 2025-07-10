@@ -22,30 +22,34 @@
       "types": "./dist/test-utils.d.cts"
     },
     "./schema.json": {
-      "import": "./src/schema.json",
-      "require": "./src/schema.json"
+      "import": "./dist/schema.json",
+      "require": "./dist/schema.json"
     }
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"],
-      "test-utils": ["./dist/test-utils.d.ts"]
+      "import": [
+        "./dist/index.d.ts"
+      ],
+      "require": [
+        "./dist/index.d.cts"
+      ],
+      "test-utils": [
+        "./dist/test-utils.d.ts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "check": "gql.tada check",
     "doctor": "gql.tada doctor",
-    "introspect:local": "BASE_URL=http://localhost:3000/graphql ./scripts/introspection-curl.sh",
-    "introspect:staging": "BASE_URL=https://api.staging.lens.dev/graphql ./scripts/introspection-curl.sh",
     "gql:generate:cache": "gql.tada generate turbo",
-    "schema:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
-    "schema:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
-    "gql:download:local": "pnpm run schema:local && pnpm run introspect:local",
-    "gql:download:staging": "pnpm run schema:staging && pnpm run introspect:staging",
+    "gql:download:local": "./scripts/fetch-schema.ts http://localhost:3000/graphql ./src/schema.json && gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
+    "gql:download:staging": "./scripts/fetch-schema.ts https://api.staging.lens.dev/graphql ./src/schema.json && gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
     "gql:generate": "gql-tada generate output",
     "gql:turbo": "gql-tada turbo",
     "prebuild": "pnpm run gql:turbo"
@@ -58,6 +62,7 @@
   },
   "devDependencies": {
     "tsup": "^8.3.5",
+    "tsx": "^4.19.3",
     "typescript": "^5.6.3"
   },
   "license": "MIT"
