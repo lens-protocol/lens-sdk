@@ -1,4 +1,12 @@
+// biome-ignore-all lint/suspicious/noExplicitAny: simplicity
+import type {
+  CreateFollowRequest,
+  CreateUnfollowRequest,
+  FollowResult,
+  UnfollowResult,
+} from '@lens-protocol/graphql';
 import introspectedSchema from '@lens-protocol/graphql/schema.json';
+import { gql } from '@urql/core';
 import { cacheExchange } from '@urql/exchange-graphcache';
 
 export const cache = /*#__PURE__*/ cacheExchange({
@@ -316,5 +324,49 @@ export const cache = /*#__PURE__*/ cacheExchange({
     RefreshMetadataResult: () => null,
     RefreshMetadataStatusResult: () => null,
     AccessControlResult: () => null,
+  },
+  updates: {
+    Mutation: {
+      follow: (
+        result: { value: FollowResult },
+        args: { request: CreateFollowRequest },
+        cache,
+        _info,
+      ) => {
+        // Optimistically update the follow status if getting txHash
+        if (result.value.__typename === 'FollowResponse') {
+          cache.writeFragment(
+            gql`
+              fragment AccountOperations on LoggedInAccountOperations {
+                isFollowedByMe
+            }`,
+            {
+              id: `${args.request.account}-0x591a47DF83758dD51a79b74d182f13B274e9171D`,
+              isFollowedByMe: true,
+            },
+          );
+        }
+      },
+      unfollow: (
+        result: { value: UnfollowResult },
+        args: { request: CreateUnfollowRequest },
+        cache,
+        _info,
+      ) => {
+        // Optimistically update the unfollow status if getting txHash
+        if (result.value.__typename === 'UnfollowResponse') {
+          cache.writeFragment(
+            gql`
+              fragment AccountOperations on LoggedInAccountOperations {
+                isFollowedByMe
+            }`,
+            {
+              id: `${args.request.account}-0x591a47DF83758dD51a79b74d182f13B274e9171D`,
+              isFollowedByMe: false,
+            },
+          );
+        }
+      },
+    },
   },
 });
