@@ -143,9 +143,12 @@ importers:
         specifier: ^4.26.1
         version: 4.30.0
     devDependencies:
+      '@urql/introspection':
+        specifier: ^1.2.1
+        version: 1.2.1(graphql@16.9.0)
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(tsx@4.19.3)(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
@@ -1137,6 +1140,11 @@ packages:
     resolution: {integrity: sha512-kiKbT0ZrtyQmmgNLYR0qkZAJjWHQOtrd+6Dt9JMtm3L/A8r3D6ptcJn668BADP6J+vkxcfNFtdI+0OdmBBkRgw==}
     peerDependencies:
       '@urql/core': ^5.0.0
+
+  '@urql/introspection@1.2.1':
+    resolution: {integrity: sha512-U9FTSISz69EEK3bHWDsqux9JqOeiLzr3eDFBQ5DmHuTLaBsd5mjPdtLRzzzmb9nW1Ygd6IR8YcuM7zeNqQ5lCQ==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
   '@vitest/expect@3.2.0':
     resolution: {integrity: sha512-0v4YVbhDKX3SKoy0PHWXpKhj44w+3zZkIoVES9Ex2pq+u6+Bijijbi2ua5kE+h3qT6LBWFTNZSCOEU37H8Y5sA==}
@@ -3683,6 +3691,10 @@ snapshots:
     transitivePeerDependencies:
       - graphql
 
+  '@urql/introspection@1.2.1(graphql@16.9.0)':
+    dependencies:
+      graphql: 16.9.0
+
   '@vitest/expect@3.2.0':
     dependencies:
       '@types/chai': 5.2.2
@@ -4848,12 +4860,6 @@ snapshots:
       postcss: 8.5.3
       tsx: 4.19.3
 
-  postcss-load-config@6.0.1(tsx@4.19.3):
-    dependencies:
-      lilconfig: 3.1.2
-    optionalDependencies:
-      tsx: 4.19.3
-
   postcss@8.5.3:
     dependencies:
       nanoid: 3.3.11
@@ -5229,32 +5235,6 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       postcss: 8.5.3
-      typescript: 5.7.2
-    transitivePeerDependencies:
-      - jiti
-      - supports-color
-      - tsx
-      - yaml
-
-  tsup@8.3.5(tsx@4.19.3)(typescript@5.7.2):
-    dependencies:
-      bundle-require: 5.0.0(esbuild@0.24.0)
-      cac: 6.7.14
-      chokidar: 4.0.1
-      consola: 3.2.3
-      debug: 4.3.7
-      esbuild: 0.24.0
-      joycon: 3.1.1
-      picocolors: 1.1.1
-      postcss-load-config: 6.0.1(tsx@4.19.3)
-      resolve-from: 5.0.0
-      rollup: 4.24.2
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tinyexec: 0.3.1
-      tinyglobby: 0.2.10
-      tree-kill: 1.2.2
-    optionalDependencies:
       typescript: 5.7.2
     transitivePeerDependencies:
       - jiti

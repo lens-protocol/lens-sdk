@@ -2,6 +2,10 @@
 
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import {
+  getIntrospectedSchema,
+  minifyIntrospectionQuery,
+} from '@urql/introspection';
 import { getIntrospectionQuery } from 'graphql';
 
 const baseUrl = process.argv[2];
@@ -39,7 +43,7 @@ try {
   }
 
   const result = (await response.json()) as {
-    data?: unknown;
+    data: unknown;
     errors?: unknown[];
   };
 
@@ -48,8 +52,12 @@ try {
     process.exit(1);
   }
 
+  const minified = minifyIntrospectionQuery(
+    getIntrospectedSchema(result.data as any),
+  );
+
   const schemaPath = join(process.cwd(), outputPath);
-  writeFileSync(schemaPath, JSON.stringify(result.data, null, 2));
+  writeFileSync(schemaPath, JSON.stringify(minified, null, 2));
 
   console.log(`Introspection saved to ${outputPath}`);
 } catch (error) {
