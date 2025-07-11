@@ -8,5 +8,7 @@ export * from './useAccountsBulk';
 export * from './useBalancesBulk';
 export * from './useCreateAccountWithFreeUsername';
 export * from './useCreateAccountWithRestrictedUsername';
+export * from './useEnableSignless';
+export * from './useRemoveSignless';
 export * from './useSetAccountMetadata';
 export * from './useWhoExecutedActionOnAccount';

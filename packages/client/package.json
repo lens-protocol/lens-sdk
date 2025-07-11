@@ -69,6 +69,7 @@
     "@lens-protocol/types": "workspace:*",
     "@urql/core": "^5.0.8",
     "@urql/exchange-auth": "^2.2.0",
+    "@urql/exchange-graphcache": "^7.2.4",
     "graphql": "^16.9.0",
     "jwt-decode": "^4.0.0"
   },
