@@ -472,6 +472,28 @@ const PostActionExecutedNotificationFragment: FragmentDocumentFor<PostActionExec
     [PostActionExecutedFragment, ReferencedPostFragment],
   );
 
+export interface TokenDistributedNotification {
+  __typename: 'TokenDistributedNotification';
+  id: ID;
+  account: Account;
+  amount: PayableAmount;
+}
+
+export const TokenDistributedNotificationFragment: FragmentDocumentFor<TokenDistributedNotification> =
+  graphql(
+    `fragment TokenDistributedNotification on TokenDistributedNotification {
+      __typename
+      id
+      account {
+        ...Account
+      }
+      amount {
+        ...PayableAmount
+      }
+    }`,
+    [AccountFragment, PayableAmountFragment],
+  );
+
 export type Notification =
   | __FutureProofUnion
   | AccountActionExecutedNotification
@@ -483,7 +505,8 @@ export type Notification =
   | CommentNotification
   | RepostNotification
   | QuoteNotification
-  | MentionNotification;
+  | MentionNotification
+  | TokenDistributedNotification;
 
 const NotificationFragment: FragmentDocumentFor<Notification, 'Notification'> =
   graphql(
@@ -519,6 +542,9 @@ const NotificationFragment: FragmentDocumentFor<Notification, 'Notification'> =
     ... on MentionNotification {
       ...MentionNotification
     }
+    ... on TokenDistributedNotification {
+      ...TokenDistributedNotification
+    }
   }`,
     [
       AccountActionExecutedNotificationFragment,
@@ -531,6 +557,7 @@ const NotificationFragment: FragmentDocumentFor<Notification, 'Notification'> =
       RepostNotificationFragment,
       QuoteNotificationFragment,
       MentionNotificationFragment,
+      TokenDistributedNotificationFragment,
     ],
   );
 
