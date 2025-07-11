@@ -8,6 +8,7 @@ import type {
 import introspectedSchema from '@lens-protocol/graphql/schema.json';
 import { gql } from '@urql/core';
 import { cacheExchange } from '@urql/exchange-graphcache';
+import { relayPagination } from '@urql/exchange-graphcache/extras';
 
 export const cache = /*#__PURE__*/ cacheExchange({
   schema: introspectedSchema,
@@ -87,7 +88,6 @@ export const cache = /*#__PURE__*/ cacheExchange({
     AccountStats: () => null,
     AccountFeedsStats: () => null,
     AccountGraphsFollowStats: () => null,
-    LoggedInAccountOperations: () => null,
 
     // Namespace related types
     NamespaceOperationValidationFailed: () => null,
@@ -325,23 +325,32 @@ export const cache = /*#__PURE__*/ cacheExchange({
     RefreshMetadataStatusResult: () => null,
     AccessControlResult: () => null,
   },
+  resolvers: {
+    Query: {
+      accounts: relayPagination(),
+    },
+  },
   updates: {
     Mutation: {
       follow: (
         result: { value: FollowResult },
         args: { request: CreateFollowRequest },
         cache,
-        _info,
+        info,
       ) => {
         // Optimistically update the follow status if getting txHash
+        console.log('info', info);
+        console.log('cache', cache);
         if (result.value.__typename === 'FollowResponse') {
+          console.log('followResponse', result.value);
           cache.writeFragment(
             gql`
               fragment AccountOperations on LoggedInAccountOperations {
+                id
                 isFollowedByMe
             }`,
             {
-              id: `${args.request.account}-0x591a47DF83758dD51a79b74d182f13B274e9171D`,
+              id: `${args.request.account}`,
               isFollowedByMe: true,
             },
           );
@@ -351,17 +360,21 @@ export const cache = /*#__PURE__*/ cacheExchange({
         result: { value: UnfollowResult },
         args: { request: CreateUnfollowRequest },
         cache,
-        _info,
+        info,
       ) => {
         // Optimistically update the unfollow status if getting txHash
+        console.log('cache', cache);
+        console.log('info', info);
         if (result.value.__typename === 'UnfollowResponse') {
+          console.log('unfollowResponse', result.value);
           cache.writeFragment(
             gql`
               fragment AccountOperations on LoggedInAccountOperations {
+                id
                 isFollowedByMe
             }`,
             {
-              id: `${args.request.account}-0x591a47DF83758dD51a79b74d182f13B274e9171D`,
+              id: `${args.request.account}`,
               isFollowedByMe: false,
             },
           );
