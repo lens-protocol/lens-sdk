@@ -2,7 +2,7 @@ name: Canary Release
 
 on:
   push:
-    branches: [next]
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
