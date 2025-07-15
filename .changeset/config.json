@@ -5,7 +5,7 @@
   "fixed": [["@lens-protocol/client", "@lens-protocol/react"]],
   "linked": [],
   "access": "public",
-  "baseBranch": "next",
+  "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": []
 }
