@@ -356,7 +356,7 @@ export const cache = /*#__PURE__*/ cacheExchange({
                 isFollowedByMe
             }`,
             {
-              id: `${args.request.account}`,
+              id: args.request.account,
               isFollowedByMe: true,
             },
           );
@@ -376,7 +376,7 @@ export const cache = /*#__PURE__*/ cacheExchange({
                 isFollowedByMe
             }`,
             {
-              id: `${args.request.account}`,
+              id: args.request.account,
               isFollowedByMe: false,
             },
           );
