@@ -18,7 +18,9 @@ import { useSuspendableQuery } from '../helpers';
  * const { data } = useMeDetails({ suspense: true });
  * ```
  */
-export function useMeDetails(args: Suspendable): SuspenseResult<MeResult | null>;
+export function useMeDetails(
+  args: Suspendable,
+): SuspenseResult<MeResult | null>;
 
 /**
  * Fetch the current authenticated user's details.
