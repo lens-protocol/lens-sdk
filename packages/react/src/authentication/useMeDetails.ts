@@ -15,21 +15,21 @@ import { useSuspendableQuery } from '../helpers';
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useMe({ suspense: true });
+ * const { data } = useMeDetails({ suspense: true });
  * ```
  */
-export function useMe(args: Suspendable): SuspenseResult<MeResult | null>;
+export function useMeDetails(args: Suspendable): SuspenseResult<MeResult | null>;
 
 /**
  * Fetch the current authenticated user's details.
  *
  * ```tsx
- * const { data, loading } = useMe();
+ * const { data, loading } = useMeDetails();
  * ```
  */
-export function useMe(): ReadResult<MeResult | null>;
+export function useMeDetails(): ReadResult<MeResult | null>;
 
-export function useMe({
+export function useMeDetails({
   suspense = false,
 }: {
   suspense?: boolean;
