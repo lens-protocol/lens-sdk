@@ -336,16 +336,12 @@ export const cache = /*#__PURE__*/ cacheExchange({
         result: { value: FollowResult },
         args: { request: CreateFollowRequest },
         cache,
-        info,
       ) => {
         // Optimistically update the follow status if getting txHash
-        console.log('info', info);
-        console.log('cache', cache);
         if (result.value.__typename === 'FollowResponse') {
-          console.log('followResponse', result.value);
           cache.writeFragment(
             gql`
-              fragment AccountOperations on LoggedInAccountOperations {
+              fragment _ on LoggedInAccountOperations {
                 id
                 isFollowedByMe
             }`,
@@ -360,16 +356,12 @@ export const cache = /*#__PURE__*/ cacheExchange({
         result: { value: UnfollowResult },
         args: { request: CreateUnfollowRequest },
         cache,
-        info,
       ) => {
         // Optimistically update the unfollow status if getting txHash
-        console.log('cache', cache);
-        console.log('info', info);
         if (result.value.__typename === 'UnfollowResponse') {
-          console.log('unfollowResponse', result.value);
           cache.writeFragment(
             gql`
-              fragment AccountOperations on LoggedInAccountOperations {
+              fragment _ on LoggedInAccountOperations {
                 id
                 isFollowedByMe
             }`,
