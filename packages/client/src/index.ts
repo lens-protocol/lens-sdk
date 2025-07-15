@@ -7,6 +7,7 @@ export type {
 export * from '@lens-protocol/types';
 export * from './AuthenticatedUser';
 export * from './authorization';
+export * from './cache';
 export * from './clients';
 export * from './config';
 export type * from './context';

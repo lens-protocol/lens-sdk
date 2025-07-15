@@ -413,6 +413,9 @@ abstract class AbstractClient<TContext extends Context, TError> {
   }
 
   protected exchanges(): Exchange[] {
+    if (this.context.cache) {
+      return [this.context.cache, fetchExchange];
+    }
     return [fetchExchange];
   }
 
@@ -805,7 +808,7 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
   }
 
   protected override exchanges(): Exchange[] {
-    return [
+    const constantExchanges = [
       authExchange(async (utils): Promise<AuthConfig> => {
         return {
           addAuthToOperation: (operation) => {
@@ -870,6 +873,11 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
       }),
       fetchExchange,
     ];
+
+    if (this.context.cache) {
+      return [this.context.cache, ...constantExchanges];
+    }
+    return constantExchanges;
   }
 
   private handleAuthentication<

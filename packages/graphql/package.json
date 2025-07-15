@@ -20,24 +20,36 @@
       "import": "./dist/test-utils.js",
       "require": "./dist/test-utils.cjs",
       "types": "./dist/test-utils.d.cts"
+    },
+    "./schema.json": {
+      "import": "./dist/schema.json",
+      "require": "./dist/schema.json"
     }
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"],
-      "test-utils": ["./dist/test-utils.d.ts"]
+      "import": [
+        "./dist/index.d.ts"
+      ],
+      "require": [
+        "./dist/index.d.cts"
+      ],
+      "test-utils": [
+        "./dist/test-utils.d.ts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "check": "gql.tada check",
     "doctor": "gql.tada doctor",
     "gql:generate:cache": "gql.tada generate turbo",
-    "gql:download:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
-    "gql:download:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
+    "gql:download:local": "./scripts/fetch-schema.ts http://localhost:3000/graphql ./src/schema.json && gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
+    "gql:download:staging": "./scripts/fetch-schema.ts https://api.staging.lens.dev/graphql ./src/schema.json && gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
     "gql:generate": "gql-tada generate output",
     "gql:turbo": "gql-tada turbo",
     "prebuild": "pnpm run gql:turbo"
@@ -49,7 +61,9 @@
     "type-fest": "^4.26.1"
   },
   "devDependencies": {
+    "@urql/introspection": "^1.2.1",
     "tsup": "^8.3.5",
+    "tsx": "^4.19.3",
     "typescript": "^5.6.3"
   },
   "license": "MIT"
