@@ -11,7 +11,6 @@ export function AccountsToFollow() {
   return (
     <div>
       <h2>Accounts to Follow</h2>
-
       <ul>
         {data?.items.map((account) => (
           <li key={account.address}>

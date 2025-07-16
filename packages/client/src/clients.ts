@@ -30,6 +30,7 @@ import {
   fetchExchange,
   type OperationResult,
   type OperationResultSource,
+  type RequestPolicy,
   type TypedDocumentNode,
   type Client as UrqlClient,
 } from '@urql/core';
@@ -128,6 +129,7 @@ abstract class AbstractClient<TContext extends Context, TError> {
   public abstract query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
+    requestPolicy: RequestPolicy,
   ): ResultAsync<TValue, TError | UnexpectedError>;
 
   public mutation<TValue, TVariables extends AnyVariables>(
@@ -576,9 +578,14 @@ export class PublicClient<
   public query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
+    requestPolicy: RequestPolicy = 'cache-first',
   ): ResultAsync<TValue, UnexpectedError> {
     const query = this.context.fragments.replaceFrom(document);
-    return this.resultFrom(this.urql.query(query, variables)).map(takeValue);
+    return this.resultFrom(
+      this.urql.query(query, variables, {
+        requestPolicy,
+      }),
+    ).map(takeValue);
   }
 
   /**
@@ -720,19 +727,26 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
    *
    * @param document - The GraphQL document to execute.
    * @param variables - The variables to pass to the operation.
+   * @param requestPolicy - The request policy to use.
    * @returns The result of the operation.
    */
 
   override query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
+    requestPolicy?: RequestPolicy,
   ): ResultAsync<TValue, UnexpectedError>;
   override query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
+    requestPolicy: RequestPolicy = 'cache-first',
   ): ResultAsync<TValue, UnauthenticatedError | UnexpectedError> {
     const query = this.context.fragments.replaceFrom(document);
-    return this.resultFrom(this.urql.query(query, variables))
+    return this.resultFrom(
+      this.urql.query(query, variables, {
+        requestPolicy,
+      }),
+    )
       .andThen(this.handleAuthentication)
       .map(takeValue);
   }

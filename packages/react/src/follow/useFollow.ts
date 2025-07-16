@@ -7,7 +7,7 @@ import type {
   UnexpectedError,
   ValidationError,
 } from '@lens-protocol/client';
-import { follow } from '@lens-protocol/client/actions';
+import { fetchAccount, follow } from '@lens-protocol/client/actions';
 
 import type { TxHash } from '@lens-protocol/types';
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
@@ -35,6 +35,7 @@ export function useFollow(
   return useAuthenticatedAsyncTask((sessionClient, request) =>
     follow(sessionClient, request)
       .andThen(args.handler)
-      .andThen(sessionClient.waitForTransaction),
+      .andThen(sessionClient.waitForTransaction)
+      .andTee(() => fetchAccount(sessionClient, { address: request.account })),
   );
 }

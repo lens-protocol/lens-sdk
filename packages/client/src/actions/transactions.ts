@@ -30,7 +30,7 @@ export function transactionStatus(
   client: AnyClient,
   request: TransactionStatusRequest,
 ): ResultAsync<TransactionStatusResult, UnexpectedError> {
-  return client.query(TransactionStatusQuery, { request });
+  return client.query(TransactionStatusQuery, { request }, 'network-only');
 }
 
 /**

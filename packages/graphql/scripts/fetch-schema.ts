@@ -53,6 +53,7 @@ try {
   }
 
   const minified = minifyIntrospectionQuery(
+    // biome-ignore lint/suspicious/noExplicitAny: simplicity
     getIntrospectedSchema(result.data as any),
   );
 
