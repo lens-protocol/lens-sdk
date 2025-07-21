@@ -1,3 +1,5 @@
+'use client';
+
 import { AccountsOrderBy, PageSize, useAccounts } from '@lens-protocol/react';
 
 export default function Home() {
