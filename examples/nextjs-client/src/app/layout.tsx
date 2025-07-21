@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import 'simpledotcss/simple.min.css';
 import './globals.css';
+import { Suspense } from 'react';
+import { Web3Providers } from './Web3Providers';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,7 +28,9 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <Web3Providers>
+          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        </Web3Providers>
       </body>
     </html>
   );

@@ -1,23 +1,18 @@
-import { AccountsOrderBy, PageSize } from '@lens-protocol/client';
-import { fetchAccounts } from '@lens-protocol/client/actions';
-import { client } from './client';
+import { AccountsOrderBy, PageSize, useAccounts } from '@lens-protocol/react';
 
-export default async function Home() {
-  const result = await fetchAccounts(client, {
+export default function Home() {
+  const { data } = useAccounts({
     orderBy: AccountsOrderBy.AccountScore,
     pageSize: PageSize.Ten,
+    suspense: true,
   });
-
-  if (result.isErr()) {
-    return <div>{result.error.message}</div>;
-  }
 
   return (
     <div>
       <p>Top 10 Accounts by Account Score:</p>
 
       <ul>
-        {result.value?.items.map((account) => (
+        {data.items.map((account) => (
           <li key={account.address}>{account.username?.value}</li>
         ))}
       </ul>
