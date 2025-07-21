@@ -20,4 +20,5 @@ export * from './ml';
 export * from './notification';
 export * from './post';
 export * from './timeline';
+export * from './tokenDistribution';
 export * from './username';

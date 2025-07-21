@@ -778,6 +778,7 @@ export enum NotificationType {
   Followed = 'FOLLOWED',
   Mentioned = 'MENTIONED',
   Reacted = 'REACTED',
+  TokenDistributed = 'TOKEN_DISTRIBUTED',
 }
 
 /**
