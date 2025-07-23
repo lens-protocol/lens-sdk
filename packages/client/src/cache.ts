@@ -1,4 +1,6 @@
-import introspectedSchema from '@lens-protocol/graphql/schema.json';
+import introspectedSchema from '@lens-protocol/graphql/schema.json' with {
+  type: 'json',
+};
 import { cacheExchange } from '@urql/exchange-graphcache';
 
 export const cache = /*#__PURE__*/ cacheExchange({
