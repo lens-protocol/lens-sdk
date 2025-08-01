@@ -17,7 +17,6 @@ const metadata = group({
 });
 const content = `data:application/json,${JSON.stringify(textOnly({ content: 'Hello world!' }))}`;
 
-
 describe('Given a logged-in user', () => {
   describe('When creating a Feed with SimplePaymentRule in native token denomination', () => {
     let feedAddress: EvmAddress;
@@ -51,17 +50,17 @@ describe('Given a logged-in user', () => {
 
     it('Then the user can post to the feed by fulfilling the payment rule with native tokens from the Lens Account', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
-        post(sessionClient, {contentUri: content})
-        .andThen(handleOperationWith(wallet))
-        .andThen(sessionClient.waitForTransaction)
-        .andThen(() =>
-          fetchFeed(sessionClient, { feed: feedAddress }).map(nonNullable),
-        ),
+        post(sessionClient, { contentUri: content })
+          .andThen(handleOperationWith(wallet))
+          .andThen(sessionClient.waitForTransaction)
+          .andThen(() =>
+            fetchFeed(sessionClient, { feed: feedAddress }).map(nonNullable),
+          ),
       );
 
       assertOk(result);
       expect(result.value.operations?.canPost).toEqual({
-        __typename: "FeedOperationValidationPassed",
+        __typename: 'FeedOperationValidationPassed',
       });
     });
   });
