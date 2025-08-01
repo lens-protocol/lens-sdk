@@ -40,7 +40,7 @@ describe('Given a logged-in user', () => {
       assertOk(accountResult);
       accountAddress = accountResult.value.address;
 
-      const followerRuleResult = await loginAsOnboardingUser().andThen(
+      const updateRuleResult = await loginAsOnboardingUser().andThen(
         (sessionClient) =>
           sessionClient
             .switchAccount({
@@ -68,12 +68,14 @@ describe('Given a logged-in user', () => {
               ),
             ),
       );
-      assertOk(followerRuleResult);
+      assertOk(updateRuleResult);
     }, 15_000);
 
     it('Then the user can follow the account by fulfilling the payment rule with native tokens from the Lens Account', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
-        follow(sessionClient, { account: accountAddress })
+        follow(sessionClient, {
+          account: accountAddress,
+        })
           .andThen(handleOperationWith(wallet))
           .andThen(sessionClient.waitForTransaction)
           .andThen(() =>
@@ -84,9 +86,7 @@ describe('Given a logged-in user', () => {
       );
 
       assertOk(result);
-      expect(result.value.operations?.canFollow).toEqual({
-        __typename: 'AccountFollowOperationValidationPassed',
-      });
+      expect(result.value.operations?.isFollowedByMe).toBe(true);
     });
   });
 });
