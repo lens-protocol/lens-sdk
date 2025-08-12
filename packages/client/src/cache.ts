@@ -1,24 +1,48 @@
-import introspectedSchema from '@lens-protocol/graphql/schema.json';
+import type {
+  Account,
+  App,
+  CreateFollowRequest,
+  CreateUnfollowRequest,
+  Feed,
+  FollowResult,
+  Graph,
+  Group,
+  SimpleCollectAction,
+  SimpleCollectActionContract,
+  Sponsorship,
+  TippingAccountAction,
+  TippingPostActionContract,
+  UnfollowResult,
+  UnknownAccountAction,
+  UnknownPostAction,
+  UnknownPostActionContract,
+  UsernameNamespace,
+} from '@lens-protocol/graphql';
+import introspectedSchema from '@lens-protocol/graphql/schema';
+import { gql } from '@urql/core';
 import { cacheExchange } from '@urql/exchange-graphcache';
 
 export const cache = /*#__PURE__*/ cacheExchange({
   schema: introspectedSchema,
   keys: {
     // Entities with address field as key
-    Account: (data: any) => data.address,
-    App: (data: any) => data.address,
-    Feed: (data: any) => data.address,
-    Graph: (data: any) => data.address,
-    Group: (data: any) => data.address,
-    UsernameNamespace: (data: any) => data.address,
-    Sponsorship: (data: any) => data.address,
-    SimpleCollectActionContract: (data: any) => data.address,
-    TippingPostActionContract: (data: any) => data.address,
-    UnknownPostActionContract: (data: any) => data.address,
-    SimpleCollectAction: (data: any) => data.address,
-    TippingAccountAction: (data: any) => data.address,
-    UnknownAccountAction: (data: any) => data.address,
-    UnknownPostAction: (data: any) => data.address,
+    Account: (data: Account) => data.address,
+    App: (data: App) => data.address,
+    Feed: (data: Feed) => data.address,
+    Graph: (data: Graph) => data.address,
+    Group: (data: Group) => data.address,
+    UsernameNamespace: (data: UsernameNamespace) => data.address,
+    Sponsorship: (data: Sponsorship) => data.address,
+    SimpleCollectActionContract: (data: SimpleCollectActionContract) =>
+      data.address,
+    TippingPostActionContract: (data: TippingPostActionContract) =>
+      data.address,
+    UnknownPostActionContract: (data: UnknownPostActionContract) =>
+      data.address,
+    SimpleCollectAction: (data: SimpleCollectAction) => data.address,
+    TippingAccountAction: (data: TippingAccountAction) => data.address,
+    UnknownAccountAction: (data: UnknownAccountAction) => data.address,
+    UnknownPostAction: (data: UnknownPostAction) => data.address,
 
     // Entities with other fields as key
     AuthenticatedSession: (data: any) => data.authenticationId,
@@ -79,7 +103,6 @@ export const cache = /*#__PURE__*/ cacheExchange({
     AccountStats: () => null,
     AccountFeedsStats: () => null,
     AccountGraphsFollowStats: () => null,
-    LoggedInAccountOperations: () => null,
 
     // Namespace related types
     NamespaceOperationValidationFailed: () => null,
@@ -316,5 +339,49 @@ export const cache = /*#__PURE__*/ cacheExchange({
     RefreshMetadataResult: () => null,
     RefreshMetadataStatusResult: () => null,
     AccessControlResult: () => null,
+  },
+  updates: {
+    Mutation: {
+      follow: (
+        result: { value: FollowResult },
+        args: { request: CreateFollowRequest },
+        cache,
+      ) => {
+        // Optimistically update the follow status if getting txHash
+        if (result.value.__typename === 'FollowResponse') {
+          cache.writeFragment(
+            gql`
+              fragment _ on LoggedInAccountOperations {
+                id
+                isFollowedByMe
+            }`,
+            {
+              id: args.request.account,
+              isFollowedByMe: true,
+            },
+          );
+        }
+      },
+      unfollow: (
+        result: { value: UnfollowResult },
+        args: { request: CreateUnfollowRequest },
+        cache,
+      ) => {
+        // Optimistically update the unfollow status if getting txHash
+        if (result.value.__typename === 'UnfollowResponse') {
+          cache.writeFragment(
+            gql`
+              fragment _ on LoggedInAccountOperations {
+                id
+                isFollowedByMe
+            }`,
+            {
+              id: args.request.account,
+              isFollowedByMe: false,
+            },
+          );
+        }
+      },
+    },
   },
 });
