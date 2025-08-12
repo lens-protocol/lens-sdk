@@ -14,4 +14,7 @@ export default defineConfig(() => ({
   dts: true,
   platform: 'neutral',
   format: ['esm', 'cjs'],
+  banner: {
+    js: '"use client"',
+  },
 }));

@@ -1349,7 +1349,7 @@ input CreateAccountWithUsernameRequest {
   owner: EvmAddress
 
   """Use `managers` instead."""
-  accountManager: [EvmAddress!] = null
+  accountManager: [EvmAddress!] = null @deprecated(reason: "Use `managers` instead.")
 
   """Any account managers you wish to add to the account"""
   managers: [EvmAddress!] = null
@@ -4792,7 +4792,7 @@ type NotIndexedYetStatus {
   txHasMined: Boolean!
 }
 
-union Notification = PostActionExecutedNotification | AccountActionExecutedNotification | GroupMembershipRequestApprovedNotification | GroupMembershipRequestRejectedNotification | ReactionNotification | CommentNotification | RepostNotification | QuoteNotification | FollowNotification | MentionNotification
+union Notification = PostActionExecutedNotification | AccountActionExecutedNotification | GroupMembershipRequestApprovedNotification | GroupMembershipRequestRejectedNotification | ReactionNotification | CommentNotification | RepostNotification | QuoteNotification | FollowNotification | MentionNotification | TokenDistributedNotification
 
 type NotificationAccountFollow {
   followedAt: DateTime!
@@ -4855,6 +4855,7 @@ enum NotificationType {
   FOLLOWED
   MENTIONED
   REACTED
+  TOKEN_DISTRIBUTED
 }
 
 input OnboardingUserChallengeRequest {
@@ -5038,6 +5039,11 @@ type PaginatedTimelineResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedTokenDistributionsResult {
+  items: [TokenDistribution!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedUsernamesResult {
   items: [Username!]!
   pageInfo: PaginatedResultInfo!
@@ -5059,7 +5065,7 @@ type PayToCollectConfig {
 
 input PayToCollectInput {
   """Use `erc20` or `native` instead."""
-  amount: Erc20AmountInput
+  amount: Erc20AmountInput @deprecated(reason: "Use `erc20/native` instead")
 
   """The ERC 20 token amount. Mutually exclusive with `native`"""
   erc20: Erc20AmountInput
@@ -5627,7 +5633,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1751874534
+  since: Int! = 1751982113
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5641,7 +5647,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1751874534, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1751982113, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -5929,6 +5935,7 @@ type Query {
   """Create a frame typed data"""
   createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
   verifyFrameSignature(request: FrameVerifySignature!): FrameVerifySignatureResult!
+  tokenDistributions(request: TokenDistributionsRequest!): PaginatedTokenDistributionsResult!
 
   """
   Checks if the given username can be created by the account
@@ -6499,7 +6506,7 @@ input SimplePaymentFollowRuleConfig {
 
 input SimplePaymentGroupRuleConfig {
   """Use `erc20` or `native` instead."""
-  cost: Erc20AmountInput
+  cost: Erc20AmountInput @deprecated(reason: "Use `erc20/native` instead")
 
   """The ERC 20 token amount. Mutually exclusive with `native`"""
   erc20: Erc20AmountInput
@@ -6561,6 +6568,7 @@ enum SnsNotificationType {
   ACCOUNT_REPORTED
   ML_ACCOUNT_SIGNAL
   ML_RECOMMENDED_ACCOUNT_DISMISSED
+  TOKEN_DISTRIBUTION_SUCCESS
 }
 
 type SnsSubscription {
@@ -6603,6 +6611,7 @@ input SnsTopicInput @oneOf {
   accountOwnershipTransferred: AccountOwnershipTransferredNotificationFilter
   accountReported: AccountReportedNotificationFilter
   accountActionExecuted: AccountActionExecutedNotificationFilter
+  tokenDistributionSuccess: TokenDistributionSuccessNotificationFilter
 }
 
 type SpaceMetadata {
@@ -7520,13 +7529,13 @@ input TippingAmountInput {
   The token address.
   Currently, only ERC20 tokens are supported.
   """
-  value: BigDecimal
+  value: BigDecimal @deprecated(reason: "Use `erc20/native` instead")
 
   """
   The token address.
   Currently, only ERC20 tokens are supported.
   """
-  currency: EvmAddress
+  currency: EvmAddress @deprecated(reason: "Use `erc20/native` instead")
 
   """The ERC 20 token to tip. Mutually exclusive with `native`"""
   erc20: Erc20AmountInput
@@ -7571,6 +7580,28 @@ input TokenAmountInput {
 
   """Optional, only for ERC-1155 tokens."""
   typeId: BigInt
+}
+
+type TokenDistributedNotification {
+  id: GeneratedNotificationId!
+  account: Account!
+  amount: PayableAmount!
+}
+
+type TokenDistribution {
+  amount: PayableAmount!
+  txHash: TxHash
+  timestamp: DateTime!
+}
+
+input TokenDistributionSuccessNotificationFilter {
+  recipient: [EvmAddress!]
+  token: [EvmAddress!]
+}
+
+input TokenDistributionsRequest {
+  pageSize: PageSize! = FIFTY
+  cursor: Cursor
 }
 
 input TokenGatedFeedRuleConfig {
@@ -7775,6 +7806,10 @@ enum TransactionOperation {
   SPONSORSHIP_UNPAUSED
   SPONSORSHIP_SIGNER_ADDED
   SPONSORSHIP_SIGNER_REMOVED
+  TOKEN_DISTRIBUTION_CREATED
+  TOKEN_DISTRIBUTION_ENDED
+  TOKEN_TRANSFER_SUCCEEDED
+  TOKEN_TRANSFER_FAILED
   NAMESPACE_INFO
 }
 
@@ -8297,7 +8332,7 @@ type UsernameNamespaceStats {
 
 input UsernamePricePerLengthNamespaceRuleConfig {
   """Use `erc20` or `native` instead."""
-  cost: Erc20AmountInput
+  cost: Erc20AmountInput @deprecated(reason: "Use `erc20/native` instead")
 
   """The ERC 20 token amount. Mutually exclusive with `native`"""
   erc20: Erc20AmountInput

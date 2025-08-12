@@ -18,7 +18,7 @@ import type {
   UnknownPostActionContract,
   UsernameNamespace,
 } from '@lens-protocol/graphql';
-import introspectedSchema from '@lens-protocol/graphql/schema.json';
+import introspectedSchema from '@lens-protocol/graphql/schema';
 import { gql } from '@urql/core';
 import { cacheExchange } from '@urql/exchange-graphcache';
 

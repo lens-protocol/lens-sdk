@@ -17,13 +17,14 @@
       "require": "./dist/index.cjs"
     },
     "./test-utils": {
+      "types": "./dist/test-utils.d.ts",
       "import": "./dist/test-utils.js",
-      "require": "./dist/test-utils.cjs",
-      "types": "./dist/test-utils.d.cts"
+      "require": "./dist/test-utils.cjs"
     },
-    "./schema.json": {
-      "import": "./dist/schema.json",
-      "require": "./dist/schema.json"
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js",
+      "require": "./dist/schema.cjs"
     }
   },
   "typesVersions": {
@@ -36,6 +37,9 @@
       ],
       "test-utils": [
         "./dist/test-utils.d.ts"
+      ],
+      "schema": [
+        "./dist/schema.d.ts"
       ]
     }
   },

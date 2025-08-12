@@ -2,7 +2,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig(() => ({
-  entry: ['src/index.ts', 'src/test-utils.ts', 'src/schema.json'],
+  entry: ['src/index.ts', 'src/test-utils.ts', 'src/schema.ts'],
   outDir: 'dist',
   splitting: false,
   sourcemap: true,
@@ -11,13 +11,11 @@ export default defineConfig(() => ({
   tsconfig: 'tsconfig.build.json',
   bundle: true,
   minify: true,
-  dts: {
-    entry: ['src/index.ts', 'src/test-utils.ts'],
-  },
+  dts: true,
   platform: 'neutral',
   format: ['esm', 'cjs'],
   loader: {
     '.graphql': 'text',
-    '.json': 'copy',
+    '.json': 'json',
   },
 }));
