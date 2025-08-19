@@ -7,4 +7,4 @@
 "@lens-protocol/types": minor
 ---
 
-**chore**: first changeset
+**chore**: transition to new major version
