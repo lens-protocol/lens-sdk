@@ -1,9 +1,8 @@
-import { describe, it } from 'vitest';
-
-import { http, createWalletClient } from 'viem';
+import { createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { sendTransaction } from 'viem/zksync';
+import { describe, it } from 'vitest';
 import {
   CHAIN,
   GLOBAL_SPONSORSHIP,

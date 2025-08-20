@@ -45,7 +45,10 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 export function createUsernameNamespace(
   client: SessionClient,
   request: CreateUsernameNamespaceRequest,
-): ResultAsync<CreateUsernameNamespaceResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  CreateUsernameNamespaceResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(CreateUsernameNamespaceMutation, { request });
 }
 
@@ -66,7 +69,10 @@ export function createUsernameNamespace(
 export function setNamespaceMetadata(
   client: SessionClient,
   request: SetNamespaceMetadataRequest,
-): ResultAsync<SetNamespaceMetadataResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetNamespaceMetadataResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetNamespaceMetadataMutation, { request });
 }
 
@@ -140,7 +146,10 @@ export function fetchNamespaces(
 export function updateNamespaceRules(
   client: SessionClient,
   request: UpdateNamespaceRulesRequest,
-): ResultAsync<UpdateNamespaceRulesResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  UpdateNamespaceRulesResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(UpdateNamespaceRulesMutation, { request });
 }
 
@@ -162,7 +171,10 @@ export function updateNamespaceRules(
 export function updateReservedUsernames(
   client: SessionClient,
   request: UpdateReservedUsernamesRequest,
-): ResultAsync<UpdateReservedUsernamesResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  UpdateReservedUsernamesResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(UpdateReservedUsernamesMutation, { request });
 }
 

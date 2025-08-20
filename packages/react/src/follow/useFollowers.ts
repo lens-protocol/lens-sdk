@@ -1,10 +1,19 @@
-import type { Follower, FollowersRequest, Paginated } from '@lens-protocol/graphql';
+import type {
+  Follower,
+  FollowersRequest,
+  Paginated,
+} from '@lens-protocol/graphql';
 import { FollowersQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type FollowersArgs = FollowersRequest;
+export type UseFollowersArgs = FollowersRequest;
 
 /**
  * Fetch followers accounts.
@@ -16,7 +25,7 @@ export type FollowersArgs = FollowersRequest;
  * ```
  */
 export function useFollowers(
-  args: FollowersArgs & Suspendable,
+  args: UseFollowersArgs & Suspendable,
 ): SuspenseResult<Paginated<Follower>>;
 
 /**
@@ -26,12 +35,16 @@ export function useFollowers(
  * const { data, loading } = useFollowers({ account: evmAddress('0x…') });
  * ```
  */
-export function useFollowers(args: FollowersArgs): ReadResult<Paginated<Follower>>;
+export function useFollowers(
+  args: UseFollowersArgs,
+): ReadResult<Paginated<Follower>>;
 
 export function useFollowers({
   suspense = false,
   ...request
-}: FollowersArgs & { suspense?: boolean }): SuspendableResult<Paginated<Follower>> {
+}: UseFollowersArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<Follower>
+> {
   return useSuspendableQuery({
     document: FollowersQuery,
     variables: { request },

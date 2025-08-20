@@ -1,10 +1,19 @@
-import type { Follower, FollowersYouKnowRequest, Paginated } from '@lens-protocol/graphql';
+import type {
+  Follower,
+  FollowersYouKnowRequest,
+  Paginated,
+} from '@lens-protocol/graphql';
 import { FollowersYouKnowQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type FollowersYouKnowArgs = FollowersYouKnowRequest;
+export type UseFollowersYouKnowArgs = FollowersYouKnowRequest;
 
 /**
  * Fetch followers you know.
@@ -20,7 +29,7 @@ export type FollowersYouKnowArgs = FollowersYouKnowRequest;
  * ```
  */
 export function useFollowersYouKnow(
-  args: FollowersYouKnowArgs & Suspendable,
+  args: UseFollowersYouKnowArgs & Suspendable,
 ): SuspenseResult<Paginated<Follower>>;
 
 /**
@@ -33,12 +42,16 @@ export function useFollowersYouKnow(
  * });
  * ```
  */
-export function useFollowersYouKnow(args: FollowersYouKnowArgs): ReadResult<Paginated<Follower>>;
+export function useFollowersYouKnow(
+  args: UseFollowersYouKnowArgs,
+): ReadResult<Paginated<Follower>>;
 
 export function useFollowersYouKnow({
   suspense = false,
   ...request
-}: FollowersYouKnowArgs & { suspense?: boolean }): SuspendableResult<Paginated<Follower>> {
+}: UseFollowersYouKnowArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<Follower>
+> {
   return useSuspendableQuery({
     document: FollowersYouKnowQuery,
     variables: { request },

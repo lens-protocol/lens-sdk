@@ -6,7 +6,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from '../fragments';
-import { type RequestOf, graphql } from '../graphql';
+import { graphql, type RequestOf } from '../graphql';
 
 export const AccountManagersQuery = graphql(
   `query AccountManagers($request: AccountManagersRequest!) {
@@ -42,7 +42,9 @@ const AddAccountManagerResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type AddAccountManagerResult = FragmentOf<typeof AddAccountManagerResultFragment>;
+export type AddAccountManagerResult = FragmentOf<
+  typeof AddAccountManagerResultFragment
+>;
 
 export const AddAccountManagerMutation = graphql(
   `mutation AddAccountManager($request: AddAccountManagerRequest!) {
@@ -52,7 +54,9 @@ export const AddAccountManagerMutation = graphql(
   }`,
   [AddAccountManagerResultFragment],
 );
-export type AddAccountManagerRequest = RequestOf<typeof AddAccountManagerMutation>;
+export type AddAccountManagerRequest = RequestOf<
+  typeof AddAccountManagerMutation
+>;
 
 const RemoveAccountManagerResultFragment = graphql(
   `fragment RemoveAccountManagerResult on RemoveAccountManagerResult{
@@ -72,7 +76,9 @@ const RemoveAccountManagerResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type RemoveAccountManagerResult = FragmentOf<typeof RemoveAccountManagerResultFragment>;
+export type RemoveAccountManagerResult = FragmentOf<
+  typeof RemoveAccountManagerResultFragment
+>;
 
 export const RemoveAccountManagerMutation = graphql(
   `mutation RemoveAccountManager($request: RemoveAccountManagerRequest!) {
@@ -82,7 +88,9 @@ export const RemoveAccountManagerMutation = graphql(
   }`,
   [RemoveAccountManagerResultFragment],
 );
-export type RemoveAccountManagerRequest = RequestOf<typeof RemoveAccountManagerMutation>;
+export type RemoveAccountManagerRequest = RequestOf<
+  typeof RemoveAccountManagerMutation
+>;
 
 const UpdateAccountManagerResultFragment = graphql(
   `fragment UpdateAccountManagerResult on UpdateAccountManagerResult{
@@ -102,28 +110,36 @@ const UpdateAccountManagerResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type UpdateAccountManagerResult = FragmentOf<typeof UpdateAccountManagerResultFragment>;
+export type UpdateAccountManagerResult = FragmentOf<
+  typeof UpdateAccountManagerResultFragment
+>;
 
 export const UpdateAccountManagerMutation = graphql(
-  `mutation RemoveAccountManager($request: UpdateAccountManagerRequest!) {
+  `mutation UpdateAccountManager($request: UpdateAccountManagerRequest!) {
     value: updateAccountManager(request: $request) {
       ...UpdateAccountManagerResult
     }
   }`,
   [UpdateAccountManagerResultFragment],
 );
-export type UpdateAccountManagerRequest = RequestOf<typeof UpdateAccountManagerMutation>;
+export type UpdateAccountManagerRequest = RequestOf<
+  typeof UpdateAccountManagerMutation
+>;
 
 export const HideManagedAccountMutation = graphql(
   `mutation HideManagedAccount($request: HideManagedAccountRequest!) {
     value: hideManagedAccount(request: $request)
   }`,
 );
-export type HideManagedAccountRequest = RequestOf<typeof HideManagedAccountMutation>;
+export type HideManagedAccountRequest = RequestOf<
+  typeof HideManagedAccountMutation
+>;
 
 export const UnhideManagedAccountMutation = graphql(
   `mutation UnhideManagedAccount($request: UnhideManagedAccountRequest!) {
     value: unhideManagedAccount(request: $request)
   }`,
 );
-export type UnhideManagedAccountRequest = RequestOf<typeof UnhideManagedAccountMutation>;
+export type UnhideManagedAccountRequest = RequestOf<
+  typeof UnhideManagedAccountMutation
+>;

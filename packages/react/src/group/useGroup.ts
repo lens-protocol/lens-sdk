@@ -1,10 +1,15 @@
 import type { Group, GroupRequest } from '@lens-protocol/graphql';
 import { GroupQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type GroupArgs = GroupRequest;
+export type UseGroupArgs = GroupRequest;
 
 /**
  * Fetch a single Group.
@@ -15,7 +20,9 @@ export type GroupArgs = GroupRequest;
  * const { data } = useGroup({ group: evmAddress('0x…'), suspense: true });
  * ```
  */
-export function useGroup(args: GroupArgs & Suspendable): SuspenseResult<Group | null>;
+export function useGroup(
+  args: UseGroupArgs & Suspendable,
+): SuspenseResult<Group | null>;
 
 /**
  * Fetch a single Group.
@@ -24,12 +31,12 @@ export function useGroup(args: GroupArgs & Suspendable): SuspenseResult<Group | 
  * const { data, loading } = useGroup({ group: evmAddress('0x…') });
  * ```
  */
-export function useGroup(args: GroupArgs): ReadResult<Group | null>;
+export function useGroup(args: UseGroupArgs): ReadResult<Group | null>;
 
 export function useGroup({
   suspense = false,
   ...request
-}: GroupArgs & { suspense?: boolean }): SuspendableResult<Group | null> {
+}: UseGroupArgs & { suspense?: boolean }): SuspendableResult<Group | null> {
   return useSuspendableQuery({
     document: GroupQuery,
     variables: { request },

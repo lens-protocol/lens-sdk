@@ -25,6 +25,9 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 export function transferPrimitiveOwnership(
   client: SessionClient,
   request: TransferPrimitiveOwnershipRequest,
-): ResultAsync<TransferPrimitiveOwnershipResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  TransferPrimitiveOwnershipResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(TransferPrimitiveOwnershipMutation, { request });
 }

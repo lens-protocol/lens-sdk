@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { graphql } from '../graphql';
+import { type FragmentDocumentFor, graphql } from '../graphql';
 import { ActionMetadataFragment, AnyKeyValueFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
 import { type GraphRule, GraphRuleFragment } from './primitives';
@@ -18,8 +18,8 @@ export const AccountFollowRuleFragment = graphql(
   `fragment AccountFollowRule on AccountFollowRule {
     __typename
     id
-    type
     address
+    type
     config {
       ...AnyKeyValue
     }
@@ -40,7 +40,9 @@ export const AccountFollowOperationValidationRuleFragment = graphql(
   }`,
   [AccountFollowRuleFragment, GraphRuleFragment],
 );
-export type AccountFollowOperationValidationRule = AccountFollowRule | GraphRule;
+export type AccountFollowOperationValidationRule =
+  | AccountFollowRule
+  | GraphRule;
 
 export const AccountFollowOperationValidationUnknownFragment = graphql(
   `fragment AccountFollowOperationValidationUnknown on AccountFollowOperationValidationUnknown {
@@ -67,7 +69,9 @@ export const AccountFollowUnsatisfiedRuleFragment = graphql(
   }`,
   [AnyKeyValueFragment],
 );
-export type AccountFollowUnsatisfiedRule = FragmentOf<typeof AccountFollowUnsatisfiedRuleFragment>;
+export type AccountFollowUnsatisfiedRule = FragmentOf<
+  typeof AccountFollowUnsatisfiedRuleFragment
+>;
 
 export const AccountFollowUnsatisfiedRulesFragment = graphql(
   `fragment AccountFollowUnsatisfiedRules on AccountFollowUnsatisfiedRules {
@@ -161,7 +165,8 @@ export const AccountMetadataFragment = graphql(
   }`,
   [MetadataAttributeFragment],
 );
-export interface AccountMetadata extends FragmentOf<typeof AccountMetadataFragment> {}
+export interface AccountMetadata
+  extends FragmentOf<typeof AccountMetadataFragment> {}
 
 export const AccountFollowRulesFragment = graphql(
   `fragment AccountFollowRules on AccountFollowRules {
@@ -183,7 +188,9 @@ export const TippingAccountActionFragment = graphql(
     address
   }`,
 );
-export type TippingAccountAction = FragmentOf<typeof TippingAccountActionFragment>;
+export type TippingAccountAction = FragmentOf<
+  typeof TippingAccountActionFragment
+>;
 
 export const UnknownAccountActionFragment = graphql(
   `fragment UnknownAccountAction on UnknownAccountAction {
@@ -198,7 +205,9 @@ export const UnknownAccountActionFragment = graphql(
   }`,
   [AnyKeyValueFragment, ActionMetadataFragment],
 );
-export type UnknownAccountAction = FragmentOf<typeof UnknownAccountActionFragment>;
+export type UnknownAccountAction = FragmentOf<
+  typeof UnknownAccountActionFragment
+>;
 
 export const AccountActionFragment = graphql(
   `fragment AccountAction on AccountAction {
@@ -247,16 +256,27 @@ export const AccountFragment = graphql(
 );
 export interface Account extends FragmentOf<typeof AccountFragment> {}
 
-const AccountManagerPermissionsFragment = graphql(
-  `fragment AccountManagerPermissions on AccountManagerPermissions {
+export interface AccountManagerPermissions {
+  __typename: 'AccountManagerPermissions';
+  canExecuteTransactions: boolean;
+  canSetMetadataUri: boolean;
+  /**
+   * @deprecated Use `canTransferTokens` field instead which supports both ERC20 and native amounts.
+   */
+  canTransferNative: boolean;
+  canTransferTokens: boolean;
+}
+
+export const AccountManagerPermissionsFragment: FragmentDocumentFor<AccountManagerPermissions> =
+  graphql(
+    `fragment AccountManagerPermissions on AccountManagerPermissions {
     __typename
     canExecuteTransactions
     canSetMetadataUri
     canTransferNative
     canTransferTokens
   }`,
-);
-export type AccountManagerPermissions = FragmentOf<typeof AccountManagerPermissionsFragment>;
+  );
 
 export const AccountManagerFragment = graphql(
   `fragment AccountManager on AccountManager {

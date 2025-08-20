@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 export const RefreshMetadataStatusResultFragment = graphql(
   `fragment RefreshMetadataStatusResult on RefreshMetadataStatusResult {
@@ -10,7 +10,9 @@ export const RefreshMetadataStatusResultFragment = graphql(
     updatedAt
   }`,
 );
-export type RefreshMetadataStatusResult = FragmentOf<typeof RefreshMetadataStatusResultFragment>;
+export type RefreshMetadataStatusResult = FragmentOf<
+  typeof RefreshMetadataStatusResultFragment
+>;
 
 export const RefreshMetadataStatusQuery = graphql(
   `query RefreshMetadataStatus($request: RefreshMetadataStatusRequest!) {
@@ -20,7 +22,9 @@ export const RefreshMetadataStatusQuery = graphql(
   }`,
   [RefreshMetadataStatusResultFragment],
 );
-export type RefreshMetadataStatusRequest = RequestOf<typeof RefreshMetadataStatusQuery>;
+export type RefreshMetadataStatusRequest = RequestOf<
+  typeof RefreshMetadataStatusQuery
+>;
 
 export const RefreshMetadataResultFragment = graphql(
   `fragment RefreshMetadataResult on RefreshMetadataResult {
@@ -28,7 +32,9 @@ export const RefreshMetadataResultFragment = graphql(
     id
   }`,
 );
-export type RefreshMetadataResult = FragmentOf<typeof RefreshMetadataResultFragment>;
+export type RefreshMetadataResult = FragmentOf<
+  typeof RefreshMetadataResultFragment
+>;
 
 export const RefreshMetadataMutation = graphql(
   `mutation RefreshMetadata($request: RefreshMetadataRequest!) {

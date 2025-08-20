@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@lens-protocol/client": "canary",
-    "next": "15.2.4",
+    "@lens-protocol/react": "canary",
+    "next": "15.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "simpledotcss": "^2.3.3"

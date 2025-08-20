@@ -21,11 +21,8 @@ import {
   UsernamesQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
-
-import type { SessionClient } from '../clients';
+import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
-
-import type { AnyClient } from '../clients';
 
 /**
  * Checks if the given username can be created by the logged in Account.
@@ -39,7 +36,10 @@ import type { AnyClient } from '../clients';
 export function canCreateUsername(
   client: SessionClient,
   request: CanCreateUsernameRequest,
-): ResultAsync<CanCreateUsernameResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  CanCreateUsernameResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.query(CanCreateUsernameQuery, { request });
 }
 
@@ -83,7 +83,10 @@ export function createUsername(
 export function assignUsernameToAccount(
   client: SessionClient,
   request: AssignUsernameToAccountRequest,
-): ResultAsync<AssignUsernameToAccountResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  AssignUsernameToAccountResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(AssignUsernameToAccountMutation, { request });
 }
 
@@ -105,7 +108,10 @@ export function assignUsernameToAccount(
 export function unassignUsernameFromAccount(
   client: SessionClient,
   request: UnassignUsernameFromAccountRequest = {},
-): ResultAsync<UnassignUsernameToAccountResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  UnassignUsernameToAccountResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(UnassignUsernameFromAccountMutation, { request });
 }
 

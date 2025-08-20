@@ -8,6 +8,8 @@ import {
   type Group,
   GroupFragment,
   PaginatedResultInfoFragment,
+  type PayableAmount,
+  PayableAmountFragment,
   type PostReaction,
   PostReactionFragment,
   type RawKeyValue,
@@ -22,10 +24,10 @@ import {
   UnknownPostActionFragment,
 } from './fragments';
 import {
-  type FragmentDocumentFor,
-  type RequestOf,
   type __FutureProofUnion,
+  type FragmentDocumentFor,
   graphql,
+  type RequestOf,
 } from './graphql';
 
 export interface NotificationAccountFollow {
@@ -52,16 +54,17 @@ export interface FollowNotification {
   followers: NotificationAccountFollow[];
 }
 
-export const FollowNotificationFragment: FragmentDocumentFor<FollowNotification> = graphql(
-  `fragment FollowNotification on FollowNotification {
+export const FollowNotificationFragment: FragmentDocumentFor<FollowNotification> =
+  graphql(
+    `fragment FollowNotification on FollowNotification {
     __typename
     id
     followers {
       ...NotificationAccountFollow
     }
   }`,
-  [NotificationAccountFollowFragment],
-);
+    [NotificationAccountFollowFragment],
+  );
 
 export interface NotificationAccountPostReaction {
   __typename: 'NotificationAccountPostReaction';
@@ -90,8 +93,9 @@ export interface ReactionNotification {
   post: ReferencedPost;
 }
 
-export const ReactionNotificationFragment: FragmentDocumentFor<ReactionNotification> = graphql(
-  `fragment ReactionNotification on ReactionNotification {
+export const ReactionNotificationFragment: FragmentDocumentFor<ReactionNotification> =
+  graphql(
+    `fragment ReactionNotification on ReactionNotification {
     __typename
     id
     reactions {
@@ -101,8 +105,8 @@ export const ReactionNotificationFragment: FragmentDocumentFor<ReactionNotificat
       ...ReferencedPost
     }
   }`,
-  [NotificationAccountPostReactionFragment, ReferencedPostFragment],
-);
+    [NotificationAccountPostReactionFragment, ReferencedPostFragment],
+  );
 
 export interface CommentNotification {
   __typename: 'CommentNotification';
@@ -110,16 +114,17 @@ export interface CommentNotification {
   comment: ReferencedPost;
 }
 
-export const CommentNotificationFragment: FragmentDocumentFor<CommentNotification> = graphql(
-  `fragment CommentNotification on CommentNotification {
+export const CommentNotificationFragment: FragmentDocumentFor<CommentNotification> =
+  graphql(
+    `fragment CommentNotification on CommentNotification {
     __typename
     id
     comment {
       ...ReferencedPost
     }
   }`,
-  [ReferencedPostFragment],
-);
+    [ReferencedPostFragment],
+  );
 
 export interface NotificationAccountRepost {
   __typename: 'NotificationAccountRepost';
@@ -148,8 +153,9 @@ export interface RepostNotification {
   post: ReferencedPost;
 }
 
-export const RepostNotificationFragment: FragmentDocumentFor<RepostNotification> = graphql(
-  `fragment RepostNotification on RepostNotification {
+export const RepostNotificationFragment: FragmentDocumentFor<RepostNotification> =
+  graphql(
+    `fragment RepostNotification on RepostNotification {
     __typename
     id
     reposts {
@@ -159,8 +165,8 @@ export const RepostNotificationFragment: FragmentDocumentFor<RepostNotification>
       ...ReferencedPost
     }
   }`,
-  [NotificationAccountRepostFragment, ReferencedPostFragment],
-);
+    [NotificationAccountRepostFragment, ReferencedPostFragment],
+  );
 
 export interface QuoteNotification {
   __typename: 'QuoteNotification';
@@ -168,16 +174,17 @@ export interface QuoteNotification {
   quote: ReferencedPost;
 }
 
-export const QuoteNotificationFragment: FragmentDocumentFor<QuoteNotification> = graphql(
-  `fragment QuoteNotification on QuoteNotification {
+export const QuoteNotificationFragment: FragmentDocumentFor<QuoteNotification> =
+  graphql(
+    `fragment QuoteNotification on QuoteNotification {
     __typename
     id
     quote {
       ...ReferencedPost
     }
   }`,
-  [ReferencedPostFragment],
-);
+    [ReferencedPostFragment],
+  );
 
 export interface MentionNotification {
   __typename: 'MentionNotification';
@@ -185,20 +192,25 @@ export interface MentionNotification {
   post: ReferencedPost;
 }
 
-export const MentionNotificationFragment: FragmentDocumentFor<MentionNotification> = graphql(
-  `fragment MentionNotification on MentionNotification {
+export const MentionNotificationFragment: FragmentDocumentFor<MentionNotification> =
+  graphql(
+    `fragment MentionNotification on MentionNotification {
     __typename
     id
     post {
       ...ReferencedPost
     }
   }`,
-  [ReferencedPostFragment],
-);
+    [ReferencedPostFragment],
+  );
 
 export interface TippingAccountActionExecuted {
   __typename: 'TippingAccountActionExecuted';
+  /**
+   * @deprecated Use `tipAmount` field instead which supports both ERC20 and native amounts.
+   */
   amount: Erc20Amount;
+  tipAmount: PayableAmount;
   executedBy: Account;
   executedAt: DateTime;
 }
@@ -210,12 +222,15 @@ export const TippingAccountActionExecutedFragment: FragmentDocumentFor<TippingAc
       amount {
         ...Erc20Amount
       }
+      tipAmount {
+        ...PayableAmount
+      }
       executedBy{
         ...Account
       }
       executedAt
     }`,
-    [AccountFragment, Erc20AmountFragment],
+    [AccountFragment, Erc20AmountFragment, PayableAmountFragment],
   );
 
 export interface UnknownAccountActionExecuted {
@@ -355,7 +370,11 @@ export const SimpleCollectPostActionExecutedFragment: FragmentDocumentFor<Simple
 export interface TippingPostActionExecuted {
   __typename: 'TippingPostActionExecuted';
   executedAt: DateTime;
+  /**
+   * @deprecated Use `tipAmount` field instead which supports both ERC20 and native amounts.
+   */
   amount: Erc20Amount;
+  tipAmount: PayableAmount;
   executedBy: Account;
 }
 
@@ -367,11 +386,14 @@ export const TippingPostActionExecutedFragment: FragmentDocumentFor<TippingPostA
       amount {
         ...Erc20Amount
       }
+      tipAmount {
+        ...PayableAmount
+      }
       executedBy {
         ...Account
       }
     }`,
-    [AccountFragment, Erc20AmountFragment],
+    [AccountFragment, Erc20AmountFragment, PayableAmountFragment],
   );
 
 export interface UnknownPostActionExecuted {
@@ -450,6 +472,28 @@ const PostActionExecutedNotificationFragment: FragmentDocumentFor<PostActionExec
     [PostActionExecutedFragment, ReferencedPostFragment],
   );
 
+export interface TokenDistributedNotification {
+  __typename: 'TokenDistributedNotification';
+  id: ID;
+  account: Account;
+  amount: PayableAmount;
+}
+
+export const TokenDistributedNotificationFragment: FragmentDocumentFor<TokenDistributedNotification> =
+  graphql(
+    `fragment TokenDistributedNotification on TokenDistributedNotification {
+      __typename
+      id
+      account {
+        ...Account
+      }
+      amount {
+        ...PayableAmount
+      }
+    }`,
+    [AccountFragment, PayableAmountFragment],
+  );
+
 export type Notification =
   | __FutureProofUnion
   | AccountActionExecutedNotification
@@ -461,10 +505,12 @@ export type Notification =
   | CommentNotification
   | RepostNotification
   | QuoteNotification
-  | MentionNotification;
+  | MentionNotification
+  | TokenDistributedNotification;
 
-const NotificationFragment: FragmentDocumentFor<Notification, 'Notification'> = graphql(
-  `fragment Notification on Notification {
+const NotificationFragment: FragmentDocumentFor<Notification, 'Notification'> =
+  graphql(
+    `fragment Notification on Notification {
     __typename
     ... on AccountActionExecutedNotification {
       ...AccountActionExecutedNotification
@@ -496,20 +542,24 @@ const NotificationFragment: FragmentDocumentFor<Notification, 'Notification'> = 
     ... on MentionNotification {
       ...MentionNotification
     }
+    ... on TokenDistributedNotification {
+      ...TokenDistributedNotification
+    }
   }`,
-  [
-    AccountActionExecutedNotificationFragment,
-    GroupMembershipRequestApprovedNotificationFragment,
-    GroupMembershipRequestRejectedNotificationFragment,
-    PostActionExecutedNotificationFragment,
-    FollowNotificationFragment,
-    ReactionNotificationFragment,
-    CommentNotificationFragment,
-    RepostNotificationFragment,
-    QuoteNotificationFragment,
-    MentionNotificationFragment,
-  ],
-);
+    [
+      AccountActionExecutedNotificationFragment,
+      GroupMembershipRequestApprovedNotificationFragment,
+      GroupMembershipRequestRejectedNotificationFragment,
+      PostActionExecutedNotificationFragment,
+      FollowNotificationFragment,
+      ReactionNotificationFragment,
+      CommentNotificationFragment,
+      RepostNotificationFragment,
+      QuoteNotificationFragment,
+      MentionNotificationFragment,
+      TokenDistributedNotificationFragment,
+    ],
+  );
 
 export const NotificationsQuery = graphql(
   `query Notifications($request: NotificationRequest!) {

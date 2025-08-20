@@ -667,6 +667,7 @@ export enum MediaImageType {
   Tiff = 'TIFF',
   Webp = 'WEBP',
   XMsBmp = 'X_MS_BMP',
+  Avif = 'AVIF',
 }
 
 /**
@@ -777,6 +778,7 @@ export enum NotificationType {
   Followed = 'FOLLOWED',
   Mentioned = 'MENTIONED',
   Reacted = 'REACTED',
+  TokenDistributed = 'TOKEN_DISTRIBUTED',
 }
 
 /**
@@ -1276,4 +1278,20 @@ export enum PrimitiveMetadataSchema {
   Sponsorship = 'SPONSORSHIP',
   Username = 'USERNAME',
   Action = 'ACTION',
+}
+
+/**
+ * Enum for PaymentSource.
+ */
+export enum PaymentSource {
+  Account = 'ACCOUNT',
+  Signer = 'SIGNER',
+}
+
+/**
+ * Describes the subject of rules.
+ */
+export enum RulesSubject {
+  Account = 'ACCOUNT',
+  Signer = 'SIGNER',
 }

@@ -1,10 +1,19 @@
-import type { Account, AccountsRequest, Paginated } from '@lens-protocol/graphql';
+import type {
+  Account,
+  AccountsRequest,
+  Paginated,
+} from '@lens-protocol/graphql';
 import { AccountsQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type AccountsArgs = AccountsRequest;
+export type UseAccountsArgs = AccountsRequest;
 
 /**
  * Fetch accounts available filtered by the given arguments.
@@ -22,7 +31,9 @@ export type AccountsArgs = AccountsRequest;
  * });
  * ```
  */
-export function useAccounts(args: AccountsArgs & Suspendable): SuspenseResult<Paginated<Account>>;
+export function useAccounts(
+  args: UseAccountsArgs & Suspendable,
+): SuspenseResult<Paginated<Account>>;
 
 /**
  * Fetch accounts available filtered by the given arguments.
@@ -37,12 +48,16 @@ export function useAccounts(args: AccountsArgs & Suspendable): SuspenseResult<Pa
  * );
  * ```
  */
-export function useAccounts(args: AccountsArgs): ReadResult<Paginated<Account>>;
+export function useAccounts(
+  args: UseAccountsArgs,
+): ReadResult<Paginated<Account>>;
 
 export function useAccounts({
   suspense = false,
   ...request
-}: AccountsArgs & { suspense?: boolean }): SuspendableResult<Paginated<Account>> {
+}: UseAccountsArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<Account>
+> {
   return useSuspendableQuery({
     document: AccountsQuery,
     variables: { request },

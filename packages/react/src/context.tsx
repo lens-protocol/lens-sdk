@@ -1,9 +1,17 @@
-import type { PublicClient, SessionClient } from '@lens-protocol/client';
+import type {
+  AnyClient,
+  PublicClient,
+  SessionClient,
+} from '@lens-protocol/client';
 import { invariant } from '@lens-protocol/types';
-import React, { type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { Provider as UrqlProvider } from 'urql';
-
-import type { AnyClient } from '@lens-protocol/client';
 import { ReadResult, type SuspenseResult } from './helpers';
 
 /**
@@ -24,18 +32,52 @@ export type LensContextValue = {
   afterLogout: () => Promise<void>;
 };
 
-function useCreateLensContextValue(publicClient: PublicClient): LensContextValue {
-  const [state, setState] = useState<SessionState>(
-    publicClient.currentSession.isSessionClient()
-      ? {
-          resolved: true,
-          client: publicClient.currentSession,
-        }
-      : {
-          resolved: false,
-          client: publicClient,
-        },
+function createInitialSessionState(publicClient: PublicClient): SessionState {
+  return publicClient.currentSession.isSessionClient()
+    ? {
+        resolved: true,
+        client: publicClient.currentSession,
+      }
+    : {
+        resolved: false,
+        client: publicClient,
+      };
+}
+
+async function attemptSessionRestoration(
+  publicClient: PublicClient,
+  setState: (state: SessionState) => void,
+) {
+  const result = await publicClient.resumeSession();
+  setState({
+    resolved: true,
+    client: result.isOk() ? result.value : publicClient,
+  });
+}
+
+function useCreateLensContextValue(
+  publicClient: PublicClient,
+): LensContextValue {
+  const [state, setState] = useState<SessionState>(() =>
+    createInitialSessionState(publicClient),
   );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: update state when publicClient changes
+  useEffect(() => {
+    const currentPublicClient = state.client.isSessionClient()
+      ? state.client.parent
+      : state.client;
+
+    // Only update if the client reference has actually changed
+    if (currentPublicClient !== publicClient) {
+      if (state.resolved) {
+        // Preserve authenticated state by attempting session restoration
+        attemptSessionRestoration(publicClient, setState);
+      } else {
+        setState(createInitialSessionState(publicClient));
+      }
+    }
+  }, [publicClient]); // Only react to prop changes, not internal state changes
 
   return {
     state,
@@ -73,7 +115,10 @@ type LensContextProviderProps = {
 /**
  * @internal
  */
-export function LensContextProvider({ children, client }: LensContextProviderProps) {
+export function LensContextProvider({
+  children,
+  client,
+}: LensContextProviderProps) {
   const value = useCreateLensContextValue(client);
 
   return (

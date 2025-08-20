@@ -15,6 +15,8 @@ import type {
   AccountsRequest,
   BlockRequest,
   BlockResult,
+  CreateAccountRequest,
+  CreateAccountResult,
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
@@ -42,6 +44,7 @@ import {
   AccountsBulkQuery,
   AccountsQuery,
   BlockMutation,
+  CreateAccountMutation,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
   MuteAccountMutation,
@@ -235,7 +238,10 @@ export function fetchAccountsBlocked(
 export function setAccountMetadata(
   client: SessionClient,
   request: SetAccountMetadataRequest,
-): ResultAsync<SetAccountMetadataResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetAccountMetadataResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetAccountMetadataMutation, { request });
 }
 
@@ -258,8 +264,33 @@ export function setAccountMetadata(
 export function createAccountWithUsername(
   client: SessionClient,
   request: CreateAccountWithUsernameRequest,
-): ResultAsync<CreateAccountWithUsernameResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  CreateAccountWithUsernameResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(CreateAccountWithUsernameMutation, { request });
+}
+
+/**
+ * Create an account without username.
+ *
+ * @alpha This is an alpha API and may be subject to breaking changes.
+ *
+ * ```ts
+ * const result = await createAccount(sessionClient, {
+ *   metadataUri: uri('lens://bafybxiky5jf…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function createAccount(
+  client: SessionClient,
+  request: CreateAccountRequest,
+): ResultAsync<CreateAccountResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(CreateAccountMutation, { request });
 }
 
 /**
@@ -451,6 +482,9 @@ export function undoRecommendAccount(
 export function updateAccountFollowRules(
   client: SessionClient,
   request: UpdateAccountFollowRulesRequest,
-): ResultAsync<UpdateAccountFollowRulesResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<
+  UpdateAccountFollowRulesResult,
+  UnauthenticatedError | UnexpectedError
+> {
   return client.mutation(UpdateAccountFollowRulesMutation, { request });
 }

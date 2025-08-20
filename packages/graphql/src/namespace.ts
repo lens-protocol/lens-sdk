@@ -6,7 +6,7 @@ import {
   TransactionWillFailFragment,
   UsernameNamespaceFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const CreateNamespaceResponseFragment = graphql(
   `fragment CreateNamespaceResponse on CreateNamespaceResponse {
@@ -14,7 +14,9 @@ const CreateNamespaceResponseFragment = graphql(
     hash
   }`,
 );
-export type CreateNamespaceResponse = FragmentOf<typeof CreateNamespaceResponseFragment>;
+export type CreateNamespaceResponse = FragmentOf<
+  typeof CreateNamespaceResponseFragment
+>;
 
 const CreateUsernameNamespaceResultFragment = graphql(
   `fragment CreateUsernameNamespaceResult on CreateUsernameNamespaceResult {
@@ -46,7 +48,9 @@ export const CreateUsernameNamespaceMutation = graphql(
   }`,
   [CreateUsernameNamespaceResultFragment],
 );
-export type CreateUsernameNamespaceRequest = RequestOf<typeof CreateUsernameNamespaceMutation>;
+export type CreateUsernameNamespaceRequest = RequestOf<
+  typeof CreateUsernameNamespaceMutation
+>;
 
 const SetNamespaceMetadataResultFragment = graphql(
   `fragment SetNamespaceMetadataResult on SetNamespaceMetadataResult {
@@ -66,7 +70,9 @@ const SetNamespaceMetadataResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetNamespaceMetadataResult = FragmentOf<typeof SetNamespaceMetadataResultFragment>;
+export type SetNamespaceMetadataResult = FragmentOf<
+  typeof SetNamespaceMetadataResultFragment
+>;
 
 export const SetNamespaceMetadataMutation = graphql(
   `mutation SetNamespaceMetadata($request: SetNamespaceMetadataRequest!) {
@@ -76,7 +82,9 @@ export const SetNamespaceMetadataMutation = graphql(
   }`,
   [SetNamespaceMetadataResultFragment],
 );
-export type SetNamespaceMetadataRequest = RequestOf<typeof SetNamespaceMetadataMutation>;
+export type SetNamespaceMetadataRequest = RequestOf<
+  typeof SetNamespaceMetadataMutation
+>;
 
 export const NamespaceQuery = graphql(
   `query Namespace($request: NamespaceRequest!) {
@@ -122,7 +130,9 @@ const UpdateNamespaceRulesResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type UpdateNamespaceRulesResult = FragmentOf<typeof UpdateNamespaceRulesResultFragment>;
+export type UpdateNamespaceRulesResult = FragmentOf<
+  typeof UpdateNamespaceRulesResultFragment
+>;
 
 export const UpdateNamespaceRulesMutation = graphql(
   `mutation UpdateNamespaceRules($request: UpdateNamespaceRulesRequest!) {
@@ -132,7 +142,9 @@ export const UpdateNamespaceRulesMutation = graphql(
   }`,
   [UpdateNamespaceRulesResultFragment],
 );
-export type UpdateNamespaceRulesRequest = RequestOf<typeof UpdateNamespaceRulesMutation>;
+export type UpdateNamespaceRulesRequest = RequestOf<
+  typeof UpdateNamespaceRulesMutation
+>;
 
 const UpdateReservedUsernamesResultFragment = graphql(
   `fragment UpdateReservedUsernamesResult on UpdateReservedUsernamesResult {
@@ -164,7 +176,9 @@ export const UpdateReservedUsernamesMutation = graphql(
   }`,
   [UpdateReservedUsernamesResultFragment],
 );
-export type UpdateReservedUsernamesRequest = RequestOf<typeof UpdateReservedUsernamesMutation>;
+export type UpdateReservedUsernamesRequest = RequestOf<
+  typeof UpdateReservedUsernamesMutation
+>;
 
 const UsernameReservedFragment = graphql(
   `fragment UsernameReserved on UsernameReserved {
@@ -189,4 +203,6 @@ export const NamespaceReservedUsernamesQuery = graphql(
   }`,
   [UsernameReservedFragment, PaginatedResultInfoFragment],
 );
-export type NamespaceReservedUsernamesRequest = RequestOf<typeof NamespaceReservedUsernamesQuery>;
+export type NamespaceReservedUsernamesRequest = RequestOf<
+  typeof NamespaceReservedUsernamesQuery
+>;

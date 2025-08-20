@@ -1,29 +1,46 @@
+import type { Account } from '@lens-protocol/graphql';
 import {
   AuthenticateMutation,
   CurrentSessionQuery,
+  graphql,
   HealthQuery,
   RefreshMutation,
   Role,
   UsernameFragment,
-  graphql,
 } from '@lens-protocol/graphql';
-import type { Account } from '@lens-protocol/graphql';
-import { url, assertErr, assertOk, expectTypename, nonNullable } from '@lens-protocol/types';
+import {
+  assertErr,
+  assertOk,
+  expectTypename,
+  nonNullable,
+  url,
+} from '@lens-protocol/types';
 import * as msw from 'msw';
 import { setupServer } from 'msw/node';
-import { afterAll, beforeAll, describe, expect, expectTypeOf, it } from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  expectTypeOf,
+  it,
+} from 'vitest';
 
 import { currentSession, fetchAccount, fetchPost } from './actions';
 import { PublicClient } from './clients';
-import { GraphQLErrorCode, UnauthenticatedError, UnexpectedError } from './errors';
 import {
-  TEST_ACCOUNT,
-  TEST_APP,
-  TEST_SIGNER,
+  GraphQLErrorCode,
+  UnauthenticatedError,
+  UnexpectedError,
+} from './errors';
+import {
   createGraphQLErrorObject,
   createPublicClient,
   mockAccessToken,
   signer,
+  TEST_ACCOUNT,
+  TEST_APP,
+  TEST_SIGNER,
   wallet,
 } from './test-utils';
 import { delay } from './utils';
@@ -191,7 +208,9 @@ describe(`Given an instance of the '${PublicClient.name}'`, () => {
         });
         assertOk(authenticated);
 
-        const result = await fetchAccount(authenticated.value, { address: TEST_ACCOUNT });
+        const result = await fetchAccount(authenticated.value, {
+          address: TEST_ACCOUNT,
+        });
         assertOk(result);
         expect(result.value?.operations).not.toBe(null);
       });
@@ -203,7 +222,9 @@ describe(`Given an instance of the '${PublicClient.name}'`, () => {
           CurrentSessionQuery,
           (_) =>
             msw.HttpResponse.json({
-              errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
+              errors: [
+                createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED),
+              ],
             }),
           {
             once: true,
@@ -245,7 +266,9 @@ describe(`Given an instance of the '${PublicClient.name}'`, () => {
       const server = setupServer(
         msw.graphql.query(CurrentSessionQuery, (_) =>
           msw.HttpResponse.json({
-            errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
+            errors: [
+              createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED),
+            ],
           }),
         ),
         msw.graphql.mutation(RefreshMutation, (_) =>
@@ -323,7 +346,9 @@ describe(`Given an instance of the '${PublicClient.name}'`, () => {
 
       const result = await client.batch((c) => [
         fetchAccount(c, { address: TEST_ACCOUNT }).map(nonNullable),
-        fetchPost(c, { post: '4evp0jgqap2awsxpvt' }).map(nonNullable).map(expectTypename('Post')),
+        fetchPost(c, { post: '4evp0jgqap2awsxpvt' })
+          .map(nonNullable)
+          .map(expectTypename('Post')),
       ]);
 
       assertOk(result);

@@ -1,10 +1,19 @@
-import type { Paginated, TimelineItem, TimelineRequest } from '@lens-protocol/graphql';
+import type {
+  Paginated,
+  TimelineItem,
+  TimelineRequest,
+} from '@lens-protocol/graphql';
 import { TimelineQuery } from '@lens-protocol/graphql';
 
-import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import type {
+  ReadResult,
+  Suspendable,
+  SuspendableResult,
+  SuspenseResult,
+} from '../helpers';
 import { useSuspendableQuery } from '../helpers';
 
-export type TimelineArgs = TimelineRequest;
+export type UseTimelineArgs = TimelineRequest;
 
 /**
  * Fetch timeline from an account.
@@ -16,7 +25,7 @@ export type TimelineArgs = TimelineRequest;
  * ```
  */
 export function useTimeline(
-  args: TimelineArgs & Suspendable,
+  args: UseTimelineArgs & Suspendable,
 ): SuspenseResult<Paginated<TimelineItem>>;
 
 /**
@@ -26,12 +35,16 @@ export function useTimeline(
  * const { data, loading } = useTimeline({ account: evmAddress('0x…') });
  * ```
  */
-export function useTimeline(args: TimelineArgs): ReadResult<Paginated<TimelineItem>>;
+export function useTimeline(
+  args: UseTimelineArgs,
+): ReadResult<Paginated<TimelineItem>>;
 
 export function useTimeline({
   suspense = false,
   ...request
-}: TimelineArgs & { suspense?: boolean }): SuspendableResult<Paginated<TimelineItem>> {
+}: UseTimelineArgs & { suspense?: boolean }): SuspendableResult<
+  Paginated<TimelineItem>
+> {
   return useSuspendableQuery({
     document: TimelineQuery,
     variables: { request },

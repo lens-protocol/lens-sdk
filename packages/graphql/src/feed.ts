@@ -6,7 +6,7 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const CreateFeedResponseFragment = graphql(
   `fragment CreateFeedResponse on CreateFeedResponse {
@@ -28,7 +28,11 @@ const CreateFeedResultFragment = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateFeedResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+  [
+    CreateFeedResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type CreateFeedResult = FragmentOf<typeof CreateFeedResultFragment>;
 
@@ -48,7 +52,9 @@ const SetFeedMetadataResponseFragment = graphql(
     hash
   }`,
 );
-export type SetFeedMetadataResponse = FragmentOf<typeof SetFeedMetadataResponseFragment>;
+export type SetFeedMetadataResponse = FragmentOf<
+  typeof SetFeedMetadataResponseFragment
+>;
 
 const SetFeedMetadataResultFragment = graphql(
   `fragment SetFeedMetadataResult on SetFeedMetadataResult {
@@ -72,7 +78,9 @@ const SetFeedMetadataResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetFeedMetadataResult = FragmentOf<typeof SetFeedMetadataResultFragment>;
+export type SetFeedMetadataResult = FragmentOf<
+  typeof SetFeedMetadataResultFragment
+>;
 
 export const SetFeedMetadataMutation = graphql(
   `mutation SetFeedMetadata($request: SetFeedMetadataRequest!) {
@@ -116,7 +124,9 @@ const UpdateFeedRulesResponseFragment = graphql(
     hash
   }`,
 );
-export type UpdateFeedRulesResponse = FragmentOf<typeof UpdateFeedRulesResponseFragment>;
+export type UpdateFeedRulesResponse = FragmentOf<
+  typeof UpdateFeedRulesResponseFragment
+>;
 
 const UpdateFeedRulesResultFragment = graphql(
   `fragment UpdateFeedRulesResult on UpdateFeedRulesResult {
@@ -140,7 +150,9 @@ const UpdateFeedRulesResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type UpdateFeedRulesResult = FragmentOf<typeof UpdateFeedRulesResultFragment>;
+export type UpdateFeedRulesResult = FragmentOf<
+  typeof UpdateFeedRulesResultFragment
+>;
 
 export const UpdateFeedRulesMutation = graphql(
   `mutation UpdateFeedRules($request: UpdateFeedRulesRequest!) {

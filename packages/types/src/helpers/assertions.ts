@@ -9,7 +9,7 @@ function isObject(value: unknown): value is UnknownRecord {
 
 export function assertError(error: unknown): asserts error is Error {
   // why not `error instanceof Error`? see https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1099
-  // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
+  // biome-ignore lint/suspicious/noPrototypeBuiltins: safe
   if (!isObject(error) || !Error.prototype.isPrototypeOf(error)) {
     throw error;
   }
@@ -19,23 +19,32 @@ export function assertError(error: unknown): asserts error is Error {
  * Exhaustiveness checking for union and enum types
  * see https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
  */
-export function assertNever(x: never, message = `Unexpected object: ${String(x)}`): never {
+export function assertNever(
+  x: never,
+  message = `Unexpected object: ${String(x)}`,
+): never {
   throw new InvariantError(message);
 }
 
 /**
  * Asserts that the given `Result<T, E>` is an `Ok<T, never>` variant.
  */
-export function assertOk<T, E extends Error>(result: Result<T, E>): asserts result is Ok<T, E> {
+export function assertOk<T, E extends Error>(
+  result: Result<T, E>,
+): asserts result is Ok<T, E> {
   if (result.isErr()) {
-    throw new InvariantError(`Expected result to be Ok: ${result.error.message}`);
+    throw new InvariantError(
+      `Expected result to be Ok: ${result.error.message}`,
+    );
   }
 }
 
 /**
  * Asserts that the given `Result<T, E>` is an `Err<never, E>` variant.
  */
-export function assertErr<T, E extends Error>(result: Result<T, E>): asserts result is Err<T, E> {
+export function assertErr<T, E extends Error>(
+  result: Result<T, E>,
+): asserts result is Err<T, E> {
   if (result.isOk()) {
     throw new InvariantError(`Expected result to be Err: ${result.value}`);
   }

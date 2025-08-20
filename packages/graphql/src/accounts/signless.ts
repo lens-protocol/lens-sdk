@@ -25,7 +25,9 @@ const EnableSignlessResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type EnableSignlessResult = FragmentOf<typeof EnableSignlessResultFragment>;
+export type EnableSignlessResult = FragmentOf<
+  typeof EnableSignlessResultFragment
+>;
 
 export const EnableSignlessMutation = graphql(
   `mutation EnableSignless {
@@ -54,7 +56,9 @@ const RemoveSignlessResultFragment = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type RemoveSignlessResult = FragmentOf<typeof RemoveSignlessResultFragment>;
+export type RemoveSignlessResult = FragmentOf<
+  typeof RemoveSignlessResultFragment
+>;
 
 export const RemoveSignlessMutation = graphql(
   `mutation RemoveSignless {

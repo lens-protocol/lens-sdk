@@ -1,5 +1,10 @@
-import { Result, ResultAsync, ResultAwareError } from '@lens-protocol/types';
-import { assertError, invariant } from '@lens-protocol/types';
+import {
+  assertError,
+  invariant,
+  Result,
+  ResultAsync,
+  ResultAwareError,
+} from '@lens-protocol/types';
 import { z } from 'zod';
 
 /**
@@ -65,13 +70,15 @@ export class BaseStorageSchema<
   process = (
     storageItemUnknown: unknown,
   ): ResultAsync<IStorageItem<Output>, SchemaMismatchError> => {
-    return this.parseStorageItem(storageItemUnknown).asyncAndThen((storageItem) =>
-      ResultAsync.fromPromise(this.migrate(storageItem), (err) => err as SchemaMismatchError).map(
-        (data) => ({
+    return this.parseStorageItem(storageItemUnknown).asyncAndThen(
+      (storageItem) =>
+        ResultAsync.fromPromise(
+          this.migrate(storageItem),
+          (err) => err as SchemaMismatchError,
+        ).map((data) => ({
           data,
           metadata: storageItem.metadata,
-        }),
-      ),
+        })),
     );
   };
 

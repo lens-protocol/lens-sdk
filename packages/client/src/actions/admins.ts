@@ -3,13 +3,16 @@ import type {
   AddAdminsResult,
   Admin,
   AdminsForRequest,
+  Paginated,
   RemoveAdminsRequest,
   RemoveAdminsResult,
 } from '@lens-protocol/graphql';
-import { AddAdminsMutation, AdminsForQuery, RemoveAdminsMutation } from '@lens-protocol/graphql';
+import {
+  AddAdminsMutation,
+  AdminsForQuery,
+  RemoveAdminsMutation,
+} from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
-
-import type { Paginated } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 

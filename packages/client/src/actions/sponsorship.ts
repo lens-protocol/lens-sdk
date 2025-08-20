@@ -162,7 +162,10 @@ export function fetchSponsorshipLimitExclusions(
 export function createSponsorship(
   client: SessionClient,
   request: CreateSponsorshipRequest,
-): ResultAsync<CreateSponsorshipResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  CreateSponsorshipResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(CreateSponsorshipMutation, { request });
 }
 
@@ -183,7 +186,10 @@ export function createSponsorship(
 export function setSponsorshipMetadata(
   client: SessionClient,
   request: SetSponsorshipMetadataRequest,
-): ResultAsync<SetSponsorshipMetadataResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  SetSponsorshipMetadataResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(SetSponsorshipMetadataMutation, { request });
 }
 
@@ -235,7 +241,10 @@ export function setSponsorshipMetadata(
 export function updateSponsorshipLimits(
   client: SessionClient,
   request: UpdateSponsorshipLimitsRequest,
-): ResultAsync<UpdateSponsorshipLimitsResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  UpdateSponsorshipLimitsResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(UpdateSponsorshipLimitsMutation, { request });
 }
 
@@ -264,7 +273,10 @@ export function updateSponsorshipLimits(
 export function updateSponsorshipExclusionList(
   client: SessionClient,
   request: UpdateSponsorshipExclusionListRequest,
-): ResultAsync<UpdateSponsorshipExclusionListResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  UpdateSponsorshipExclusionListResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(UpdateSponsorshipExclusionListMutation, { request });
 }
 
@@ -293,7 +305,10 @@ export function updateSponsorshipExclusionList(
 export function updateSponsorshipSigners(
   client: SessionClient,
   request: UpdateSponsorshipSignersRequest,
-): ResultAsync<UpdateSponsorshipSignersResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<
+  UpdateSponsorshipSignersResult,
+  UnexpectedError | UnauthenticatedError
+> {
   return client.mutation(UpdateSponsorshipSignersMutation, { request });
 }
 

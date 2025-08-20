@@ -1,20 +1,31 @@
 /// <reference path="../../../vite-env.d.ts" />
 
 import { chains } from '@lens-chain/sdk/viem';
-import { StorageClient, immutable, walletOnly } from '@lens-chain/storage-client';
+import {
+  immutable,
+  StorageClient,
+  walletOnly,
+} from '@lens-chain/storage-client';
 import { Role } from '@lens-protocol/graphql';
 import { schema } from '@lens-protocol/graphql/test-utils';
 import { type TextOnlyMetadata, textOnly } from '@lens-protocol/metadata';
-import { type URI, evmAddress, hexString, uuid } from '@lens-protocol/types';
-import { type AccessToken, ResultAsync, type TxHash } from '@lens-protocol/types';
+import {
+  type AccessToken,
+  evmAddress,
+  hexString,
+  ResultAsync,
+  type TxHash,
+  type URI,
+  uuid,
+} from '@lens-protocol/types';
 import type { TypedDocumentNode } from '@urql/core';
 import { validate } from 'graphql';
 import type { ValidationRule } from 'graphql/validation/ValidationContext';
 import {
-  http,
-  type WalletClient,
   createPublicClient as createViemPublicClient,
   createWalletClient,
+  http,
+  type WalletClient,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { expect } from 'vitest';
@@ -23,11 +34,11 @@ import {
   type AnyVariables,
   type ClientConfig,
   GraphQLErrorCode,
-  PublicClient,
-  UnexpectedError,
   local,
+  PublicClient,
   staging,
   testnet,
+  UnexpectedError,
 } from '.';
 import { type AccessTokenClaims, ROLE_CLAIM, SPONSORED_CLAIM } from './tokens';
 
@@ -36,7 +47,9 @@ export const TEST_ACCOUNT = evmAddress(import.meta.env.TEST_ACCOUNT);
 export const TEST_APP = evmAddress(import.meta.env.TEST_APP);
 export const TEST_ERC20 = evmAddress(import.meta.env.TEST_ERC20);
 export const PRIVATE_KEY = hexString(import.meta.env.PRIVATE_KEY);
-export const GLOBAL_SPONSORSHIP = evmAddress(import.meta.env.GLOBAL_SPONSORSHIP);
+export const GLOBAL_SPONSORSHIP = evmAddress(
+  import.meta.env.GLOBAL_SPONSORSHIP,
+);
 export const SPONSORSHIP_APPROVER_PRIVATE_KEY = hexString(
   import.meta.env.SPONSORSHIP_APPROVER_PRIVATE_KEY,
 );
@@ -88,13 +101,28 @@ export function loginAsOnboardingUser() {
   });
 }
 
+export function loginAsBuilder() {
+  const client = createPublicClient();
+
+  return client.login({
+    builder: {
+      address: TEST_SIGNER,
+    },
+    signMessage: (message) => signer.signMessage({ message }),
+  });
+}
+
 const messages: Record<GraphQLErrorCode, string> = {
   [GraphQLErrorCode.UNAUTHENTICATED]:
     "Unauthenticated - Authentication is required to access '<operation>'",
-  [GraphQLErrorCode.FORBIDDEN]: "Forbidden - You are not authorized to access '<operation>'",
-  [GraphQLErrorCode.INTERNAL_SERVER_ERROR]: 'Internal server error - Please try again later',
-  [GraphQLErrorCode.BAD_USER_INPUT]: 'Bad user input - Please check the input and try again',
-  [GraphQLErrorCode.BAD_REQUEST]: 'Bad request - Please check the request and try again',
+  [GraphQLErrorCode.FORBIDDEN]:
+    "Forbidden - You are not authorized to access '<operation>'",
+  [GraphQLErrorCode.INTERNAL_SERVER_ERROR]:
+    'Internal server error - Please try again later',
+  [GraphQLErrorCode.BAD_USER_INPUT]:
+    'Bad user input - Please check the input and try again',
+  [GraphQLErrorCode.BAD_REQUEST]:
+    'Bad request - Please check the request and try again',
 };
 
 export function createGraphQLErrorObject(code: GraphQLErrorCode) {
@@ -140,7 +168,9 @@ function createFakeJwt(payload: object): string {
   return `${header}.${body}.dummy_signature`;
 }
 
-export function mockAccessToken(claims: Partial<AccessTokenClaims>): AccessToken {
+export function mockAccessToken(
+  claims: Partial<AccessTokenClaims>,
+): AccessToken {
   const defaultClaims: AccessTokenClaims = {
     sub: evmAddress('0x391de77dB4c78a6f9358cf502A846357E0211942'),
     iss: 'https://api.lens.dev',
@@ -157,18 +187,24 @@ export function mockAccessToken(claims: Partial<AccessTokenClaims>): AccessToken
   return createFakeJwt(defaultClaims) as AccessToken;
 }
 
-export function waitForTransactionReceipt(hash: TxHash): ResultAsync<void, UnexpectedError> {
+export function waitForTransactionReceipt(
+  hash: TxHash,
+): ResultAsync<void, UnexpectedError> {
   const publicClient = createViemPublicClient({
     chain: CHAIN,
     transport: http(),
   });
 
-  return ResultAsync.fromPromise(publicClient.waitForTransactionReceipt({ hash }), (err) =>
-    UnexpectedError.from(err),
+  return ResultAsync.fromPromise(
+    publicClient.waitForTransactionReceipt({ hash }),
+    (err) => UnexpectedError.from(err),
   ).map(() => undefined);
 }
 
-export function assertTypedDocumentSatisfies<TResult, TVariables extends AnyVariables>(
+export function assertTypedDocumentSatisfies<
+  TResult,
+  TVariables extends AnyVariables,
+>(
   document: TypedDocumentNode<TResult, TVariables>,
   rules: ReadonlyArray<ValidationRule>,
 ) {

@@ -10,7 +10,10 @@ export default function (plop: NodePlopAPI) {
         message: 'Choose a template:',
         choices: [
           { name: 'Library', value: { name: 'lib', dest: 'packages' } },
-          { name: 'React Example', value: { name: 'example-react', dest: 'examples' } },
+          {
+            name: 'React Example',
+            value: { name: 'example-react', dest: 'examples' },
+          },
         ],
       },
       {

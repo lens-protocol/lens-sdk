@@ -1,4 +1,4 @@
-import { type Post, justPost } from '@lens-protocol/graphql';
+import { justPost, type Post } from '@lens-protocol/graphql';
 import { textOnly } from '@lens-protocol/metadata';
 import { assertOk, nonNullable } from '@lens-protocol/types';
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -33,7 +33,10 @@ describe('Given a Lens Post', () => {
     );
     assertOk(result);
     item = result.value;
-  });
+
+    // Make sure the metadata is on IPFS before being able to edit/delete it
+    await resources.waitForPropagation();
+  }, 20_000);
 
   describe(`When the metadata at 'contentUri' is updated`, () => {
     const client = createPublicClient();
@@ -42,18 +45,23 @@ describe('Given a Lens Post', () => {
     beforeAll(async () => {
       const response = await updateTextOnlyMetadata(item.contentUri, updates);
       await response.waitForPropagation();
-    }, 10_000);
+    }, 20_000);
 
     it('Then it should be possible to force a refresh of the metadata', async () => {
-      const refreshed = await refreshMetadata(client, { entity: { post: item.id } }).andThen(
-        ({ id }) => waitForMetadata(client, id),
-      );
+      const refreshed = await refreshMetadata(client, {
+        entity: { post: item.id },
+      }).andThen(({ id }) => waitForMetadata(client, id));
 
       assertOk(refreshed);
 
-      const fetched = await fetchPost(client, { post: item.id }).map(nonNullable).map(justPost);
+      const fetched = await fetchPost(client, { post: item.id })
+        .map(nonNullable)
+        .map(justPost);
       assertOk(fetched);
-      expect(fetched.value.metadata).toHaveProperty('content', updates.lens.content);
+      expect(fetched.value.metadata).toHaveProperty(
+        'content',
+        updates.lens.content,
+      );
     });
   });
 });

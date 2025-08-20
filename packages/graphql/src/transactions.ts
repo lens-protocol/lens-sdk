@@ -1,5 +1,10 @@
 import type { FragmentOf } from 'gql.tada';
-import { type RequestOf, graphql } from './graphql';
+import {
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
+} from './fragments/transactions';
+import { graphql, type RequestOf } from './graphql';
 
 const SubOperationStatusFragment = graphql(
   `fragment SubOperationStatus on SubOperationStatus {
@@ -20,7 +25,9 @@ const PendingTransactionStatusFragment = graphql(
   }`,
   [SubOperationStatusFragment],
 );
-export type PendingTransactionStatus = FragmentOf<typeof PendingTransactionStatusFragment>;
+export type PendingTransactionStatus = FragmentOf<
+  typeof PendingTransactionStatusFragment
+>;
 
 const FinishedTransactionStatusFragment = graphql(
   `fragment FinishedTransactionStatus on FinishedTransactionStatus {
@@ -32,7 +39,9 @@ const FinishedTransactionStatusFragment = graphql(
   }`,
   [SubOperationStatusFragment],
 );
-export type FinishedTransactionStatus = FragmentOf<typeof FinishedTransactionStatusFragment>;
+export type FinishedTransactionStatus = FragmentOf<
+  typeof FinishedTransactionStatusFragment
+>;
 
 const FailedTransactionStatusFragment = graphql(
   `fragment FailedTransactionStatus on FailedTransactionStatus {
@@ -45,7 +54,9 @@ const FailedTransactionStatusFragment = graphql(
   }`,
   [SubOperationStatusFragment],
 );
-export type FailedTransactionStatus = FragmentOf<typeof FailedTransactionStatusFragment>;
+export type FailedTransactionStatus = FragmentOf<
+  typeof FailedTransactionStatusFragment
+>;
 
 const NotIndexedYetStatusFragment = graphql(
   `fragment NotIndexedYetStatus on NotIndexedYetStatus {
@@ -54,7 +65,9 @@ const NotIndexedYetStatusFragment = graphql(
     txHasMined
   }`,
 );
-export type NotIndexedYetStatus = FragmentOf<typeof NotIndexedYetStatusFragment>;
+export type NotIndexedYetStatus = FragmentOf<
+  typeof NotIndexedYetStatusFragment
+>;
 
 const TransactionStatusResultFragment = graphql(
   `fragment TransactionStatusResult on TransactionStatusResult {
@@ -78,7 +91,9 @@ const TransactionStatusResultFragment = graphql(
     NotIndexedYetStatusFragment,
   ],
 );
-export type TransactionStatusResult = FragmentOf<typeof TransactionStatusResultFragment>;
+export type TransactionStatusResult = FragmentOf<
+  typeof TransactionStatusResultFragment
+>;
 
 export const TransactionStatusQuery = graphql(
   `query TransactionStatus($request: TransactionStatusRequest!) {
@@ -90,3 +105,39 @@ export const TransactionStatusQuery = graphql(
 );
 
 export type TransactionStatusRequest = RequestOf<typeof TransactionStatusQuery>;
+
+export const PrepareSignerErc20ApprovalResultFragment = graphql(
+  `fragment PrepareSignerErc20ApprovalResult on PrepareSignerErc20ApprovalResult {
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+
+export type PrepareSignerErc20ApprovalResult = FragmentOf<
+  typeof PrepareSignerErc20ApprovalResultFragment
+>;
+
+export const PrepareSignerErc20ApprovalMutation = graphql(
+  `mutation PrepareSignerErc20Approval($request: PrepareSignerErc20ApprovalRequest!) {
+    value: prepareSignerErc20Approval(request: $request) {
+      ...PrepareSignerErc20ApprovalResult
+    }
+  }`,
+  [PrepareSignerErc20ApprovalResultFragment],
+);
+
+export type PrepareSignerErc20ApprovalRequest = RequestOf<
+  typeof PrepareSignerErc20ApprovalMutation
+>;

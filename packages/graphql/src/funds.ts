@@ -1,14 +1,12 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  type Erc20Amount,
   Erc20AmountFragment,
-  type NativeAmount,
   NativeAmountFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { graphql, type RequestOf } from './graphql';
 
 const Erc20BalanceErrorFragment = graphql(
   `fragment Erc20BalanceError on Erc20BalanceError {
@@ -49,7 +47,7 @@ const AnyAccountBalanceFragment = graphql(
     NativeBalanceErrorFragment,
   ],
 );
-export type AnyAccountBalance = Erc20Amount | NativeAmount | Erc20BalanceError | NativeBalanceError;
+export type AnyAccountBalance = FragmentOf<typeof AnyAccountBalanceFragment>;
 
 export const AccountBalancesQuery = graphql(
   `query AccountBalances($request: AccountBalancesRequest!) {
@@ -68,6 +66,21 @@ export const InsufficientFundsFragment = graphql(`
   }
 `);
 export type InsufficientFunds = FragmentOf<typeof InsufficientFundsFragment>;
+
+export const SignerErc20ApprovalRequiredFragment = graphql(
+  `fragment SignerErc20ApprovalRequired on SignerErc20ApprovalRequired {
+    __typename
+    reason
+    amount {
+      ...Erc20Amount
+    }
+  }
+`,
+  [Erc20AmountFragment],
+);
+export type SignerErc20ApprovalRequired = FragmentOf<
+  typeof SignerErc20ApprovalRequiredFragment
+>;
 
 const WithdrawResultFragment = graphql(
   `fragment WithdrawResult on WithdrawResult{
@@ -204,3 +217,38 @@ export const UnwrapTokensMutation = graphql(
   [UnwrapTokensResultFragment],
 );
 export type UnwrapTokensRequest = RequestOf<typeof UnwrapTokensMutation>;
+
+export const AnyBalanceFragment = graphql(
+  `fragment AnyBalance on AnyBalance {
+    __typename
+    ...on Erc20Amount {
+      ...Erc20Amount
+    }
+    ...on NativeAmount {
+      ...NativeAmount
+    }
+    ...on Erc20BalanceError {
+      ...Erc20BalanceError
+    }
+    ...on NativeBalanceError {
+      ...NativeBalanceError
+    }
+  }`,
+  [
+    Erc20AmountFragment,
+    NativeAmountFragment,
+    Erc20BalanceErrorFragment,
+    NativeBalanceErrorFragment,
+  ],
+);
+export type AnyBalance = FragmentOf<typeof AnyBalanceFragment>;
+
+export const BalancesBulkQuery = graphql(
+  `query BalancesBulk($request: BalancesBulkRequest!) {
+    value: balancesBulk(request: $request) {
+      ...AnyBalance
+    }
+  }`,
+  [AnyBalanceFragment],
+);
+export type BalancesBulkRequest = RequestOf<typeof BalancesBulkQuery>;

@@ -2,18 +2,18 @@ import type { chains } from '@lens-chain/sdk/viem';
 import { type EvmAddress, invariant } from '@lens-protocol/types';
 import {
   type Account,
+  encodeAbiParameters,
   type Hex,
   type PrepareTransactionRequestParameters,
+  parseAbiParameters,
   type Transport,
   type WalletClient,
-  encodeAbiParameters,
-  parseAbiParameters,
 } from 'viem';
 import { getBlock } from 'viem/actions';
 import {
+  getGeneralPaymasterInput,
   type ZksyncTransactionSerializable,
   type ZksyncTransactionSerializableEIP712,
-  getGeneralPaymasterInput,
 } from 'viem/zksync';
 
 /**
@@ -107,11 +107,10 @@ export class SponsorshipApprovalSigner<chain extends chains.LensChain> {
 
   private encodePaymasterInput(deadline: bigint, approval: Hex = '0x'): Hex {
     return getGeneralPaymasterInput({
-      innerInput: encodeAbiParameters(parseAbiParameters('address,uint256,bytes'), [
-        this.context.signer.account?.address,
-        deadline,
-        approval,
-      ]),
+      innerInput: encodeAbiParameters(
+        parseAbiParameters('address,uint256,bytes'),
+        [this.context.signer.account?.address, deadline, approval],
+      ),
     });
   }
 }

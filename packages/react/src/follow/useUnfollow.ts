@@ -1,0 +1,41 @@
+import type {
+  CreateUnfollowRequest,
+  OperationHandler,
+  SigningError,
+  TransactionIndexingError,
+  UnauthenticatedError,
+  UnexpectedError,
+  ValidationError,
+} from '@lens-protocol/client';
+import { fetchAccount, unfollow } from '@lens-protocol/client/actions';
+
+import type { TxHash } from '@lens-protocol/types';
+import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
+
+export type UseUnfollowArgs = {
+  handler: OperationHandler;
+};
+
+/**
+ * Unfollows a user on the Lens.
+ *
+ * @alpha This is an alpha API and may be subject to breaking changes.
+ */
+export function useUnfollow(
+  args: UseUnfollowArgs,
+): UseAsyncTask<
+  CreateUnfollowRequest,
+  TxHash,
+  | SigningError
+  | ValidationError
+  | TransactionIndexingError
+  | UnauthenticatedError
+  | UnexpectedError
+> {
+  return useAuthenticatedAsyncTask((sessionClient, request) =>
+    unfollow(sessionClient, request)
+      .andThen(args.handler)
+      .andThen(sessionClient.waitForTransaction)
+      .andTee(() => fetchAccount(sessionClient, { address: request.account })),
+  );
+}
