@@ -4005,9 +4005,10 @@ type Mutation {
   addAccountManager(request: AddAccountManagerRequest!): AddAccountManagerResult!
 
   """
-  Remove an account manager to the authenticated account.
+  Remove an account manager from the authenticated account.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  Note: Account Managers can only remove themselves.
   """
   removeAccountManager(request: RemoveAccountManagerRequest!): RemoveAccountManagerResult!
 
@@ -5633,7 +5634,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1753603785
+  since: Int! = 1755355247
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5647,7 +5648,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1753603785, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1755355247, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -7598,6 +7599,7 @@ type TokenDistributedNotification {
   id: GeneratedNotificationId!
   account: Account!
   amount: PayableAmount!
+  actionDate: DateTime!
 }
 
 type TokenDistribution {
