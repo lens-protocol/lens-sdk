@@ -11,9 +11,9 @@ import type {
   UpdateAccountManagerResult,
 } from '@lens-protocol/graphql';
 import {
-  type AccountManagerPermissions,
   AccountManagersQuery,
   AddAccountManagerMutation,
+  type AddAccountManagerRequest,
   HideManagedAccountMutation,
   RemoveAccountManagerMutation,
   UnhideManagedAccountMutation,
@@ -59,7 +59,10 @@ export function fetchAccountManagers(
  */
 export function addAccountManager(
   client: SessionClient,
-  request: { address: EvmAddress; permissions?: AccountManagerPermissions },
+  request: {
+    address: EvmAddress;
+    permissions?: AddAccountManagerRequest['permissions'];
+  },
 ): ResultAsync<
   AddAccountManagerResult,
   UnexpectedError | UnauthenticatedError
