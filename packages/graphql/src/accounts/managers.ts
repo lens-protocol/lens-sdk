@@ -58,6 +58,10 @@ export type AddAccountManagerRequest = RequestOf<
   typeof AddAccountManagerMutation
 >;
 
+export type AccountManagerPermissionsInput = ReturnType<
+  typeof graphql.scalar<'AccountManagerPermissionsInput'>
+>;
+
 const RemoveAccountManagerResultFragment = graphql(
   `fragment RemoveAccountManagerResult on RemoveAccountManagerResult{
     ...on SponsoredTransactionRequest {

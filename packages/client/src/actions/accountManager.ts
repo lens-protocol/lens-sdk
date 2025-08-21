@@ -1,5 +1,6 @@
 import type {
   AccountManager,
+  AccountManagerPermissionsInput,
   AccountManagersRequest,
   AddAccountManagerResult,
   HideManagedAccountRequest,
@@ -13,7 +14,6 @@ import type {
 import {
   AccountManagersQuery,
   AddAccountManagerMutation,
-  type AddAccountManagerRequest,
   HideManagedAccountMutation,
   RemoveAccountManagerMutation,
   UnhideManagedAccountMutation,
@@ -61,7 +61,7 @@ export function addAccountManager(
   client: SessionClient,
   request: {
     address: EvmAddress;
-    permissions?: AddAccountManagerRequest['permissions'];
+    permissions?: AccountManagerPermissionsInput;
   },
 ): ResultAsync<
   AddAccountManagerResult,
