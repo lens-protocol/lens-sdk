@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/storage",
-  "version": "1.0.0",
+  "version": "0.9.0-alpha.0",
   "description": "This package contains functionality related to storage.",
   "repository": {
     "directory": "packages/storage",
@@ -19,11 +19,17 @@
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
+      "import": [
+        "./dist/index.d.ts"
+      ],
+      "require": [
+        "./dist/index.d.cts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup"
   },

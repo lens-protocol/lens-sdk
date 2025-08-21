@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@lens-protocol/client": "2.3.2",
+    "@lens-protocol/env": "0.0.1",
+    "@lens-protocol/graphql": "0.0.1",
+    "@lens-protocol/react": "2.3.2",
+    "@lens-protocol/storage": "0.8.1",
+    "@lens-protocol/types": "0.0.1"
+  },
+  "changesets": [
+    "nice-baboons-protect"
+  ]
+}
