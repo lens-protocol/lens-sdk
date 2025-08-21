@@ -1,7 +1,6 @@
 import type {
   AccountManager,
   AccountManagersRequest,
-  AddAccountManagerRequest,
   AddAccountManagerResult,
   HideManagedAccountRequest,
   Paginated,
@@ -12,6 +11,7 @@ import type {
   UpdateAccountManagerResult,
 } from '@lens-protocol/graphql';
 import {
+  type AccountManagerPermissions,
   AccountManagersQuery,
   AddAccountManagerMutation,
   HideManagedAccountMutation,
@@ -19,8 +19,7 @@ import {
   UnhideManagedAccountMutation,
   UpdateAccountManagerMutation,
 } from '@lens-protocol/graphql';
-import type { ResultAsync } from '@lens-protocol/types';
-
+import type { EvmAddress, ResultAsync } from '@lens-protocol/types';
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -60,12 +59,22 @@ export function fetchAccountManagers(
  */
 export function addAccountManager(
   client: SessionClient,
-  request: AddAccountManagerRequest,
+  request: { address: EvmAddress; permissions?: AccountManagerPermissions },
 ): ResultAsync<
   AddAccountManagerResult,
   UnexpectedError | UnauthenticatedError
 > {
-  return client.mutation(AddAccountManagerMutation, { request });
+  return client.mutation(AddAccountManagerMutation, {
+    request: {
+      address: request.address,
+      permissions: request.permissions ?? {
+        canExecuteTransactions: false,
+        canTransferTokens: false,
+        canTransferNative: false,
+        canSetMetadataUri: false,
+      },
+    },
+  });
 }
 
 /**

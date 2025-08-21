@@ -21,13 +21,6 @@ export type UseAddAccountManagerArgs = {
   handler: OperationHandler;
 };
 
-const DEFAULT_PERMISSIONS = {
-  canExecuteTransactions: false,
-  canTransferTokens: false,
-  canTransferNative: false,
-  canSetMetadataUri: true,
-};
-
 /**
  * Add an account manager to the authenticated account.
  *
@@ -44,17 +37,10 @@ export function useAddAccountManager(
   | UnauthenticatedError
   | UnexpectedError
 > {
-  return useAuthenticatedAsyncTask(
-    (sessionClient, { address, permissions }) => {
-      const request = {
-        address,
-        permissions: permissions ?? DEFAULT_PERMISSIONS,
-      };
-
-      return addAccountManager(sessionClient, request)
-        .andThen(args.handler)
-        .andThen(sessionClient.waitForTransaction)
-        .andThen(() => fetchAccountManagers(sessionClient));
-    },
-  );
+  return useAuthenticatedAsyncTask((sessionClient, request) => {
+    return addAccountManager(sessionClient, request)
+      .andThen(args.handler)
+      .andThen(sessionClient.waitForTransaction)
+      .andThen(() => fetchAccountManagers(sessionClient));
+  });
 }
