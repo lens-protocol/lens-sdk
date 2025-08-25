@@ -39,7 +39,7 @@ export function useFollowStatus(
  * Fetch follow status.
  *
  * ```tsx
- * const { data, loading } = useFollowStatus({
+ * const { data, error, loading } = useFollowStatus({
  *   pairs: [
  *     {
  *       account: evmAddress('0x…'),

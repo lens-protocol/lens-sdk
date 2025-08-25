@@ -35,7 +35,7 @@ export function useWhoReferencedPost(
  * Fetch who referenced a post.
  *
  * ```tsx
- * const { data, loading } = useWhoReferencedPost({ post: postId('34…') });
+ * const { data, error, loading } = useWhoReferencedPost({ post: postId('34…') });
  * ```
  */
 export function useWhoReferencedPost(

@@ -31,7 +31,7 @@ export function useNamespace(
  * Fetch a single namespace.
  *
  * ```tsx
- * const { data, loading } = useNamespace({ namespace: evmAddress('0x1234…') });
+ * const { data, error, loading } = useNamespace({ namespace: evmAddress('0x1234…') });
  * ```
  */
 export function useNamespace(

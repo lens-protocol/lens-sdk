@@ -36,7 +36,7 @@ export function useFollowersYouKnow(
  * Fetch followers you know.
  *
  * ```tsx
- * const { data, loading } = useFollowersYouKnow({
+ * const { data, error, loading } = useFollowersYouKnow({
  *   observer: evmAddress('0x…'),
  *   target: evmAddress('0x…'),
  * });

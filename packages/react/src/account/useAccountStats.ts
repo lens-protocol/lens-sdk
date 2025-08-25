@@ -34,7 +34,7 @@ export function useAccountStats(
  * Fetch an Account Stats.
  *
  * ```tsx
- * const { data, loading } = useAccountStats({
+ * const { data, error, loading } = useAccountStats({
  *   account: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * );
  * ```

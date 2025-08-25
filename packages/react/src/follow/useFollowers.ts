@@ -32,7 +32,7 @@ export function useFollowers(
  * Fetch followers accounts.
  *
  * ```tsx
- * const { data, loading } = useFollowers({ account: evmAddress('0x…') });
+ * const { data, error, loading } = useFollowers({ account: evmAddress('0x…') });
  * ```
  */
 export function useFollowers(

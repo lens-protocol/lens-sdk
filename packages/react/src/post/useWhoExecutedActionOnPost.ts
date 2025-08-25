@@ -35,7 +35,7 @@ export function useWhoExecutedActionOnPost(
  * Fetch who executed action on a post.
  *
  * ```tsx
- * const { data, loading } = useWhoExecutedActionOnPost({
+ * const { data, error, loading } = useWhoExecutedActionOnPost({
  *   post: postId('34…'),
  * });
  * ```

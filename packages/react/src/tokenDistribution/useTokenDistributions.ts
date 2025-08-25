@@ -31,7 +31,7 @@ export function useTokenDistributions(
  * Fetch list of token distributions received by the authenticated account.
  *
  * ```tsx
- * const { data, loading } = useTokenDistributions();
+ * const { data, error, loading } = useTokenDistributions();
  * ```
  */
 export function useTokenDistributions(
