@@ -32,7 +32,7 @@ export function useAccountRecommendations(
  * Fetch a list of recommended accounts for a given account address.
  *
  * ```tsx
- * const { data, loading } = useAccountRecommendations({ account: evmAddress('0x…') });
+ * const { data, error, loading } = useAccountRecommendations({ account: evmAddress('0x…') });
  * ```
  */
 export function useAccountRecommendations(

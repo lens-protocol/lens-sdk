@@ -28,7 +28,7 @@ export function useFeed(
  * Fetch a single Feed.
  *
  * ```tsx
- * const { data, loading } = useFeed({ feed: evmAddress('0x…') });
+ * const { data, error, loading } = useFeed({ feed: evmAddress('0x…') });
  * ```
  */
 export function useFeed(args: UseFeedArgs): ReadResult<Feed | null>;

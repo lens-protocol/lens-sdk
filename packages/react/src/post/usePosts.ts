@@ -33,7 +33,7 @@ export function usePosts(
  * Fetch posts available filtered by the given arguments.
  *
  * ```tsx
- * const { data, loading } = usePosts({
+ * const { data, error, loading } = usePosts({
  *   filter: {
  *     searchQuery: 'test',
  *   },

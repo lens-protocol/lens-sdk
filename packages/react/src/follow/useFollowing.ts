@@ -32,7 +32,7 @@ export function useFollowing(
  * Fetch accounts following.
  *
  * ```tsx
- * const { data, loading } = useFollowing({ account: evmAddress('0x…') });
+ * const { data, error, loading } = useFollowing({ account: evmAddress('0x…') });
  * ```
  */
 export function useFollowing(

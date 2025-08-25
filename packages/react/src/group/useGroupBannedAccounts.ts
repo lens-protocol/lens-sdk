@@ -35,7 +35,7 @@ export function useGroupBannedAccounts(
  * Fetch group banned accounts.
  *
  * ```tsx
- * const { data, loading } = useGroupBannedAccounts({
+ * const { data, error, loading } = useGroupBannedAccounts({
  *   group: evmAddress('0x…'),
  * });
  * ```

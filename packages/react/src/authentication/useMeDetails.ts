@@ -26,7 +26,7 @@ export function useMeDetails(
  * Fetch the current authenticated user's details.
  *
  * ```tsx
- * const { data, loading } = useMeDetails();
+ * const { data, error, loading } = useMeDetails();
  * ```
  */
 export function useMeDetails(): ReadResult<MeResult | null>;

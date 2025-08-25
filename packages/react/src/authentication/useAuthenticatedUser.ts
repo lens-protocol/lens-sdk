@@ -34,7 +34,7 @@ export function useAuthenticatedUser(
  * ```tsx
  * import { useAuthenticatedUser } from '@lens-protocol/react';
  *
- * const { data, loading } = useAuthenticatedUser();
+ * const { data, error, loading } = useAuthenticatedUser();
  * ```
  */
 export function useAuthenticatedUser(): ReadResult<AuthenticatedUser | null>;

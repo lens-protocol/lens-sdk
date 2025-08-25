@@ -32,7 +32,7 @@ export function useTimelineHighlights(
  * Fetch Timeline Highlights for an account.
  *
  * ```tsx
- * const { data, loading } = useTimelineHighlights({ account: evmAddress('0x…') });
+ * const { data, error, loading } = useTimelineHighlights({ account: evmAddress('0x…') });
  * ```
  */
 export function useTimelineHighlights(

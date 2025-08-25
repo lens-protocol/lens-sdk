@@ -28,7 +28,7 @@ export function useAccount(
  * Fetch a single Account.
  *
  * ```tsx
- * const { data, loading } = useAccount({ address: evmAddress('0x…') });
+ * const { data, error, loading } = useAccount({ address: evmAddress('0x…') });
  * ```
  */
 export function useAccount(args: UseAccountArgs): ReadResult<Account | null>;

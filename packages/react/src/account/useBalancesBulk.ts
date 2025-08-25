@@ -32,7 +32,7 @@ export function useBalancesBulk(
  * Fetch a finite number of balances for the specified address.
  *
  * ```tsx
- * const { data, loading } = useBalancesBulk({
+ * const { data, error, loading } = useBalancesBulk({
  *   address: evmAddress('0x…'),
  *   tokens: [evmAddress("0x1234…"), evmAddress("0x5678…")]
  * });

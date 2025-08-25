@@ -28,7 +28,7 @@ export function useGraph(
  * Fetch a single Graph.
  *
  * ```tsx
- * const { data, loading } = useGraph({ graph: evmAddress('0x…') });
+ * const { data, error, loading } = useGraph({ graph: evmAddress('0x…') });
  * ```
  */
 export function useGraph(args: UseGraphArgs): ReadResult<Graph | null>;

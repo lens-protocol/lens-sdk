@@ -39,7 +39,7 @@ export function useUsernames(
  * Example: owned by a specific address.
  *
  * ```tsx
- * const { data, loading } = useUsernames({
+ * const { data, error, loading } = useUsernames({
  *   filter: {
  *     owner: evmAddress('0x..'),
  *   },

@@ -35,7 +35,7 @@ export function useGroups(
  * Example: Filtered by search query.
  *
  * ```tsx
- * const { data, loading } = useGroups({ filter: { searchQuery: 'test' }});
+ * const { data, error, loading } = useGroups({ filter: { searchQuery: 'test' }});
  * ```
  */
 export function useGroups(args: UseGroupsArgs): ReadResult<Paginated<Group>>;

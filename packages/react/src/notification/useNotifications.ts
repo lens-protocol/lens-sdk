@@ -32,7 +32,7 @@ export function useNotifications(
  * Fetch notifications for the authenticated Account.
  *
  * ```tsx
- * const { data, loading } = useNotifications();
+ * const { data, error, loading } = useNotifications();
  * ```
  */
 export function useNotifications(
