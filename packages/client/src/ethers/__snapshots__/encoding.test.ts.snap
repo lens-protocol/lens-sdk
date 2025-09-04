@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Given the encodeKeyValuePairs helper > When encoding a '(uint256,string)' > Then it should encode the expected KeyValuePair 1`] = `
+[
+  {
+    "data": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000003e80000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000568656c6c6f000000000000000000000000000000000000000000000000000000",
+    "key": "0x3f27e0c3f547c2a8f1a68a32652564973b8672e0c50e135bf31877363dd92031",
+  },
+]
+`;
+
+exports[`Given the encodeKeyValuePairs helper > When encoding a 'address' > Then it should encode the expected KeyValuePair 1`] = `
+[
+  {
+    "data": "0x000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045",
+    "key": "0xa740ced125b3917e1a813047b7ac05ddce590285547a3465692185f1ef4876c4",
+  },
+]
+`;
+
+exports[`Given the encodeKeyValuePairs helper > When encoding a 'bool' > Then it should encode the expected KeyValuePair 1`] = `
+[
+  {
+    "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
+    "key": "0x5faa28a1c6642ff01c94ff04364eaab69fd7c24e9fca87e75fdb201dae6ec5ea",
+  },
+]
+`;
+
+exports[`Given the encodeKeyValuePairs helper > When encoding a 'bytes32' > Then it should encode the expected KeyValuePair 1`] = `
+[
+  {
+    "data": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+    "key": "0xe8d3e8ecd52e4595b9924700dc9e3ef5dff6a9fb3571d91d547051ee4a81854d",
+  },
+]
+`;
+
+exports[`Given the encodeKeyValuePairs helper > When encoding a 'int256' > Then it should encode the expected KeyValuePair 1`] = `
+[
+  {
+    "data": "0x0000000000000000000000000000000000000000000000000000000000000064",
+    "key": "0xdc59ec0d94e0bf86f61b200278ea69b74ce963dac86090241008ddee889baffe",
+  },
+]
+`;
+
+exports[`Given the encodeKeyValuePairs helper > When encoding a 'string' > Then it should encode the expected KeyValuePair 1`] = `
+[
+  {
+    "data": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000011706f7374696e672077697468204c656e73000000000000000000000000000000",
+    "key": "0x807f729f3b16f5e0a674ac8b94593ad03bac2f07d184b832507d62f25043244e",
+  },
+]
+`;
+
+exports[`Given the encoding functions for viem > When encoding a bool > Then should encode bool parameter correctly 1`] = `
+[
+  {
+    "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
+    "key": "0x5faa28a1c6642ff01c94ff04364eaab69fd7c24e9fca87e75fdb201dae6ec5ea",
+  },
+]
+`;
+
+exports[`Given the encoding functions for viem > When encoding a bytes32 > Then should encode bytes32 parameter correctly 1`] = `
+[
+  {
+    "data": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+    "key": "0xe8d3e8ecd52e4595b9924700dc9e3ef5dff6a9fb3571d91d547051ee4a81854d",
+  },
+]
+`;
+
+exports[`Given the encoding functions for viem > When encoding a string > Then should encode string parameter correctly 1`] = `
+[
+  {
+    "data": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000011706f7374696e672077697468204c656e73000000000000000000000000000000",
+    "key": "0x807f729f3b16f5e0a674ac8b94593ad03bac2f07d184b832507d62f25043244e",
+  },
+]
+`;
+
+exports[`Given the encoding functions for viem > When encoding a tuple > Then should encode tuple parameter correctly 1`] = `
+[
+  {
+    "data": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000003e80000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000568656c6c6f000000000000000000000000000000000000000000000000000000",
+    "key": "0x3f27e0c3f547c2a8f1a68a32652564973b8672e0c50e135bf31877363dd92031",
+  },
+]
+`;
+
+exports[`Given the encoding functions for viem > When encoding an address > Then should encode address parameter correctly 1`] = `
+[
+  {
+    "data": "0x000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045",
+    "key": "0xa740ced125b3917e1a813047b7ac05ddce590285547a3465692185f1ef4876c4",
+  },
+]
+`;
+
+exports[`Given the encoding functions for viem > When encoding an int256 > Then should encode int256 parameter correctly 1`] = `
+[
+  {
+    "data": "0x0000000000000000000000000000000000000000000000000000000000000064",
+    "key": "0xdc59ec0d94e0bf86f61b200278ea69b74ce963dac86090241008ddee889baffe",
+  },
+]
+`;

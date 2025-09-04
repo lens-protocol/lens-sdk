@@ -1,5 +1,6 @@
 export * from './useBookmarkPost';
 export * from './useCreatePost';
+export * from './useExecutePostAction';
 export * from './usePost';
 export * from './usePostBookmarks';
 export * from './usePostReactions';
