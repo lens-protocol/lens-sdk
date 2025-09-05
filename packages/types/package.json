@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/types",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.0",
   "description": "Low-level types for Lens SDK",
   "repository": {
     "directory": "packages/types",
@@ -19,11 +19,17 @@
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
+      "import": [
+        "./dist/index.d.ts"
+      ],
+      "require": [
+        "./dist/index.d.cts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup"

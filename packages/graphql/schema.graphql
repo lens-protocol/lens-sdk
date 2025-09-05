@@ -4005,9 +4005,10 @@ type Mutation {
   addAccountManager(request: AddAccountManagerRequest!): AddAccountManagerResult!
 
   """
-  Remove an account manager to the authenticated account.
+  Remove an account manager from the authenticated account.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  Note: Account Managers can only remove themselves.
   """
   removeAccountManager(request: RemoveAccountManagerRequest!): RemoveAccountManagerResult!
 
@@ -5633,7 +5634,7 @@ enum PostVisibilityFilter {
 
 input PostsExploreFilter {
   """Only return posts after this timestamp, defaults to 3 days ago."""
-  since: Int! = 1751982113
+  since: Int! = 1755355247
 
   """Metadata filters to apply to posts"""
   metadata: PostMetadataFilter! = {mainContentFocus: null, tags: null, contentWarning: null}
@@ -5647,7 +5648,7 @@ input PostsExploreRequest {
   cursor: Cursor
 
   """Filter for posts"""
-  filter: PostsExploreFilter! = {since: 1751982113, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
+  filter: PostsExploreFilter! = {since: 1755355247, metadata: {mainContentFocus: null, tags: null, contentWarning: null}}
 
   """
   Shuffle the results, defaults to false. Causes performance issues so is ignored for now.
@@ -6477,28 +6478,40 @@ type SimpleCollectValidationPassed {
 }
 
 input SimplePaymentFeedRuleConfig {
-  """The feed post fee."""
-  cost: Erc20AmountInput!
+  """Use `erc20` or `native` instead."""
+  cost: Erc20AmountInput @deprecated(reason: "Use `erc20/native` instead")
 
-  """The feed post fee recipient."""
+  """The ERC 20 token amount. Mutually exclusive with `native`"""
+  erc20: Erc20AmountInput
+
+  """The native token amount. Mutually exclusive with `erc20`"""
+  native: BigDecimal
+
+  """The fee recipient."""
   recipient: EvmAddress!
 
   """
-  The maximum percentage of the feed post fee that can be allocated to referrals.
+  The maximum percentage of the fee that can be allocated to referrals.
   This is calculated on the total amount after the treasury fee is deducted.
   """
   referralShare: Float! = 0
 }
 
 input SimplePaymentFollowRuleConfig {
-  """The follow fee."""
-  cost: Erc20AmountInput!
+  """Use `erc20` or `native` instead."""
+  cost: Erc20AmountInput @deprecated(reason: "Use `erc20/native` instead")
 
-  """The follow fee recipient."""
+  """The ERC 20 token amount. Mutually exclusive with `native`"""
+  erc20: Erc20AmountInput
+
+  """The native token amount. Mutually exclusive with `erc20`"""
+  native: BigDecimal
+
+  """The fee recipient."""
   recipient: EvmAddress!
 
   """
-  The maximum percentage of the follow fee that can be allocated to referrals.
+  The maximum percentage of the fee that can be allocated to referrals.
   This is calculated on the total amount after the treasury fee is deducted.
   """
   referralShare: Float! = 0
@@ -6514,11 +6527,11 @@ input SimplePaymentGroupRuleConfig {
   """The native token amount. Mutually exclusive with `erc20`"""
   native: BigDecimal
 
-  """The group joining fee recipient."""
+  """The fee recipient."""
   recipient: EvmAddress!
 
   """
-  The maximum percentage of the group joining fee that can be allocated to referrals.
+  The maximum percentage of the fee that can be allocated to referrals.
   This is calculated on the total amount after the treasury fee is deducted.
   """
   referralShare: Float! = 0
@@ -7586,6 +7599,7 @@ type TokenDistributedNotification {
   id: GeneratedNotificationId!
   account: Account!
   amount: PayableAmount!
+  actionDate: DateTime!
 }
 
 type TokenDistribution {

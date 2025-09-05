@@ -477,6 +477,7 @@ export interface TokenDistributedNotification {
   id: ID;
   account: Account;
   amount: PayableAmount;
+  actionDate: DateTime;
 }
 
 export const TokenDistributedNotificationFragment: FragmentDocumentFor<TokenDistributedNotification> =
@@ -490,6 +491,7 @@ export const TokenDistributedNotificationFragment: FragmentDocumentFor<TokenDist
       amount {
         ...PayableAmount
       }
+      actionDate
     }`,
     [AccountFragment, PayableAmountFragment],
   );

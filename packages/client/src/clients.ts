@@ -578,6 +578,19 @@ export class PublicClient<
   public query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
+  ): ResultAsync<TValue, UnexpectedError>;
+
+  /**
+   * @internal
+   */
+  public query<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+    requestPolicy: RequestPolicy,
+  ): ResultAsync<TValue, UnexpectedError>;
+  public query<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
     requestPolicy: RequestPolicy = 'cache-first',
   ): ResultAsync<TValue, UnexpectedError> {
     const query = this.context.fragments.replaceFrom(document);
@@ -730,11 +743,17 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
    * @param requestPolicy - The request policy to use.
    * @returns The result of the operation.
    */
-
   override query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
-    requestPolicy?: RequestPolicy,
+  ): ResultAsync<TValue, UnexpectedError>;
+  /**
+   * @internal
+   */
+  override query<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+    requestPolicy: RequestPolicy,
   ): ResultAsync<TValue, UnexpectedError>;
   override query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
