@@ -17,23 +17,23 @@
       "require": "./dist/index.cjs"
     },
     "./ethers": {
-      "import": "./dist/ethers.js",
-      "require": "./dist/ethers.cjs",
-      "types": "./dist/ethers.d.cts"
+      "import": "./dist/ethers/index.js",
+      "require": "./dist/ethers/index.cjs",
+      "types": "./dist/ethers/index.d.cts"
     },
     "./viem": {
-      "import": "./dist/viem.js",
-      "require": "./dist/viem.cjs",
-      "types": "./dist/viem.d.cts"
+      "import": "./dist/viem/index.js",
+      "require": "./dist/viem/index.cjs",
+      "types": "./dist/viem/index.d.cts"
     }
   },
   "typesVersions": {
     "*": {
       "ethers": [
-        "./dist/ethers.d.ts"
+        "./dist/ethers/index.d.ts"
       ],
       "viem": [
-        "./dist/viem.d.ts"
+        "./dist/viem/index.d.ts"
       ]
     }
   },
