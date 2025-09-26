@@ -34,22 +34,22 @@ importers:
         version: 2.3.3
       typescript:
         specifier: ^5.6.3
-        version: 5.7.2
+        version: 5.8.3
       vite:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@22.15.29)(tsx@4.19.3)
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.7.2)(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3))
+        version: 5.0.1(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3))
       vitest:
         specifier: ^3.2.0
-        version: 3.2.0(@types/node@22.15.29)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.15.29)(typescript@5.7.2))(tsx@4.19.3)
+        version: 3.2.0(@types/node@22.15.29)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.15.29)(typescript@5.8.3))(tsx@4.19.3)
 
   packages/client:
     dependencies:
       '@lens-chain/sdk':
         specifier: ^1.0.0
-        version: 1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
+        version: 1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.8.3)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-protocol/env':
         specifier: workspace:*
         version: link:../env
@@ -83,7 +83,7 @@ importers:
         version: 1.0.5
       '@lens-protocol/metadata':
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.7.2)(zod@3.23.8)
+        version: 2.0.0(typescript@5.8.3)(zod@3.23.8)
       '@types/big.js':
         specifier: ^6.2.2
         version: 6.2.2
@@ -95,16 +95,16 @@ importers:
         version: 6.13.4
       msw:
         specifier: ^2.7.0
-        version: 2.7.0(@types/node@22.15.29)(typescript@5.7.2)
+        version: 2.7.0(@types/node@22.15.29)(typescript@5.8.3)
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.6.3
-        version: 5.7.2
+        version: 5.8.3
       viem:
         specifier: ^2.22.4
-        version: 2.22.4(typescript@5.7.2)(zod@3.23.8)
+        version: 2.22.4(typescript@5.8.3)(zod@3.23.8)
       zksync-ethers:
         specifier: ^6.15.3
         version: 6.15.3(ethers@6.13.4)
@@ -123,10 +123,10 @@ importers:
         version: 22.10.2
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.6.3
-        version: 5.7.2
+        version: 5.8.3
 
   packages/graphql:
     dependencies:
@@ -135,7 +135,7 @@ importers:
         version: link:../types
       gql.tada:
         specifier: ^1.8.10
-        version: 1.8.10(graphql@16.9.0)(typescript@5.7.2)
+        version: 1.8.10(graphql@16.9.0)(typescript@5.8.3)
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
@@ -148,13 +148,13 @@ importers:
         version: 1.2.1(graphql@16.9.0)
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.3)
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
       typescript:
         specifier: ^5.6.3
-        version: 5.7.2
+        version: 5.8.3
 
   packages/react:
     dependencies:
@@ -176,7 +176,7 @@ importers:
     devDependencies:
       '@lens-protocol/metadata':
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.7.2)(zod@3.23.8)
+        version: 2.0.0(typescript@5.8.3)(zod@3.23.8)
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -200,13 +200,13 @@ importers:
         version: 19.1.0(react@19.1.0)
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.6.3
-        version: 5.7.2
+        version: 5.8.3
       viem:
         specifier: ^2.22.4
-        version: 2.22.4(typescript@5.7.2)(zod@3.23.8)
+        version: 2.22.4(typescript@5.8.3)(zod@3.23.8)
       zksync-ethers:
         specifier: ^6.15.3
         version: 6.15.3(ethers@6.13.4)
@@ -222,10 +222,10 @@ importers:
     devDependencies:
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.6.3
-        version: 5.7.2
+        version: 5.8.3
 
   packages/types:
     dependencies:
@@ -238,10 +238,10 @@ importers:
     devDependencies:
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2)
+        version: 8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.6.3
-        version: 5.7.2
+        version: 5.8.3
 
 packages:
 
@@ -2682,8 +2682,8 @@ packages:
     resolution: {integrity: sha512-G6zXWS1dLj6eagy6sVhOMQiLtJdxQBHIA9Z6HFUNLOlr6MFOgzV8wvmidtPONfPtEUv0uZsy77XJNzTAfwPDaA==}
     engines: {node: '>=16'}
 
-  typescript@5.7.2:
-    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2941,11 +2941,11 @@ snapshots:
     optionalDependencies:
       graphql: 16.9.0
 
-  '@0no-co/graphqlsp@1.12.16(graphql@16.9.0)(typescript@5.7.2)':
+  '@0no-co/graphqlsp@1.12.16(graphql@16.9.0)(typescript@5.8.3)':
     dependencies:
-      '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.7.2)
+      '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.8.3)
       graphql: 16.9.0
-      typescript: 5.7.2
+      typescript: 5.8.3
 
   '@adraffy/ens-normalize@1.10.1': {}
 
@@ -3306,18 +3306,18 @@ snapshots:
   '@esbuild/win32-x64@0.25.2':
     optional: true
 
-  '@gql.tada/cli-utils@1.6.3(graphql@16.9.0)(typescript@5.7.2)':
+  '@gql.tada/cli-utils@1.6.3(graphql@16.9.0)(typescript@5.8.3)':
     dependencies:
-      '@0no-co/graphqlsp': 1.12.16(graphql@16.9.0)(typescript@5.7.2)
-      '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.7.2)
+      '@0no-co/graphqlsp': 1.12.16(graphql@16.9.0)(typescript@5.8.3)
+      '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.8.3)
       graphql: 16.9.0
-      typescript: 5.7.2
+      typescript: 5.8.3
 
-  '@gql.tada/internal@1.0.8(graphql@16.9.0)(typescript@5.7.2)':
+  '@gql.tada/internal@1.0.8(graphql@16.9.0)(typescript@5.8.3)':
     dependencies:
       '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
       graphql: 16.9.0
-      typescript: 5.7.2
+      typescript: 5.8.3
 
   '@inquirer/confirm@5.1.0(@types/node@22.15.29)':
     dependencies:
@@ -3377,17 +3377,17 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lens-chain/sdk@1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
+  '@lens-chain/sdk@1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.8.3)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
     optionalDependencies:
       ethers: 6.13.4
-      viem: 2.22.4(typescript@5.7.2)(zod@3.23.8)
+      viem: 2.22.4(typescript@5.8.3)(zod@3.23.8)
       zksync-ethers: 6.15.3(ethers@6.13.4)
 
   '@lens-chain/storage-client@1.0.5': {}
 
-  '@lens-protocol/metadata@2.0.0(typescript@5.7.2)(zod@3.23.8)':
+  '@lens-protocol/metadata@2.0.0(typescript@5.8.3)(zod@3.23.8)':
     dependencies:
-      abitype: 1.0.8(typescript@5.7.2)(zod@3.23.8)
+      abitype: 1.0.8(typescript@5.8.3)(zod@3.23.8)
       json-stable-stringify: 1.1.1
       uuid: 9.0.1
     optionalDependencies:
@@ -3693,13 +3693,13 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.0(msw@2.7.0(@types/node@22.15.29)(typescript@5.7.2))(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3))':
+  '@vitest/mocker@3.2.0(msw@2.7.0(@types/node@22.15.29)(typescript@5.8.3))(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3))':
     dependencies:
       '@vitest/spy': 3.2.0
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      msw: 2.7.0(@types/node@22.15.29)(typescript@5.7.2)
+      msw: 2.7.0(@types/node@22.15.29)(typescript@5.8.3)
       vite: 6.3.5(@types/node@22.15.29)(tsx@4.19.3)
 
   '@vitest/pretty-format@3.2.0':
@@ -3727,14 +3727,14 @@ snapshots:
       loupe: 3.1.3
       tinyrainbow: 2.0.0
 
-  abitype@1.0.7(typescript@5.7.2)(zod@3.23.8):
+  abitype@1.0.7(typescript@5.8.3)(zod@3.23.8):
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.8.3
       zod: 3.23.8
 
-  abitype@1.0.8(typescript@5.7.2)(zod@3.23.8):
+  abitype@1.0.8(typescript@5.8.3)(zod@3.23.8):
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.8.3
       zod: 3.23.8
 
   aes-js@4.0.0-beta.5: {}
@@ -4300,13 +4300,13 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  gql.tada@1.8.10(graphql@16.9.0)(typescript@5.7.2):
+  gql.tada@1.8.10(graphql@16.9.0)(typescript@5.8.3):
     dependencies:
       '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
-      '@0no-co/graphqlsp': 1.12.16(graphql@16.9.0)(typescript@5.7.2)
-      '@gql.tada/cli-utils': 1.6.3(graphql@16.9.0)(typescript@5.7.2)
-      '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.7.2)
-      typescript: 5.7.2
+      '@0no-co/graphqlsp': 1.12.16(graphql@16.9.0)(typescript@5.8.3)
+      '@gql.tada/cli-utils': 1.6.3(graphql@16.9.0)(typescript@5.8.3)
+      '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.8.3)
+      typescript: 5.8.3
     transitivePeerDependencies:
       - '@gql.tada/svelte-support'
       - '@gql.tada/vue-support'
@@ -4601,7 +4601,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.7.0(@types/node@22.15.29)(typescript@5.7.2):
+  msw@2.7.0(@types/node@22.15.29)(typescript@5.8.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
@@ -4622,7 +4622,7 @@ snapshots:
       type-fest: 4.30.0
       yargs: 17.7.2
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.8.3
     transitivePeerDependencies:
       - '@types/node'
 
@@ -4725,17 +4725,17 @@ snapshots:
 
   outvariant@1.4.3: {}
 
-  ox@0.6.0(typescript@5.7.2)(zod@3.23.8):
+  ox@0.6.0(typescript@5.8.3)(zod@3.23.8):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.7.2)(zod@3.23.8)
+      abitype: 1.0.7(typescript@5.8.3)(zod@3.23.8)
       eventemitter3: 5.0.1
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.8.3
     transitivePeerDependencies:
       - zod
 
@@ -5188,15 +5188,15 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  tsconfck@3.1.4(typescript@5.7.2):
+  tsconfck@3.1.4(typescript@5.8.3):
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.8.3
 
   tslib@2.7.0: {}
 
   tslib@2.8.0: {}
 
-  tsup@8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.7.2):
+  tsup@8.3.5(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.3):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.24.0)
       cac: 6.7.14
@@ -5216,7 +5216,7 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       postcss: 8.5.3
-      typescript: 5.7.2
+      typescript: 5.8.3
     transitivePeerDependencies:
       - jiti
       - supports-color
@@ -5261,7 +5261,7 @@ snapshots:
 
   type-fest@4.30.0: {}
 
-  typescript@5.7.2: {}
+  typescript@5.8.3: {}
 
   uglify-js@3.19.3:
     optional: true
@@ -5305,19 +5305,19 @@ snapshots:
 
   v8flags@4.0.1: {}
 
-  viem@2.22.4(typescript@5.7.2)(zod@3.23.8):
+  viem@2.22.4(typescript@5.8.3)(zod@3.23.8):
     dependencies:
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.7.2)(zod@3.23.8)
+      abitype: 1.0.7(typescript@5.8.3)(zod@3.23.8)
       isows: 1.0.6(ws@8.18.0)
-      ox: 0.6.0(typescript@5.7.2)(zod@3.23.8)
+      ox: 0.6.0(typescript@5.8.3)(zod@3.23.8)
       webauthn-p256: 0.0.10
       ws: 8.18.0
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.8.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -5344,11 +5344,11 @@ snapshots:
       - tsx
       - yaml
 
-  vite-tsconfig-paths@5.0.1(typescript@5.7.2)(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3)):
+  vite-tsconfig-paths@5.0.1(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
-      tsconfck: 3.1.4(typescript@5.7.2)
+      tsconfck: 3.1.4(typescript@5.8.3)
     optionalDependencies:
       vite: 6.3.5(@types/node@22.15.29)(tsx@4.19.3)
     transitivePeerDependencies:
@@ -5368,11 +5368,11 @@ snapshots:
       fsevents: 2.3.3
       tsx: 4.19.3
 
-  vitest@3.2.0(@types/node@22.15.29)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.15.29)(typescript@5.7.2))(tsx@4.19.3):
+  vitest@3.2.0(@types/node@22.15.29)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.15.29)(typescript@5.8.3))(tsx@4.19.3):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.0
-      '@vitest/mocker': 3.2.0(msw@2.7.0(@types/node@22.15.29)(typescript@5.7.2))(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3))
+      '@vitest/mocker': 3.2.0(msw@2.7.0(@types/node@22.15.29)(typescript@5.8.3))(vite@6.3.5(@types/node@22.15.29)(tsx@4.19.3))
       '@vitest/pretty-format': 3.2.0
       '@vitest/runner': 3.2.0
       '@vitest/snapshot': 3.2.0
