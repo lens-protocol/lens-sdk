@@ -36,7 +36,7 @@ export function useWhoExecutedActionOnAccount(
  * Fetch who executed action on an Account.
  *
  * ```tsx
- * const { data, loading } = useWhoExecutedActionOnAccount({
+ * const { data, error, loading } = useWhoExecutedActionOnAccount({
  *   account: evmAddress('0x…'),
  * });
  * ```

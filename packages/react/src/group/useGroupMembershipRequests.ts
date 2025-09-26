@@ -35,7 +35,7 @@ export function useGroupMembershipRequests(
  * Fetch group membership requests.
  *
  * ```tsx
- * const { data, loading } = useGroupMembershipRequests({
+ * const { data, error, loading } = useGroupMembershipRequests({
  *   group: evmAddress('0x…'),
  * });
  * ```

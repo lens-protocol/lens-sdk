@@ -39,7 +39,7 @@ export function useAccounts(
  * Fetch accounts available filtered by the given arguments.
  *
  * ```tsx
- * const { data, loading } = useAccounts({
+ * const { data, error, loading } = useAccounts({
  *   filter: {
  *     searchBy: {
  *       localNameQuery: 'wagmi'

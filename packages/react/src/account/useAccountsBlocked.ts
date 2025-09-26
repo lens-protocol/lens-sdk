@@ -32,7 +32,7 @@ export function useAccountsBlocked(
  * Fetch Blocked Accounts.
  *
  * ```tsx
- * const { data, loading } = useAccountsBlocked();
+ * const { data, error, loading } = useAccountsBlocked();
  * ```
  */
 export function useAccountsBlocked(

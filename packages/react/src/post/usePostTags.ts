@@ -37,7 +37,7 @@ export function usePostTags(
  * Fetch post tags.
  *
  * ```tsx
- * const { data, loading } = usePostTags({
+ * const { data, error, loading } = usePostTags({
  *   filter: {
  *     feeds: { globalFeed: true },
  *   },

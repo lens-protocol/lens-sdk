@@ -28,7 +28,7 @@ export function useGroup(
  * Fetch a single Group.
  *
  * ```tsx
- * const { data, loading } = useGroup({ group: evmAddress('0x…') });
+ * const { data, error, loading } = useGroup({ group: evmAddress('0x…') });
  * ```
  */
 export function useGroup(args: UseGroupArgs): ReadResult<Group | null>;

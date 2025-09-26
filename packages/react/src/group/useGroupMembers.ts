@@ -35,7 +35,7 @@ export function useGroupMembers(
  * Fetch group members.
  *
  * ```tsx
- * const { data, loading } = useGroupMembers({
+ * const { data, error, loading } = useGroupMembers({
  *   group: evmAddress('0x…'),
  * });
  * ```

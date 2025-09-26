@@ -31,7 +31,7 @@ export function useAccountsAvailable(
  * Fetch the accounts available for a given address.
  *
  * ```tsx
- * const { data, loading } = useAccountsAvailable({ managedBy: evmAddress('0x…') });
+ * const { data, error, loading } = useAccountsAvailable({ managedBy: evmAddress('0x…') });
  * ```
  */
 export function useAccountsAvailable(

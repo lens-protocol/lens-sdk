@@ -35,7 +35,7 @@ export function usePostReactions(
  * Fetch reactions to a post.
  *
  * ```tsx
- * const { data, loading } = usePostReactions({
+ * const { data, error, loading } = usePostReactions({
  *   post: postId('42'),
  * );
  * ```

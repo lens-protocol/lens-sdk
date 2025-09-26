@@ -31,7 +31,7 @@ export function useAccountsBulk(
  * Fetch Accounts in Bulk.
  *
  * ```tsx
- * const { data, loading } = useAccountsBulk({
+ * const { data, error, loading } = useAccountsBulk({
  *   addresses: [evmAddress('0x…'), evmAddress('0x…')]
  * });
  * ```

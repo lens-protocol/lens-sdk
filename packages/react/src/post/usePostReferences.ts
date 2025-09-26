@@ -36,7 +36,7 @@ export function usePostReferences(
  * Fetch references to a post.
  *
  * ```tsx
- * const { data, loading } = usePostReferences({
+ * const { data, error, loading } = usePostReferences({
  *   referencedTypes: [PostReferenceType.CommentOn],
  *   referencedPost: postId('42'),
  * );

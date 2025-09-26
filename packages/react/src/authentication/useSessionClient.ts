@@ -35,7 +35,7 @@ export function useSessionClient(
  * ```tsx
  * import { useSessionClient } from '@lens-protocol/react';
  *
- * const { data, loading } = useSessionClient();
+ * const { data, error, loading } = useSessionClient();
  * ```
  */
 export function useSessionClient(): ReadResult<SessionClient | null>;

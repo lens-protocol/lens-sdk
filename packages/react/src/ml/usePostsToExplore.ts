@@ -28,7 +28,7 @@ export function usePostsToExplore(
  * Fetch a list of recommended posts using Lens's ML algorithms.
  *
  * ```tsx
- * const { data, loading } = usePostsToExplore();
+ * const { data, error, loading } = usePostsToExplore();
  * ```
  */
 export function usePostsToExplore(

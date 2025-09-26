@@ -32,7 +32,7 @@ export function useAccountManagers(
  * Fetch Account Managers.
  *
  * ```tsx
- * const { data, loading } = useAccountManagers();
+ * const { data, error, loading } = useAccountManagers();
  * ```
  */
 export function useAccountManagers(

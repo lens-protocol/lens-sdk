@@ -32,7 +32,7 @@ export function usePostBookmarks(
  * Fetch bookmarked posts.
  *
  * ```tsx
- * const { data, loading } = usePostBookmarks();
+ * const { data, error, loading } = usePostBookmarks();
  * ```
  */
 export function usePostBookmarks(

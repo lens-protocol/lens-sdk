@@ -28,7 +28,7 @@ export function usePostsForYou(
  * Fetch a list of recommended posts for the current user's Account.
  *
  * ```tsx
- * const { data, loading } = usePostsForYou();
+ * const { data, error, loading } = usePostsForYou();
  * ```
  */
 export function usePostsForYou(

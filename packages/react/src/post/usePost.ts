@@ -28,7 +28,7 @@ export function usePost(
  * Fetch a single post.
  *
  * ```tsx
- * const { data, loading } = usePost({ post: postId('34…') });
+ * const { data, error, loading } = usePost({ post: postId('34…') });
  * ```
  */
 export function usePost(args: UsePostArgs): ReadResult<AnyPost | null>;
