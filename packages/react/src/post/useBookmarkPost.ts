@@ -3,7 +3,7 @@ import type {
   UnauthenticatedError,
   UnexpectedError,
 } from '@lens-protocol/client';
-import { bookmarkPost } from '@lens-protocol/client/actions';
+import { bookmarkPost, fetchPost } from '@lens-protocol/client/actions';
 
 import { type UseAsyncTask, useAuthenticatedAsyncTask } from '../helpers';
 
@@ -32,6 +32,8 @@ export function useBookmarkPost(): UseAsyncTask<
   UnauthenticatedError | UnexpectedError
 > {
   return useAuthenticatedAsyncTask((sessionClient, request) =>
-    bookmarkPost(sessionClient, request),
+    bookmarkPost(sessionClient, request).andTee(() =>
+      fetchPost(sessionClient, { post: request.post }),
+    ),
   );
 }
