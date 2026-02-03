@@ -15,7 +15,7 @@ import { useSuspendableQuery } from '../helpers';
 export type UseAccountStatsArgs = AccountStatsRequest;
 
 /**
- * Fetch an Account Stats.
+ * Fetch Account Stats.
  *
  * This signature supports React Suspense:
  *
@@ -31,7 +31,7 @@ export function useAccountStats(
 ): SuspenseResult<AccountStats>;
 
 /**
- * Fetch an Account Stats.
+ * Fetch Account Stats.
  *
  * ```tsx
  * const { data, loading } = useAccountStats({

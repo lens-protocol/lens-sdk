@@ -85,7 +85,7 @@ export function fetchAccount(
 }
 
 /**
- * Fetch an Accounts.
+ * Fetch Accounts.
  *
  * Using a {@link SessionClient} will yield {@link Account#operations} specific to the authenticated Account.
  *
@@ -105,7 +105,7 @@ export function fetchAccounts(
 }
 
 /**
- * Fetch an Accounts Bulk.
+ * Fetch Accounts in Bulk.
  *
  * ```ts
  * const result = await fetchAccountsBulk(anyClient, {
@@ -125,7 +125,7 @@ export function fetchAccountsBulk(
 }
 
 /**
- * Fetch an Account Stats.
+ * Fetch Account Stats.
  *
  * ```ts
  * const result = await fetchAccountStats(anyClient, {
@@ -145,7 +145,7 @@ export function fetchAccountStats(
 }
 
 /**
- * Fetch an Account Feed Stats.
+ * Fetch Account Feed Stats.
  *
  * ```ts
  * const result = await fetchAccountFeedStats(anyClient, {
@@ -165,7 +165,7 @@ export function fetchAccountFeedStats(
 }
 
 /**
- * Fetch an Account Graph Stats.
+ * Fetch Account Graph Stats.
  *
  * ```ts
  * const result = await fetchAccountGraphStats(anyClient, {

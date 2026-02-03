@@ -29,7 +29,7 @@ export function health(
 }
 
 /**
- * Fetch an Access Control details.
+ * Fetch Access Control details.
  *
  * ```ts
  * const result = await fetchAccessControl(anyClient, {
