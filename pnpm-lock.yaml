@@ -49,7 +49,7 @@ importers:
     dependencies:
       '@lens-chain/sdk':
         specifier: ^1.0.0
-        version: 1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
+        version: 1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@4.6.7))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-protocol/env':
         specifier: workspace:*
         version: link:../env
@@ -83,7 +83,7 @@ importers:
         version: 1.0.5
       '@lens-protocol/metadata':
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.7.2)(zod@3.23.8)
+        version: 2.0.0(typescript@5.7.2)(zod@4.6.7)
       '@types/big.js':
         specifier: ^6.2.2
         version: 6.2.2
@@ -104,13 +104,13 @@ importers:
         version: 5.7.2
       viem:
         specifier: ^2.22.4
-        version: 2.22.4(typescript@5.7.2)(zod@3.23.8)
+        version: 2.22.4(typescript@5.7.2)(zod@4.6.7)
       zksync-ethers:
         specifier: ^6.15.3
         version: 6.15.3(ethers@6.13.4)
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
 
   packages/env:
     dependencies:
@@ -176,7 +176,7 @@ importers:
     devDependencies:
       '@lens-protocol/metadata':
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.7.2)(zod@3.23.8)
+        version: 2.0.0(typescript@5.7.2)(zod@4.6.7)
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -206,7 +206,7 @@ importers:
         version: 5.7.2
       viem:
         specifier: ^2.22.4
-        version: 2.22.4(typescript@5.7.2)(zod@3.23.8)
+        version: 2.22.4(typescript@5.7.2)(zod@4.6.7)
       zksync-ethers:
         specifier: ^6.15.3
         version: 6.15.3(ethers@6.13.4)
@@ -217,8 +217,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       tsup:
         specifier: ^8.3.5
@@ -1663,16 +1663,18 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@11.0.0:
     resolution: {integrity: sha512-9UiX/Bl6J2yaBbxKoEBRm4Cipxgok8kQYcOPEhScPwebu2I0HoQOuYdIO6S3hLuWoZgpDpwQZMzTFxgpkyT76g==}
     engines: {node: 20 || >=22}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-modules@1.0.0:
     resolution: {integrity: sha512-sKzpEkf11GpOFuw0Zzjzmt4B4UZwjOcG757PPvrfhxcLFbq0wpsgpOqxpxtxFiCG4DtG93M6XRVbF2oGdev7bg==}
@@ -2467,6 +2469,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   spawndamnit@3.0.1:
     resolution: {integrity: sha512-MmnduQUuHCoFckZoWnXsTg7JaiLBJrKFj9UI2MbRPGaJeVpsLcVBu6P/IGZovziM/YBsellCmsprgNA+w0CzVg==}
@@ -2603,6 +2606,7 @@ packages:
   tsconfck@3.1.4:
     resolution: {integrity: sha512-kdqWFGVJqe+KGYvlSO9NIaWn9jT1Ny4oKVzAJsKii5eoE9snzTJzL4+MMVOMn+fikWGFmKEylcXL710V/kIPJQ==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -2732,6 +2736,7 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8flags@4.0.1:
@@ -2928,8 +2933,8 @@ packages:
     peerDependencies:
       ethers: ^6.7.1
 
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
 snapshots:
 
@@ -3377,21 +3382,21 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lens-chain/sdk@1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
+  '@lens-chain/sdk@1.0.3(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@4.6.7))(zksync-ethers@6.15.3(ethers@6.13.4))':
     optionalDependencies:
       ethers: 6.13.4
-      viem: 2.22.4(typescript@5.7.2)(zod@3.23.8)
+      viem: 2.22.4(typescript@5.7.2)(zod@4.6.7)
       zksync-ethers: 6.15.3(ethers@6.13.4)
 
   '@lens-chain/storage-client@1.0.5': {}
 
-  '@lens-protocol/metadata@2.0.0(typescript@5.7.2)(zod@3.23.8)':
+  '@lens-protocol/metadata@2.0.0(typescript@5.7.2)(zod@4.6.7)':
     dependencies:
-      abitype: 1.0.8(typescript@5.7.2)(zod@3.23.8)
+      abitype: 1.0.8(typescript@5.7.2)(zod@4.6.7)
       json-stable-stringify: 1.1.1
       uuid: 9.0.1
     optionalDependencies:
-      zod: 3.23.8
+      zod: 4.6.7
     transitivePeerDependencies:
       - typescript
 
@@ -3727,15 +3732,15 @@ snapshots:
       loupe: 3.1.3
       tinyrainbow: 2.0.0
 
-  abitype@1.0.7(typescript@5.7.2)(zod@3.23.8):
+  abitype@1.0.7(typescript@5.7.2)(zod@4.6.7):
     optionalDependencies:
       typescript: 5.7.2
-      zod: 3.23.8
+      zod: 4.6.7
 
-  abitype@1.0.8(typescript@5.7.2)(zod@3.23.8):
+  abitype@1.0.8(typescript@5.7.2)(zod@4.6.7):
     optionalDependencies:
       typescript: 5.7.2
-      zod: 3.23.8
+      zod: 4.6.7
 
   aes-js@4.0.0-beta.5: {}
 
@@ -4725,14 +4730,14 @@ snapshots:
 
   outvariant@1.4.3: {}
 
-  ox@0.6.0(typescript@5.7.2)(zod@3.23.8):
+  ox@0.6.0(typescript@5.7.2)(zod@4.6.7):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.7.2)(zod@3.23.8)
+      abitype: 1.0.7(typescript@5.7.2)(zod@4.6.7)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.7.2
@@ -5305,15 +5310,15 @@ snapshots:
 
   v8flags@4.0.1: {}
 
-  viem@2.22.4(typescript@5.7.2)(zod@3.23.8):
+  viem@2.22.4(typescript@5.7.2)(zod@4.6.7):
     dependencies:
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.7.2)(zod@3.23.8)
+      abitype: 1.0.7(typescript@5.7.2)(zod@4.6.7)
       isows: 1.0.6(ws@8.18.0)
-      ox: 0.6.0(typescript@5.7.2)(zod@3.23.8)
+      ox: 0.6.0(typescript@5.7.2)(zod@4.6.7)
       webauthn-p256: 0.0.10
       ws: 8.18.0
     optionalDependencies:
@@ -5492,4 +5497,4 @@ snapshots:
     dependencies:
       ethers: 6.13.4
 
-  zod@3.23.8: {}
+  zod@4.6.7: {}
